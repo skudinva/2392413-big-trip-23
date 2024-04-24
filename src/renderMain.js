@@ -1,5 +1,4 @@
 import { render } from './render';
-import ContentView from './view/main/content-view';
 import EventEditView from './view/main/event-edit-view';
 import EventItemView from './view/main/event-item-view';
 import EventView from './view/main/event-view';
@@ -20,7 +19,6 @@ const renderMain = () => {
     '.trip-events__list .trip-events__item'
   );
   render(new EventEditView(), tripEventListElement);
-  render(new ContentView(), tripEventElement);
 };
 
 export { renderMain };
