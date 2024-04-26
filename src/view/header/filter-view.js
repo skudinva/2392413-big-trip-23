@@ -1,7 +1,7 @@
 import ComponentSimpleView from '../component-simple-view';
 
 export default class FilterView extends ComponentSimpleView {
-  createComponentTemplace() {
+  createComponentTemplate() {
     return `<div class="trip-main__trip-controls  trip-controls">
     <div class="trip-controls__filters">
       <h2 class="visually-hidden">Filter events</h2>

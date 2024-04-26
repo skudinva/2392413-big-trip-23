@@ -1,7 +1,7 @@
 import ComponentSimpleView from '../component-simple-view';
 
 export default class EventEditView extends ComponentSimpleView {
-  createComponentTemplace() {
+  createComponentTemplate() {
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">

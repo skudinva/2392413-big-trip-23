@@ -14,11 +14,13 @@ export default class EventPresenter {
   eventListComponet = new EventListView();
   editComponent = new EventEditView();
 
-  constructor ({mainContainer}){
+  constructor ({mainContainer, eventModel}){
     this.mainContainer = mainContainer;
+    this.eventModel = eventModel;
   }
 
   init() {
+    this.events = [...this.eventModel.getEvents()];
     render(this.mainComponent, this.mainContainer);
     render(this.tripComponent, this.mainComponent.getElement());
 
@@ -26,10 +28,15 @@ export default class EventPresenter {
     render(this.sortComponent, tripEventElement);
 
     render(this.eventListComponet, tripEventElement);
-    for (let i = 0; i < 4; i++) {
+
+    const editorItemComponent = new EventItemView();
+    render(editorItemComponent, this.eventListComponet.getElement());
+    render(this.editComponent, editorItemComponent.getElement());
+
+    for (let i = 0; i < this.events.length; i++) {
       const eventItemComponent = new EventItemView();
       render(eventItemComponent, this.eventListComponet.getElement());
-      render((i === 0) ? this.editComponent : new EventView(), eventItemComponent.getElement());
+      render(new EventView({event: this.events[i]}), eventItemComponent.getElement());
     }
   }
 }
