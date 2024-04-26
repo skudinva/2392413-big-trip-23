@@ -101,25 +101,28 @@ const createOffersTemplate = (offers, selectedOffers) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate =
-  () => `<section class="event__section  event__section--destination">
-  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-  <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+const createDestinationDetailTemplate = ({ description, pictures }) => {
+  const destDetalInfo = [];
+  destDetalInfo.push(`<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${description}</p>
+    <div class="event__photos-container"><div class="event__photos-tape">`);
 
-  <div class="event__photos-container">
-    <div class="event__photos-tape">
-      <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-      <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-      <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-      <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-      <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-    </div>
-  </div>
-</section>`;
+  pictures.forEach((picture) => {
+    destDetalInfo.push(
+      `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
+    );
+  });
+
+  destDetalInfo.push('</div></div></section>');
+
+  return destDetalInfo.join('');
+};
 export default class EventEditView extends ComponentSimpleView {
-  constructor({ event, cities, offers }) {
+  constructor({ event, city, cities, offers }) {
     super();
     this.event = event;
+    this.city = city;
     this.cities = cities;
     this.offers = offers;
   }
@@ -130,7 +133,9 @@ export default class EventEditView extends ComponentSimpleView {
     const eventDateTemplate = createEventDateTemplate();
     const priceTemplate = createPriceTemplate();
     const offersTemplate = createOffersTemplate(this.offers, this.event.offers);
-    const destinationDetailTemplate = createDestinationDetailTemplate();
+    const destinationDetailTemplate = createDestinationDetailTemplate(
+      this.city
+    );
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">

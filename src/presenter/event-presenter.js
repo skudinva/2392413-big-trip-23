@@ -28,9 +28,11 @@ export default class EventPresenter {
     this.renderEventItem((container) => {
       const event = this.events[0];
       const offers = this.eventsModel.getOffersByType(event.type);
+      const city = this.eventsModel.getCityById(event.destination);
       render(
         new EventEditView({
           event: event,
+          city: city,
           cities: this.cities,
           offers: offers,
         }),
