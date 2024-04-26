@@ -13,15 +13,14 @@ export default class EventPresenter {
   sortComponent = new SortView();
   eventListComponet = new EventListView();
 
-  constructor({ mainContainer, eventsModel, citiesModel }) {
+  constructor({ mainContainer, eventsModel }) {
     this.mainContainer = mainContainer;
     this.eventsModel = eventsModel;
-    this.citiesModel = citiesModel;
   }
 
   init() {
     this.events = [...this.eventsModel.getEvents()];
-    this.cities = [...this.citiesModel.getCities()];
+    this.cities = [...this.eventsModel.getCities()];
     this.offers = [...this.eventsModel.getOffers()];
     render(this.mainComponent, this.mainContainer);
     render(this.tripComponent, this.mainComponent.getElement());
@@ -40,7 +39,7 @@ export default class EventPresenter {
 
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
-      const city = this.citiesModel.getCityById(event.destination);
+      const city = this.eventsModel.getCityById(event.destination);
       const offers = this.eventsModel
         .getOffersByType(event.type)
         .filter((offer) => event.offers.indexOf(offer.id) > -1);
