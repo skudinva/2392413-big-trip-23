@@ -27,22 +27,31 @@ export default class EventPresenter {
 
     const tripEventElement = this.tripComponent.getElement();
     render(this.sortComponent, tripEventElement);
-
     render(this.eventListComponet, tripEventElement);
 
-    const editorItemComponent = new EventItemView();
-    render(editorItemComponent, this.eventListComponet.getElement());
+    const editorItemComponent = new EventItemView(); //1
+    render(editorItemComponent, this.eventListComponet.getElement()); //2
+
+    const event = this.events[0];
+    const offers = this.eventsModel.getOffersByType(event.type);
     render(
-      new EventEditView({ cities: this.cities, offers: this.offers }),
+      new EventEditView({
+        event: event,
+        cities: this.cities,
+        offers: offers,
+      }),
       editorItemComponent.getElement()
     );
 
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
       const city = this.eventsModel.getCityById(event.destination);
-      const offers = this.eventsModel.getOffersByType(event.type, event.offers);
-      const eventItemComponent = new EventItemView();
-      render(eventItemComponent, this.eventListComponet.getElement());
+      const offers = this.eventsModel.getSelectedOffers(
+        event.type,
+        event.offers
+      );
+      const eventItemComponent = new EventItemView(); //1
+      render(eventItemComponent, this.eventListComponet.getElement()); //2
       render(
         new EventView({ event: event, city: city, offers: offers }),
         eventItemComponent.getElement()

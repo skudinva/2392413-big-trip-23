@@ -81,10 +81,28 @@ const createPriceTemplate =
 <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
 </div>`;
 
-const createOffersTemplate =
-  () => `<section class="event__section  event__section--offers">
+const createOffersTemplate = (offers, selectedOffers) => {
+  const offersTemplate = [];
+  offersTemplate.push(`<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  <div class="event__available-offers">`);
+  offers.forEach((offer) => {
+    const checkedState = selectedOffers.indexOf(offer.id) > -1 ? 'checked' : '';
+    offersTemplate.push(`<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${checkedState}>
+      <label class="event__offer-label" for="event-offer-luggage-1">
+        <span class="event__offer-title">Add luggage</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </label>
+      </div>`);
+  });
 
+  offersTemplate.push('</div></section>');
+  return offersTemplate.join('');
+  /*
+  return `<section class="event__section  event__section--offers">
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
     <div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
@@ -131,7 +149,8 @@ const createOffersTemplate =
       </label>
     </div>
   </div>
-</section>`;
+</section>`;*/
+};
 
 const createDestinationDetailTemplate =
   () => `<section class="event__section  event__section--destination">
@@ -149,9 +168,11 @@ const createDestinationDetailTemplate =
   </div>
 </section>`;
 export default class EventEditView extends ComponentSimpleView {
-  constructor({ cities }) {
+  constructor({ event, cities, offers }) {
     super();
+    this.event = event;
     this.cities = cities;
+    this.offers = offers;
   }
 
   createComponentTemplate() {
@@ -159,7 +180,7 @@ export default class EventEditView extends ComponentSimpleView {
     const destinationTemplate = createDestinationTemplate(this.cities);
     const eventDateTemplate = createEventDateTemplate();
     const priceTemplate = createPriceTemplate();
-    const offersTemplate = createOffersTemplate();
+    const offersTemplate = createOffersTemplate(this.offers, this.event.offers);
     const destinationDetailTemplate = createDestinationDetailTemplate();
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
