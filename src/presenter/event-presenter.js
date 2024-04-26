@@ -40,10 +40,7 @@ export default class EventPresenter {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
       const city = this.eventsModel.getCityById(event.destination);
-      const offers = this.eventsModel
-        .getOffersByType(event.type)
-        .filter((offer) => event.offers.indexOf(offer.id) > -1);
-
+      const offers = this.eventsModel.getOffersByType(event.type, event.offers);
       const eventItemComponent = new EventItemView();
       render(eventItemComponent, this.eventListComponet.getElement());
       render(
