@@ -12,15 +12,17 @@ export default class EventPresenter {
   tripComponent = new TripView();
   sortComponent = new SortView();
   eventListComponet = new EventListView();
-  editComponent = new EventEditView();
 
-  constructor ({mainContainer, eventModel}){
+  constructor({ mainContainer, eventsModel, citiesModel }) {
     this.mainContainer = mainContainer;
-    this.eventModel = eventModel;
+    this.eventsModel = eventsModel;
+    this.citiesModel = citiesModel;
   }
 
   init() {
-    this.events = [...this.eventModel.getEvents()];
+    this.events = [...this.eventsModel.getEvents()];
+    this.cities = [...this.citiesModel.getCities()];
+    this.offers = [...this.eventsModel.getOffers()];
     render(this.mainComponent, this.mainContainer);
     render(this.tripComponent, this.mainComponent.getElement());
 
@@ -31,12 +33,24 @@ export default class EventPresenter {
 
     const editorItemComponent = new EventItemView();
     render(editorItemComponent, this.eventListComponet.getElement());
-    render(this.editComponent, editorItemComponent.getElement());
+    render(
+      new EventEditView({ cities: this.cities, offers: this.offers }),
+      editorItemComponent.getElement()
+    );
 
     for (let i = 0; i < this.events.length; i++) {
+      const event = this.events[i];
+      const city = this.citiesModel.getCityById(event.destination);
+      const offers = this.eventsModel
+        .getOffersByType(event.type)
+        .filter((offer) => event.offers.indexOf(offer.id) > -1);
+
       const eventItemComponent = new EventItemView();
       render(eventItemComponent, this.eventListComponet.getElement());
-      render(new EventView({event: this.events[i]}), eventItemComponent.getElement());
+      render(
+        new EventView({ event: event, city: city, offers: offers }),
+        eventItemComponent.getElement()
+      );
     }
   }
 }

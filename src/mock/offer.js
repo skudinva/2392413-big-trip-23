@@ -19,7 +19,7 @@ const mockOffer = [
       },
       {
         id: '1b8b5893-234d-4c40-bc57-7fc0f0a0432b',
-        title: 'Drive quickly, I\'m in a hurry',
+        title: 'Drive quickly, I am in a hurry',
         price: 71,
       },
       {
@@ -205,9 +205,6 @@ const mockOffer = [
   },
 ];
 
-const getOfferByType = (type) => {
-  const offer = mockOffer.find((offerItem) => offerItem.type === type);
-  return offer.offers;
-};
+const getOffers = () => mockOffer;
 
-export { getOfferByType };
+export { getOffers };

@@ -203,6 +203,4 @@ const getRandomCity = () => getRandomArrayElement(mockCities);
 
 const getCities = () => mockCities;
 
-const getCitiesById = (id) => mockCities.find((city) => city.id === id);
-
-export { getCities, getCitiesById, getRandomCity };
+export { getCities, getRandomCity };
