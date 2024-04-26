@@ -60,9 +60,22 @@ export default class EventPresenter {
     this.events = [...this.eventsModel.getEvents()];
     this.cities = [...this.eventsModel.getCities()];
     this.offers = [...this.eventsModel.getOffers()];
+
+    /*renderChain(this.mainComponent, this.mainContainer, (mainComponent) => {
+      renderChain(
+        this.tripComponent,
+        mainComponent.getElement(),
+        (tripEventComponent) => {
+          render(this.sortComponent, tripEventComponent.getElement());
+          render(this.eventListComponet, tripEventComponent.getElement());
+          this.renderEventEdit();
+          this.renderTripPoints();
+        }
+      );
+    });*/
+
     render(this.mainComponent, this.mainContainer);
     render(this.tripComponent, this.mainComponent.getElement());
-
     const tripEventElement = this.tripComponent.getElement();
     render(this.sortComponent, tripEventElement);
     render(this.eventListComponet, tripEventElement);
