@@ -155,6 +155,12 @@ export default class EventEditView extends ComponentSimpleView {
   }
 
   createComponentTemplate() {
+    const eventTypeTemplate = createEventTypeTemplate();
+    const destinationTemplate = createDestinationTemplate(this.cities);
+    const eventDateTemplate = createEventDateTemplate();
+    const priceTemplate = createPriceTemplate();
+    const offersTemplate = createOffersTemplate();
+    const destinationDetailTemplate = createDestinationDetailTemplate();
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -164,18 +170,18 @@ export default class EventEditView extends ComponentSimpleView {
         </label>
         <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
         <div class="event__type-list">
-          ${createEventTypeTemplate()}
+          ${eventTypeTemplate}
         </div>
       </div>
-      ${createDestinationTemplate(this.cities)}
-      ${createEventDateTemplate()}
-      ${createPriceTemplate()}
+      ${destinationTemplate}
+      ${eventDateTemplate}
+      ${priceTemplate}
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>
     <section class="event__details">
-      ${createOffersTemplate()}
-      ${createDestinationDetailTemplate()}
+      ${offersTemplate}
+      ${destinationDetailTemplate}
     </section>
   </form>`;
   }
