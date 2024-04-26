@@ -48,13 +48,13 @@ const createEventTypeTemplate = () => `<fieldset class="event__type-group">
   <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
 </div>
 </fieldset>`;
-const createDestinationTemplate = (cities) => {
+const createDestinationTemplate = (cities, selectedCity) => {
   const elements = [];
   elements.push(`<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
     Flight
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity.name}" list="destination-list-1">
   <datalist id="destination-list-1">`);
   cities.forEach((city) => {
     elements.push(`<option value="${city.name}"></option>`);
@@ -129,7 +129,10 @@ export default class EventEditView extends ComponentSimpleView {
 
   createComponentTemplate() {
     const eventTypeTemplate = createEventTypeTemplate();
-    const destinationTemplate = createDestinationTemplate(this.cities);
+    const destinationTemplate = createDestinationTemplate(
+      this.cities,
+      this.city
+    );
     const eventDateTemplate = createEventDateTemplate();
     const priceTemplate = createPriceTemplate();
     const offersTemplate = createOffersTemplate(this.offers, this.event.offers);
