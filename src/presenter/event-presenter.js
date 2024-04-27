@@ -24,7 +24,7 @@ export default class EventPresenter {
     this.renderEventItem((container) => {
       const event = {
         id: null,
-        basePrice: null,
+        basePrice: 0,
         dateFrom: null,
         dateTo: null,
         destination: null,
