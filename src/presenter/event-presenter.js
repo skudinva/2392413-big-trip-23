@@ -20,6 +20,30 @@ export default class EventPresenter {
     callback(itemComponent);
   }
 
+  renderEventNew() {
+    this.renderEventItem((container) => {
+      const event = {
+        id: null,
+        basePrice: null,
+        dateFrom: null,
+        dateTo: null,
+        destination: null,
+        isFavorite: null,
+        offers: [],
+        type: 'flight',
+      };
+      const offers = this.eventsModel.getOffersByType(event.type);
+      render(
+        new EventEditView({
+          event: event,
+          cities: this.cities,
+          offers: offers,
+        }),
+        container.getElement()
+      );
+    });
+  }
+
   renderEventEdit() {
     this.renderEventItem((container) => {
       const event = this.events[0];
@@ -61,6 +85,7 @@ export default class EventPresenter {
 
     render(this.sortComponent, this.container);
     render(this.eventListComponet, this.container);
+    this.renderEventNew();
     this.renderEventEdit();
     this.renderTripPoints();
   }

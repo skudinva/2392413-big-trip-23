@@ -20,7 +20,7 @@ const createEventTypeListTemplate = (type) => {
   return eventTypeListTemplate.join('');
 };
 
-const createEventTypeTemplate = ({ type }) => {
+const createEventTypeTemplate = ({ type } = undefined || {}) => {
   const eventTypeTemplate = [];
   const eventTypeListTemplate = createEventTypeListTemplate(type);
   eventTypeTemplate.push(`<div class="event__type-wrapper">
@@ -38,11 +38,12 @@ const createEventTypeTemplate = ({ type }) => {
 };
 const createDestinationTemplate = (cities, selectedCity) => {
   const elements = [];
+  const selectedCityName = selectedCity?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
     Flight
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity.name}" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCityName}" list="destination-list-1">
   <datalist id="destination-list-1">`);
   cities.forEach((city) => {
     elements.push(`<option value="${city.name}"></option>`);
@@ -51,7 +52,7 @@ const createDestinationTemplate = (cities, selectedCity) => {
   return elements.join('');
 };
 
-const createEventDateTemplate = ({ dateFrom, dateTo }) => {
+const createEventDateTemplate = ({ dateFrom, dateTo } = undefined || {}) => {
   const dateFromInput = getInputDateTime(dateFrom);
   const dateToInput = getInputDateTime(dateTo);
   return `<div class="event__field-group  event__field-group--time">
@@ -63,17 +64,22 @@ const createEventDateTemplate = ({ dateFrom, dateTo }) => {
 </div>`;
 };
 
-const createPriceTemplate = ({
-  basePrice,
-}) => `<div class="event__field-group  event__field-group--price">
+const createPriceTemplate = (
+  { basePrice } = undefined || {}
+) => `<div class="event__field-group  event__field-group--price">
 <label class="event__label" for="event-price-1">
   <span class="visually-hidden">Price</span>
   &euro;
 </label>
-<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${
+  basePrice || ''
+}">
 </div>`;
 
 const createOffersTemplate = (offers, selectedOffers) => {
+  if (!offers) {
+    return '';
+  }
   const offersTemplate = [];
   offersTemplate.push(`<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -93,7 +99,12 @@ const createOffersTemplate = (offers, selectedOffers) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate = ({ description, pictures }) => {
+const createDestinationDetailTemplate = (
+  { description, pictures } = undefined || {}
+) => {
+  if (!description && !pictures) {
+    return '';
+  }
   const destDetalInfo = [];
   destDetalInfo.push(`<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -127,7 +138,10 @@ export default class EventEditView extends ComponentSimpleView {
     );
     const eventDateTemplate = createEventDateTemplate(this.event);
     const priceTemplate = createPriceTemplate(this.event);
-    const offersTemplate = createOffersTemplate(this.offers, this.event.offers);
+    const offersTemplate = createOffersTemplate(
+      this.offers,
+      this.event?.offers
+    );
     const destinationDetailTemplate = createDestinationDetailTemplate(
       this.city
     );
