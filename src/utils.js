@@ -19,6 +19,8 @@ const getMachinizeDate = (date) =>
 const getMachinizeDateTime = (date) =>
   getDateString(date, DateFormat.MACHINIZE_DATETIME);
 const getShortTime = (date) => getDateString(date, DateFormat.SHORT_TIME);
+const getInputDateTime = (date) =>
+  getDateString(date, DateFormat.INPUT_DATETIME);
 const getDurationString = (dateFrom, dateTo) => {
   const date1 = dayjs(dateTo);
   const date2 = dayjs(dateFrom);
@@ -41,24 +43,23 @@ const getDurationString = (dateFrom, dateTo) => {
   duration.strings.push(`${String(duration.days).padStart(2, '0')}D`);
   duration.strings.push(`${String(duration.hours).padStart(2, '0')}H`);
   duration.strings.push(`${String(duration.minutes).padStart(2, '0')}M`);
-  duration.strings.every(
-    (element, index) => {
-      if (element.startsWith('00')) {
-        delete duration.strings[index];
-        return true;
-      }
-      return false;
-    });
+  duration.strings.every((element, index) => {
+    if (element.startsWith('00')) {
+      delete duration.strings[index];
+      return true;
+    }
+    return false;
+  });
   return duration.strings.join(' ');
 };
 
 export {
   getDurationString,
   getHumanizeDate,
+  getInputDateTime,
   getMachinizeDate,
   getMachinizeDateTime,
   getRandomArrayElement,
   getShortTime,
-  guid
+  guid,
 };
-

@@ -1,3 +1,4 @@
+import { getInputDateTime } from '../utils';
 import ComponentSimpleView from './component-simple-view';
 
 const createEventTypeTemplate = () => `<fieldset class="event__type-group">
@@ -63,22 +64,26 @@ const createDestinationTemplate = (cities, selectedCity) => {
   return elements.join('');
 };
 
-const createEventDateTemplate =
-  () => `<div class="event__field-group  event__field-group--time">
+const createEventDateTemplate = ({ dateFrom, dateTo }) => {
+  const dateFromInput = getInputDateTime(dateFrom);
+  const dateToInput = getInputDateTime(dateTo);
+  return `<div class="event__field-group  event__field-group--time">
 <label class="visually-hidden" for="event-start-time-1">From</label>
-<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromInput}">
 &mdash;
 <label class="visually-hidden" for="event-end-time-1">To</label>
-<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToInput}">
 </div>`;
+};
 
-const createPriceTemplate =
-  () => `<div class="event__field-group  event__field-group--price">
+const createPriceTemplate = ({
+  basePrice,
+}) => `<div class="event__field-group  event__field-group--price">
 <label class="event__label" for="event-price-1">
   <span class="visually-hidden">Price</span>
   &euro;
 </label>
-<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
 </div>`;
 
 const createOffersTemplate = (offers, selectedOffers) => {
@@ -133,8 +138,8 @@ export default class EventEditView extends ComponentSimpleView {
       this.cities,
       this.city
     );
-    const eventDateTemplate = createEventDateTemplate();
-    const priceTemplate = createPriceTemplate();
+    const eventDateTemplate = createEventDateTemplate(this.event);
+    const priceTemplate = createPriceTemplate(this.event);
     const offersTemplate = createOffersTemplate(this.offers, this.event.offers);
     const destinationDetailTemplate = createDestinationDetailTemplate(
       this.city
