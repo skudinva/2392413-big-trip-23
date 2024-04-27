@@ -1,7 +1,43 @@
+import { TYPE_EVENTS } from '../const';
 import { getInputDateTime } from '../utils';
 import ComponentSimpleView from './component-simple-view';
 
-const createEventTypeTemplate = () => `<fieldset class="event__type-group">
+const createEventTypeListTemplate = (type) => {
+  const eventTypeListTemplate = [];
+  eventTypeListTemplate.push(`<fieldset class="event__type-group">
+  <legend class="visually-hidden">Event type</legend>`);
+
+  TYPE_EVENTS.forEach((typeEvent) => {
+    const typeEventCode = typeEvent.toLowerCase();
+    const checkedProperty = typeEventCode === type ? 'checked' : '';
+    eventTypeListTemplate.push(`<div class="event__type-item">
+    <input id="event-type-${typeEventCode}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEventCode}" ${checkedProperty}>
+   <label class="event__type-label  event__type-label--${typeEventCode}" for="event-type-${typeEventCode}-1">${typeEvent}</label>
+  </div>`);
+  });
+
+  eventTypeListTemplate.push('</fieldset>');
+  return eventTypeListTemplate.join('');
+};
+
+const createEventTypeTemplate = ({ type }) => {
+  const eventTypeTemplate = [];
+  const eventTypeListTemplate = createEventTypeListTemplate(type);
+  eventTypeTemplate.push(`<div class="event__type-wrapper">
+        <label class="event__type  event__type-btn" for="event-type-toggle-1">
+          <span class="visually-hidden">Choose event type</span>
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+        </label>
+        <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
+        <div class="event__type-list">
+          ${eventTypeListTemplate}
+        </div>
+      </div>`);
+
+  return eventTypeTemplate.join('');
+
+  /*
+  return `<fieldset class="event__type-group">
 <legend class="visually-hidden">Event type</legend>
 
 <div class="event__type-item">
@@ -49,6 +85,8 @@ const createEventTypeTemplate = () => `<fieldset class="event__type-group">
   <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
 </div>
 </fieldset>`;
+*/
+};
 const createDestinationTemplate = (cities, selectedCity) => {
   const elements = [];
   elements.push(`<div class="event__field-group  event__field-group--destination">
@@ -133,7 +171,7 @@ export default class EventEditView extends ComponentSimpleView {
   }
 
   createComponentTemplate() {
-    const eventTypeTemplate = createEventTypeTemplate();
+    const eventTypeTemplate = createEventTypeTemplate(this.event);
     const destinationTemplate = createDestinationTemplate(
       this.cities,
       this.city
@@ -146,16 +184,7 @@ export default class EventEditView extends ComponentSimpleView {
     );
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
-      <div class="event__type-wrapper">
-        <label class="event__type  event__type-btn" for="event-type-toggle-1">
-          <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
-        </label>
-        <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
-        <div class="event__type-list">
-          ${eventTypeTemplate}
-        </div>
-      </div>
+      ${eventTypeTemplate}
       ${destinationTemplate}
       ${eventDateTemplate}
       ${priceTemplate}
