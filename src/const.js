@@ -15,7 +15,7 @@ const DateFormat = {
   MACHINIZE_DATE: 'YYYY-MM-DD',
   MACHINIZE_DATETIME: 'YYYY-MM-DDTHH:mm',
   SHORT_TIME: 'HH:mm',
-  INPUT_DATETIME: 'YYYY/MM/DD HH:mm',
+  INPUT_DATETIME: 'DD/MM/YY HH:mm',
 };
 
 export { DateFormat, TYPE_EVENTS };
