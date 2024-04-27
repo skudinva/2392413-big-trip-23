@@ -77,9 +77,10 @@ const createPriceTemplate = (
 </div>`;
 
 const createOffersTemplate = (offers, selectedOffers) => {
-  if (!offers) {
+  if (!offers || offers.length === 0) {
     return '';
   }
+  console.log(offers);
   const offersTemplate = [];
   offersTemplate.push(`<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
