@@ -1,4 +1,4 @@
-import ComponentSimpleView from '../component-simple-view';
+import ComponentSimpleView from './component-simple-view';
 
 export default class EventListView extends ComponentSimpleView {
   createComponentTemplate() {

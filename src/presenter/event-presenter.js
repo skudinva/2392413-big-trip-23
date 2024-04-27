@@ -1,20 +1,16 @@
 import { render } from '../render';
-import EventEditView from '../view/main/event-edit-view';
-import EventItemView from '../view/main/event-item-view';
-import EventListView from '../view/main/event-list-view';
-import EventView from '../view/main/event-view';
-import MainView from '../view/main/main-view';
-import SortView from '../view/main/sort-view';
-import TripView from '../view/main/trip-view';
+import EventEditView from '../view/event-edit-view';
+import EventItemView from '../view/event-item-view';
+import EventListView from '../view/event-list-view';
+import EventView from '../view/event-view';
+import SortView from '../view/sort-view';
 
 export default class EventPresenter {
-  mainComponent = new MainView();
-  tripComponent = new TripView();
   sortComponent = new SortView();
   eventListComponet = new EventListView();
 
-  constructor({ mainContainer, eventsModel }) {
-    this.mainContainer = mainContainer;
+  constructor({ container, eventsModel }) {
+    this.container = container;
     this.eventsModel = eventsModel;
   }
 
@@ -63,24 +59,8 @@ export default class EventPresenter {
     this.cities = [...this.eventsModel.getCities()];
     this.offers = [...this.eventsModel.getOffers()];
 
-    /*renderChain(this.mainComponent, this.mainContainer, (mainComponent) => {
-      renderChain(
-        this.tripComponent,
-        mainComponent.getElement(),
-        (tripEventComponent) => {
-          render(this.sortComponent, tripEventComponent.getElement());
-          render(this.eventListComponet, tripEventComponent.getElement());
-          this.renderEventEdit();
-          this.renderTripPoints();
-        }
-      );
-    });*/
-
-    render(this.mainComponent, this.mainContainer);
-    render(this.tripComponent, this.mainComponent.getElement());
-    const tripEventElement = this.tripComponent.getElement();
-    render(this.sortComponent, tripEventElement);
-    render(this.eventListComponet, tripEventElement);
+    render(this.sortComponent, this.container);
+    render(this.eventListComponet, this.container);
     this.renderEventEdit();
     this.renderTripPoints();
   }

@@ -1,4 +1,4 @@
-import ComponentSimpleView from '../component-simple-view';
+import ComponentSimpleView from './component-simple-view';
 
 const createEventTypeTemplate = () => `<fieldset class="event__type-group">
 <legend class="visually-hidden">Event type</legend>

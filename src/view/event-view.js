@@ -4,8 +4,8 @@ import {
   getMachinizeDate,
   getMachinizeDateTime,
   getShortTime,
-} from '../../utils';
-import ComponentSimpleView from '../component-simple-view';
+} from '../utils';
+import ComponentSimpleView from './component-simple-view';
 
 const createFavoriteButtonTemplate = (isFavoriteFlag) => {
   const favoriteClassName = isFavoriteFlag ? 'event__favorite-btn--active' : '';

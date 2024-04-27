@@ -2,10 +2,10 @@ import EventsModel from './model/events-model';
 import EventPresenter from './presenter/event-presenter';
 
 const renderMain = () => {
-  const mainElement = document.querySelector('.page-main');
+  const containerElement = document.querySelector('.page-main .trip-events');
   const eventsModel = new EventsModel();
   const eventPresenter = new EventPresenter({
-    mainContainer: mainElement,
+    container: containerElement,
     eventsModel,
   });
   eventPresenter.init();

@@ -1,4 +1,4 @@
-import ComponentSimpleView from '../component-simple-view';
+import ComponentSimpleView from './component-simple-view';
 
 export default class SortView extends ComponentSimpleView {
   createComponentTemplate() {
