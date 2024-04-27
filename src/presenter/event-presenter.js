@@ -44,11 +44,10 @@ export default class EventPresenter {
     });
   }
 
-  renderEventEdit() {
+  renderEventEdit(event) {
     this.renderEventItem((container) => {
-      const event = this.events[0];
-      const offers = this.eventsModel.getOffersByType(event.type);
       const city = this.eventsModel.getCityById(event.destination);
+      const offers = this.eventsModel.getOffersByType(event.type);
       render(
         new EventEditView({
           event: event,
@@ -85,8 +84,7 @@ export default class EventPresenter {
 
     render(this.sortComponent, this.container);
     render(this.eventListComponet, this.container);
-    this.renderEventNew();
-    this.renderEventEdit();
+    this.renderEventEdit(this.events[0]);
     this.renderTripPoints();
   }
 }
