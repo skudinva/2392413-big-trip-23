@@ -7,7 +7,7 @@ import SortView from '../view/sort-view';
 
 export default class EventPresenter {
   sortComponent = new SortView();
-  eventListComponet = new EventsListView();
+  eventListComponent = new EventsListView();
 
   constructor({ container, eventsModel }) {
     this.container = container;
@@ -16,7 +16,7 @@ export default class EventPresenter {
 
   renderEventItem(callback) {
     const itemComponent = new EventItemView();
-    render(itemComponent, this.eventListComponet.getElement());
+    render(itemComponent, this.eventListComponent.getElement());
     callback(itemComponent);
   }
 
@@ -83,7 +83,7 @@ export default class EventPresenter {
     this.offers = [...this.eventsModel.getOffers()];
 
     render(this.sortComponent, this.container);
-    render(this.eventListComponet, this.container);
+    render(this.eventListComponent, this.container);
     this.renderEventEdit(this.events[0]);
     this.renderTripPoints();
   }
