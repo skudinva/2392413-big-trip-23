@@ -1,13 +1,13 @@
 import { render } from '../render';
 import EventEditView from '../view/event-edit-view';
 import EventItemView from '../view/event-item-view';
-import EventListView from '../view/event-list-view';
 import EventView from '../view/event-view';
+import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
 
 export default class EventPresenter {
   sortComponent = new SortView();
-  eventListComponet = new EventListView();
+  eventListComponet = new EventsListView();
 
   constructor({ container, eventsModel }) {
     this.container = container;
