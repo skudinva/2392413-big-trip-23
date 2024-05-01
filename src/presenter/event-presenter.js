@@ -45,17 +45,20 @@ export default class EventPresenter {
     });
   }
 
+  renderTripPoint(event) {
+    this.renderEventItem((container) => {
+      const city = this.#eventsModel.getCityById(event.destination);
+      const offers = this.#eventsModel.getSelectedOffers(
+        event.type,
+        event.offers
+      );
+      render(new EventView({ event, city, offers }), container.element);
+    });
+  }
+
   renderTripPoints() {
     for (let i = 0; i < this.#events.length; i++) {
-      this.renderEventItem((container) => {
-        const event = this.#events[i];
-        const city = this.#eventsModel.getCityById(event.destination);
-        const offers = this.#eventsModel.getSelectedOffers(
-          event.type,
-          event.offers
-        );
-        render(new EventView({ event, city, offers }), container.element);
-      });
+      this.renderTripPoint(this.#events[i]);
     }
   }
 
@@ -65,7 +68,6 @@ export default class EventPresenter {
 
     render(this.#sortComponent, this.#container);
     render(this.#eventListComponent, this.#container);
-    this.renderEventEdit(this.#events[0]);
     this.renderTripPoints();
   }
 }
