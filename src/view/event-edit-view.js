@@ -1,6 +1,6 @@
 import { TYPE_EVENTS } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 import { getInputDateTime } from '../utils';
-import ComponentSimpleView from './component-simple-view';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -117,7 +117,7 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
 
   return destDetalInfo.join('');
 };
-export default class EventEditView extends ComponentSimpleView {
+export default class EventEditView extends AbstractView {
   constructor({ event, city, cities, offers }) {
     super();
     this.event = event;
@@ -126,7 +126,7 @@ export default class EventEditView extends ComponentSimpleView {
     this.offers = offers;
   }
 
-  createComponentTemplate() {
+  get template() {
     const eventTypeTemplate = createEventTypeTemplate(this.event);
     const destinationTemplate = createDestinationTemplate(
       this.cities,

@@ -1,3 +1,4 @@
+import AbstractView from '../framework/view/abstract-view';
 import {
   getDurationString,
   getHumanizeDate,
@@ -5,7 +6,6 @@ import {
   getMachinizeDateTime,
   getShortTime,
 } from '../utils';
-import ComponentSimpleView from './component-simple-view';
 
 const createFavoriteButtonTemplate = (isFavoriteFlag) => {
   const favoriteClassName = isFavoriteFlag ? 'event__favorite-btn--active' : '';
@@ -33,7 +33,7 @@ const createOfferTemplate = (offers) => {
   offersElement.push('</ul>');
   return offersElement.join('');
 };
-export default class EventView extends ComponentSimpleView {
+export default class EventView extends AbstractView {
   constructor({ event, city, offers }) {
     super();
     this.event = event;
@@ -41,7 +41,7 @@ export default class EventView extends ComponentSimpleView {
     this.offers = offers;
   }
 
-  createComponentTemplate() {
+  get template() {
     const { basePrice, isFavorite, type, dateFrom, dateTo } = this.event;
     const { name: cityName } = this.city;
 

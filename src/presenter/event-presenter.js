@@ -1,5 +1,5 @@
 import { DEFAULT_EVENT_PROPS } from '../const';
-import { render } from '../render';
+import { render } from '../framework/render';
 import EventEditView from '../view/event-edit-view';
 import EventItemView from '../view/event-item-view';
 import EventView from '../view/event-view';
@@ -17,7 +17,7 @@ export default class EventPresenter {
 
   renderEventItem(callback) {
     const itemComponent = new EventItemView();
-    render(itemComponent, this.eventListComponent.getElement());
+    render(itemComponent, this.eventListComponent.element);
     callback(itemComponent);
   }
 
@@ -36,7 +36,7 @@ export default class EventPresenter {
           cities: this.cities,
           offers: offers,
         }),
-        container.getElement()
+        container.element
       );
     });
   }
@@ -52,7 +52,7 @@ export default class EventPresenter {
         );
         render(
           new EventView({ event: event, city: city, offers: offers }),
-          container.getElement()
+          container.element
         );
       });
     }

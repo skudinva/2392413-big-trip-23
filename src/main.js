@@ -1,6 +1,6 @@
+import { RenderPosition, render } from './framework/render';
 import EventsModel from './model/events-model';
 import EventPresenter from './presenter/event-presenter';
-import { RenderPosition, render } from './render';
 import FilterView from './view/filter-view';
 import TripInfoView from './view/trip-info-view';
 
