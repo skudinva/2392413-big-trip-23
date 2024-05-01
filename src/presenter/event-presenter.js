@@ -47,20 +47,31 @@ export default class EventPresenter {
 
   renderTripPoint(event) {
     this.renderEventItem((container) => {
+      const escKeyDownHandler = (evt) => {
+        if (evt.key === 'Escape') {
+          evt.preventDefault();
+          replaceFormToCard();
+          document.removeEventListener('keydown', escKeyDownHandler);
+        }
+      };
+
       const city = this.#eventsModel.getCityById(event.destination);
       const offers = this.#eventsModel.getOffersByType(event.type);
       const selectedOffers = this.#eventsModel.getSelectedOffers(
         event.type,
         event.offers
       );
+
       const eventComponent = new EventView({
         event,
         city,
         selectedOffers,
         onEditClick: () => {
           replaceCardToForm();
+          document.addEventListener('keydown', escKeyDownHandler);
         },
       });
+
       const eventEditComponent = new EventEditView({
         event: event,
         city: city,
@@ -68,6 +79,7 @@ export default class EventPresenter {
         offers: offers,
         onSubmit: () => {
           replaceFormToCard();
+          document.removeEventListener('keydown', escKeyDownHandler);
         },
       });
 
