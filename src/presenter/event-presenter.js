@@ -82,6 +82,9 @@ export default class EventPresenter {
         onCancel: () => {
           closeEditForm();
         },
+        onReset: () => {
+          closeEditForm();
+        },
       });
 
       function closeEditForm() {

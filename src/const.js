@@ -1,4 +1,4 @@
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 5;
 
 const TYPE_EVENTS = [
   'Taxi',

@@ -124,8 +124,9 @@ export default class EventEditView extends AbstractView {
   #offers = null;
   #handleSubmit = null;
   #handleCancel = null;
+  #handleReset = null;
 
-  constructor({ event, city, cities, offers, onSubmit, onCancel }) {
+  constructor({ event, city, cities, offers, onSubmit, onCancel, onReset }) {
     super();
     this.#event = event;
     this.#city = city;
@@ -133,7 +134,9 @@ export default class EventEditView extends AbstractView {
     this.#offers = offers;
     this.#handleSubmit = onSubmit;
     this.#handleCancel = onCancel;
+    this.#handleReset = onReset;
     this.element.addEventListener('submit', this.#onSubmit);
+    this.element.addEventListener('reset', this.#onReset);
     const cancelEditElement = this.element.querySelector(
       'button.event__rollup-btn'
     );
@@ -151,6 +154,13 @@ export default class EventEditView extends AbstractView {
     evt.preventDefault();
     if (this.#handleCancel) {
       this.#handleCancel();
+    }
+  };
+
+  #onReset = (evt) => {
+    evt.preventDefault();
+    if (this.#handleReset) {
+      this.#handleReset();
     }
   };
 
