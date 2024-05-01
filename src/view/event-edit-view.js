@@ -131,8 +131,7 @@ export default class EventEditView extends AbstractView {
     this.#cities = cities;
     this.#offers = offers;
     this.#handleSubmit = onSubmit;
-    const editFormElement = this.element.querySelector('form.event--edit');
-    editFormElement.addEventListener('submit', this.#onSubmit);
+    this.element.addEventListener('submit', this.#onSubmit);
   }
 
   #onSubmit = (evt) => {

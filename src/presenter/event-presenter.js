@@ -1,5 +1,5 @@
 import { DEFAULT_EVENT_PROPS } from '../const';
-import { render } from '../framework/render';
+import { render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit-view';
 import EventItemView from '../view/event-item-view';
 import EventView from '../view/event-view';
@@ -48,11 +48,38 @@ export default class EventPresenter {
   renderTripPoint(event) {
     this.renderEventItem((container) => {
       const city = this.#eventsModel.getCityById(event.destination);
-      const offers = this.#eventsModel.getSelectedOffers(
+      const offers = this.#eventsModel.getOffersByType(event.type);
+      const selectedOffers = this.#eventsModel.getSelectedOffers(
         event.type,
         event.offers
       );
-      render(new EventView({ event, city, offers }), container.element);
+      const eventComponent = new EventView({
+        event,
+        city,
+        selectedOffers,
+        onEditClick: () => {
+          replaceCardToForm();
+        },
+      });
+      const eventEditComponent = new EventEditView({
+        event: event,
+        city: city,
+        cities: this.#cities,
+        offers: offers,
+        onSubmit: () => {
+          replaceFormToCard();
+        },
+      });
+
+      function replaceCardToForm() {
+        replace(eventEditComponent, eventComponent);
+      }
+
+      function replaceFormToCard() {
+        replace(eventComponent, eventEditComponent);
+      }
+
+      render(eventComponent, container.element);
     });
   }
 

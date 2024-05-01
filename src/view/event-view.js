@@ -17,12 +17,12 @@ const createFavoriteButtonTemplate = (isFavoriteFlag) => {
   </svg></button>`;
 };
 
-const createOfferTemplate = (offers) => {
-  if (offers.length === 0) {
+const createOfferTemplate = (selectedOffers) => {
+  if (selectedOffers.length === 0) {
     return '';
   }
   const offersElement = ['<ul class="event__selected-offers">'];
-  offers.forEach((offer) => {
+  selectedOffers.forEach((offer) => {
     offersElement.push(`<li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
@@ -36,14 +36,14 @@ const createOfferTemplate = (offers) => {
 export default class EventView extends AbstractView {
   #event = null;
   #city = null;
-  #offers = null;
+  #selectedOffers = null;
   #handleEditClick = null;
 
-  constructor({ event, city, offers, onEditClick }) {
+  constructor({ event, city, selectedOffers, onEditClick }) {
     super();
     this.#event = event;
     this.#city = city;
-    this.#offers = offers;
+    this.#selectedOffers = selectedOffers;
     this.#handleEditClick = onEditClick;
 
     const editElement = this.element.querySelector('button.event__rollup-btn');
@@ -68,7 +68,7 @@ export default class EventView extends AbstractView {
     const shortTimeFrom = getShortTime(dateFrom);
     const shortTimeTo = getShortTime(dateTo);
     const eventDuration = getDurationString(dateFrom, dateTo);
-    const offerTemplate = createOfferTemplate(this.#offers);
+    const offerTemplate = createOfferTemplate(this.#selectedOffers);
     const favoriteButtonTemplate = createFavoriteButtonTemplate(isFavorite);
 
     return `<div class="event">
