@@ -118,28 +118,32 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
   return destDetalInfo.join('');
 };
 export default class EventEditView extends AbstractView {
+  #event = null;
+  #city = null;
+  #cities = null;
+  #offers = null;
   constructor({ event, city, cities, offers }) {
     super();
-    this.event = event;
-    this.city = city;
-    this.cities = cities;
-    this.offers = offers;
+    this.#event = event;
+    this.#city = city;
+    this.#cities = cities;
+    this.#offers = offers;
   }
 
   get template() {
-    const eventTypeTemplate = createEventTypeTemplate(this.event);
+    const eventTypeTemplate = createEventTypeTemplate(this.#event);
     const destinationTemplate = createDestinationTemplate(
-      this.cities,
-      this.city
+      this.#cities,
+      this.#city
     );
-    const eventDateTemplate = createEventDateTemplate(this.event);
-    const priceTemplate = createPriceTemplate(this.event);
+    const eventDateTemplate = createEventDateTemplate(this.#event);
+    const priceTemplate = createPriceTemplate(this.#event);
     const offersTemplate = createOffersTemplate(
-      this.offers,
-      this.event?.offers
+      this.#offers,
+      this.#event?.offers
     );
     const destinationDetailTemplate = createDestinationDetailTemplate(
-      this.city
+      this.#city
     );
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">

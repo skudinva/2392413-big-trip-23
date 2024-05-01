@@ -4,19 +4,19 @@ import { getRandomEvent } from '../mock/event';
 import { getMockOffers } from '../mock/offer';
 
 export default class EventsModel {
-  events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
-  cities = getMockCities();
-  offers = getMockOffers();
-  getEvents() {
-    return this.events;
+  #events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
+  #cities = getMockCities();
+  #offers = getMockOffers();
+  get events() {
+    return this.#events;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 
   getOffersByType(type) {
-    const offer = this.getOffers().find((offerItem) => offerItem.type === type);
+    const offer = this.offers.find((offerItem) => offerItem.type === type);
     return offer.offers;
   }
 
@@ -26,11 +26,11 @@ export default class EventsModel {
     );
   }
 
-  getCities() {
-    return this.cities;
+  get cities() {
+    return this.#cities;
   }
 
   getCityById(id) {
-    return this.getCities().find((city) => city.id === id);
+    return this.cities.find((city) => city.id === id);
   }
 }

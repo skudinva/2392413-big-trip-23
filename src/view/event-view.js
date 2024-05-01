@@ -34,16 +34,19 @@ const createOfferTemplate = (offers) => {
   return offersElement.join('');
 };
 export default class EventView extends AbstractView {
+  #event = null;
+  #city = null;
+  #offers = null;
   constructor({ event, city, offers }) {
     super();
-    this.event = event;
-    this.city = city;
-    this.offers = offers;
+    this.#event = event;
+    this.#city = city;
+    this.#offers = offers;
   }
 
   get template() {
-    const { basePrice, isFavorite, type, dateFrom, dateTo } = this.event;
-    const { name: cityName } = this.city;
+    const { basePrice, isFavorite, type, dateFrom, dateTo } = this.#event;
+    const { name: cityName } = this.#city;
 
     const machinizeDate = getMachinizeDate(dateFrom);
     const humanizeDate = getHumanizeDate(dateFrom);
@@ -52,7 +55,7 @@ export default class EventView extends AbstractView {
     const shortTimeFrom = getShortTime(dateFrom);
     const shortTimeTo = getShortTime(dateTo);
     const eventDuration = getDurationString(dateFrom, dateTo);
-    const offerTemplate = createOfferTemplate(this.offers);
+    const offerTemplate = createOfferTemplate(this.#offers);
     const favoriteButtonTemplate = createFavoriteButtonTemplate(isFavorite);
 
     return `<div class="event">

@@ -7,17 +7,19 @@ import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
 
 export default class EventPresenter {
-  sortComponent = new SortView();
-  eventListComponent = new EventsListView();
+  #sortComponent = new SortView();
+  #eventListComponent = new EventsListView();
+  #container = null;
+  #eventsModel = null;
 
   constructor({ container, eventsModel }) {
-    this.container = container;
-    this.eventsModel = eventsModel;
+    this.#container = container;
+    this.#eventsModel = eventsModel;
   }
 
   renderEventItem(callback) {
     const itemComponent = new EventItemView();
-    render(itemComponent, this.eventListComponent.element);
+    render(itemComponent, this.#eventListComponent.element);
     callback(itemComponent);
   }
 
@@ -27,8 +29,8 @@ export default class EventPresenter {
 
   renderEventEdit(event) {
     this.renderEventItem((container) => {
-      const city = this.eventsModel.getCityById(event.destination);
-      const offers = this.eventsModel.getOffersByType(event.type);
+      const city = this.#eventsModel.getCityById(event.destination);
+      const offers = this.#eventsModel.getOffersByType(event.type);
       render(
         new EventEditView({
           event: event,
@@ -45,8 +47,8 @@ export default class EventPresenter {
     for (let i = 0; i < this.events.length; i++) {
       this.renderEventItem((container) => {
         const event = this.events[i];
-        const city = this.eventsModel.getCityById(event.destination);
-        const offers = this.eventsModel.getSelectedOffers(
+        const city = this.#eventsModel.getCityById(event.destination);
+        const offers = this.#eventsModel.getSelectedOffers(
           event.type,
           event.offers
         );
@@ -59,12 +61,12 @@ export default class EventPresenter {
   }
 
   init() {
-    this.events = [...this.eventsModel.getEvents()];
-    this.cities = [...this.eventsModel.getCities()];
-    this.offers = [...this.eventsModel.getOffers()];
+    this.events = [...this.#eventsModel.events];
+    this.cities = [...this.#eventsModel.cities];
+    this.offers = [...this.#eventsModel.offers];
 
-    render(this.sortComponent, this.container);
-    render(this.eventListComponent, this.container);
+    render(this.#sortComponent, this.#container);
+    render(this.#eventListComponent, this.#container);
     this.renderEventEdit(this.events[0]);
     this.renderTripPoints();
   }
