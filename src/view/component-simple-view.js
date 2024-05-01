@@ -1,12 +1,12 @@
 import { createElement } from '../render';
 
 export default class ComponentSimpleView {
-  createComponentTemplace() {
+  createComponentTemplate() {
     return '';
   }
 
   getTemplate() {
-    return this.createComponentTemplace();
+    return this.createComponentTemplate();
   }
 
   getElement() {
