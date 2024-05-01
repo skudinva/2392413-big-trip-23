@@ -11,6 +11,8 @@ export default class EventPresenter {
   #eventListComponent = new EventsListView();
   #container = null;
   #eventsModel = null;
+  #events = null;
+  #cities = null;
 
   constructor({ container, eventsModel }) {
     this.#container = container;
@@ -35,7 +37,7 @@ export default class EventPresenter {
         new EventEditView({
           event: event,
           city: city,
-          cities: this.cities,
+          cities: this.#cities,
           offers: offers,
         }),
         container.element
@@ -44,30 +46,26 @@ export default class EventPresenter {
   }
 
   renderTripPoints() {
-    for (let i = 0; i < this.events.length; i++) {
+    for (let i = 0; i < this.#events.length; i++) {
       this.renderEventItem((container) => {
-        const event = this.events[i];
+        const event = this.#events[i];
         const city = this.#eventsModel.getCityById(event.destination);
         const offers = this.#eventsModel.getSelectedOffers(
           event.type,
           event.offers
         );
-        render(
-          new EventView({ event: event, city: city, offers: offers }),
-          container.element
-        );
+        render(new EventView({ event, city, offers }), container.element);
       });
     }
   }
 
   init() {
-    this.events = [...this.#eventsModel.events];
-    this.cities = [...this.#eventsModel.cities];
-    this.offers = [...this.#eventsModel.offers];
+    this.#events = [...this.#eventsModel.events];
+    this.#cities = [...this.#eventsModel.cities];
 
     render(this.#sortComponent, this.#container);
     render(this.#eventListComponent, this.#container);
-    this.renderEventEdit(this.events[0]);
+    this.renderEventEdit(this.#events[0]);
     this.renderTripPoints();
   }
 }
