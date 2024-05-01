@@ -19,18 +19,18 @@ export default class EventPresenter {
     this.#eventsModel = eventsModel;
   }
 
-  renderEventItem(callback) {
+  #renderEventItem(callback) {
     const itemComponent = new EventItemView();
     render(itemComponent, this.#eventListComponent.element);
     callback(itemComponent);
   }
 
-  renderEventNew() {
-    this.renderEventEdit(DEFAULT_EVENT_PROPS);
+  #renderEventNew() {
+    this.#renderEventEdit(DEFAULT_EVENT_PROPS);
   }
 
-  renderEventEdit(event) {
-    this.renderEventItem((container) => {
+  #renderEventEdit(event) {
+    this.#renderEventItem((container) => {
       const city = this.#eventsModel.getCityById(event.destination);
       const offers = this.#eventsModel.getOffersByType(event.type);
       render(
@@ -45,8 +45,8 @@ export default class EventPresenter {
     });
   }
 
-  renderTripPoint(event) {
-    this.renderEventItem((container) => {
+  #renderTripPoint(event) {
+    this.#renderEventItem((container) => {
       const city = this.#eventsModel.getCityById(event.destination);
       const offers = this.#eventsModel.getOffersByType(event.type);
       const selectedOffers = this.#eventsModel.getSelectedOffers(
@@ -104,9 +104,9 @@ export default class EventPresenter {
     });
   }
 
-  renderTripPoints() {
+  #renderTripPoints() {
     for (let i = 0; i < this.#events.length; i++) {
-      this.renderTripPoint(this.#events[i]);
+      this.#renderTripPoint(this.#events[i]);
     }
   }
 
@@ -116,6 +116,6 @@ export default class EventPresenter {
 
     render(this.#sortComponent, this.#container);
     render(this.#eventListComponent, this.#container);
-    this.renderTripPoints();
+    this.#renderTripPoints();
   }
 }
