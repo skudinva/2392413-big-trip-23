@@ -47,11 +47,11 @@ export default class EventPresenter {
 
   renderTripPoint(event) {
     this.renderEventItem((container) => {
-      const escKeyDownHandler = (evt) => {
+      const onEscKeyDown = (evt) => {
         if (evt.key === 'Escape') {
           evt.preventDefault();
           replaceFormToCard();
-          document.removeEventListener('keydown', escKeyDownHandler);
+          document.removeEventListener('keydown', onEscKeyDown);
         }
       };
 
@@ -68,7 +68,7 @@ export default class EventPresenter {
         selectedOffers,
         onEditClick: () => {
           replaceCardToForm();
-          document.addEventListener('keydown', escKeyDownHandler);
+          document.addEventListener('keydown', onEscKeyDown);
         },
       });
 
@@ -79,7 +79,7 @@ export default class EventPresenter {
         offers: offers,
         onSubmit: () => {
           replaceFormToCard();
-          document.removeEventListener('keydown', escKeyDownHandler);
+          document.removeEventListener('keydown', onEscKeyDown);
         },
       });
 
