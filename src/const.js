@@ -1,3 +1,5 @@
+const EVENT_COUNT = 3;
+
 const TYPE_EVENTS = [
   'Taxi',
   'Bus',
@@ -10,6 +12,17 @@ const TYPE_EVENTS = [
   'Restaurant',
 ];
 
+const DEFAULT_EVENT_PROPS = {
+  id: null,
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  isFavorite: null,
+  offers: [],
+  type: 'flight',
+};
+
 const DateFormat = {
   HUMANIZE: 'MMMM D',
   MACHINIZE_DATE: 'YYYY-MM-DD',
@@ -18,4 +31,4 @@ const DateFormat = {
   INPUT_DATETIME: 'DD/MM/YY HH:mm',
 };
 
-export { DateFormat, TYPE_EVENTS };
+export { DEFAULT_EVENT_PROPS, DateFormat, EVENT_COUNT, TYPE_EVENTS };

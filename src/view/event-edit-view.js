@@ -20,7 +20,7 @@ const createEventTypeListTemplate = (type) => {
   return eventTypeListTemplate.join('');
 };
 
-const createEventTypeTemplate = ({ type } = undefined || {}) => {
+const createEventTypeTemplate = ({ type } = {}) => {
   const eventTypeTemplate = [];
   const eventTypeListTemplate = createEventTypeListTemplate(type);
   eventTypeTemplate.push(`<div class="event__type-wrapper">
@@ -52,7 +52,7 @@ const createDestinationTemplate = (cities, selectedCity) => {
   return elements.join('');
 };
 
-const createEventDateTemplate = ({ dateFrom, dateTo } = undefined || {}) => {
+const createEventDateTemplate = ({ dateFrom, dateTo } = {}) => {
   const dateFromInput = getInputDateTime(dateFrom);
   const dateToInput = getInputDateTime(dateTo);
   return `<div class="event__field-group  event__field-group--time">
@@ -64,9 +64,9 @@ const createEventDateTemplate = ({ dateFrom, dateTo } = undefined || {}) => {
 </div>`;
 };
 
-const createPriceTemplate = (
-  { basePrice } = undefined || {}
-) => `<div class="event__field-group  event__field-group--price">
+const createPriceTemplate = ({
+  basePrice,
+} = {}) => `<div class="event__field-group  event__field-group--price">
 <label class="event__label" for="event-price-1">
   <span class="visually-hidden">Price</span>
   &euro;
@@ -83,7 +83,7 @@ const createOffersTemplate = (offers, selectedOffers) => {
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">`);
   offers.forEach((offer) => {
-    const checkedState = selectedOffers.indexOf(offer.id) > -1 ? 'checked' : '';
+    const checkedState = selectedOffers.includes(offer.id) ? 'checked' : '';
     offersTemplate.push(`<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-luggage" ${checkedState}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
@@ -97,9 +97,7 @@ const createOffersTemplate = (offers, selectedOffers) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate = (
-  { description, pictures } = undefined || {}
-) => {
+const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
   if (!description && !pictures) {
     return '';
   }

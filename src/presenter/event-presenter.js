@@ -1,3 +1,4 @@
+import { DEFAULT_EVENT_PROPS } from '../const';
 import { render } from '../render';
 import EventEditView from '../view/event-edit-view';
 import EventItemView from '../view/event-item-view';
@@ -21,27 +22,7 @@ export default class EventPresenter {
   }
 
   renderEventNew() {
-    this.renderEventItem((container) => {
-      const event = {
-        id: null,
-        basePrice: 0,
-        dateFrom: null,
-        dateTo: null,
-        destination: null,
-        isFavorite: null,
-        offers: [],
-        type: 'flight',
-      };
-      const offers = this.eventsModel.getOffersByType(event.type);
-      render(
-        new EventEditView({
-          event: event,
-          cities: this.cities,
-          offers: offers,
-        }),
-        container.getElement()
-      );
-    });
+    this.renderEventEdit(DEFAULT_EVENT_PROPS);
   }
 
   renderEventEdit(event) {

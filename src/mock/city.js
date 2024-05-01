@@ -201,6 +201,6 @@ const mockCities = [
 
 const getRandomCity = () => getRandomArrayElement(mockCities);
 
-const getCities = () => mockCities;
+const getMockCities = () => mockCities;
 
-export { getCities, getRandomCity };
+export { getMockCities, getRandomCity };

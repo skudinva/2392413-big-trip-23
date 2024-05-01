@@ -205,6 +205,6 @@ const mockOffer = [
   },
 ];
 
-const getOffers = () => mockOffer;
+const getMockOffers = () => mockOffer;
 
-export { getOffers };
+export { getMockOffers };

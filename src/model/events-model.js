@@ -1,13 +1,12 @@
-import { getCities } from '../mock/city';
+import { EVENT_COUNT } from '../const';
+import { getMockCities } from '../mock/city';
 import { getRandomEvent } from '../mock/event';
-import { getOffers } from '../mock/offer';
-
-const EVENT_COUNT = 3;
+import { getMockOffers } from '../mock/offer';
 
 export default class EventsModel {
   events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
-  cities = getCities();
-  offers = getOffers();
+  cities = getMockCities();
+  offers = getMockOffers();
   getEvents() {
     return this.events;
   }
@@ -22,8 +21,8 @@ export default class EventsModel {
   }
 
   getSelectedOffers(type, eventOffers) {
-    return this.getOffersByType(type).filter(
-      (offer) => eventOffers.indexOf(offer.id) > -1
+    return this.getOffersByType(type).filter((offer) =>
+      eventOffers.includes(offer.id)
     );
   }
 
