@@ -123,21 +123,34 @@ export default class EventEditView extends AbstractView {
   #cities = null;
   #offers = null;
   #handleSubmit = null;
+  #handleCancel = null;
 
-  constructor({ event, city, cities, offers, onSubmit }) {
+  constructor({ event, city, cities, offers, onSubmit, onCancel }) {
     super();
     this.#event = event;
     this.#city = city;
     this.#cities = cities;
     this.#offers = offers;
     this.#handleSubmit = onSubmit;
+    this.#handleCancel = onCancel;
     this.element.addEventListener('submit', this.#onSubmit);
+    const cancelEditElement = this.element.querySelector(
+      'button.event__rollup-btn'
+    );
+    cancelEditElement.addEventListener('click', this.#onCancel);
   }
 
   #onSubmit = (evt) => {
     evt.preventDefault();
     if (this.#handleSubmit) {
       this.#handleSubmit();
+    }
+  };
+
+  #onCancel = (evt) => {
+    evt.preventDefault();
+    if (this.#handleCancel) {
+      this.#handleCancel();
     }
   };
 
@@ -162,8 +175,11 @@ export default class EventEditView extends AbstractView {
       ${destinationTemplate}
       ${eventDateTemplate}
       ${priceTemplate}
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__save-btn btn btn--blue" type="submit">Save</button>
+      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
     </header>
     <section class="event__details">
       ${offersTemplate}
