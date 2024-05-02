@@ -66,6 +66,10 @@ export default class EventPresenter {
         city,
         selectedOffers,
         onEditClick: () => {
+          //это кривость, но не смог сообразить как нормально сделать
+          document.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'Escape' })
+          );
           replaceCardToForm();
           document.addEventListener('keydown', onEscKeyDown);
         },

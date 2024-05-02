@@ -21,6 +21,11 @@ export default class EventsModel {
       cost: 0,
     };
 
+    const destinationDummy = {
+      date: null,
+      cityName: '...',
+    };
+
     tripInfo.cost = this.events
       .map((event) => event.basePrice)
       .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
@@ -30,30 +35,27 @@ export default class EventsModel {
         new Date(nextEvent.dateFrom) - new Date(currentEvent.dateFrom)
     );
 
-    tripInfo.destinationInfo.push({
-      date: sortEvents[0].dateFrom,
-      cityName: this.getCityById(sortEvents[0].destination).name,
+    const getInfo = (date, destination) => ({
+      date: date,
+      cityName: this.getCityById(destination).name,
     });
 
+    const pushInfo = (index, dateField) => {
+      tripInfo.destinationInfo.push(
+        getInfo(sortEvents[index][dateField], sortEvents[index].destination)
+      );
+    };
+
+    pushInfo(0, 'dateFrom');
+
     if (sortEvents.length > 3) {
-      tripInfo.destinationInfo.push({
-        date: null,
-        cityName: '...',
-      });
+      tripInfo.destinationInfo.push(destinationDummy);
     } else if (sortEvents.length === 3) {
-      tripInfo.destinationInfo.push({
-        date: sortEvents[1].dateFrom,
-        cityName: this.getCityById(sortEvents[1].destination).name,
-      });
+      pushInfo(1, 'dateFrom');
     }
 
     if (sortEvents.length > 1) {
-      tripInfo.destinationInfo.push({
-        date: sortEvents[sortEvents.length - 1].dateTo,
-        cityName: this.getCityById(
-          sortEvents[sortEvents.length - 1].destination
-        ).name,
-      });
+      pushInfo(sortEvents.length - 1, 'dateTo');
     }
 
     return tripInfo;

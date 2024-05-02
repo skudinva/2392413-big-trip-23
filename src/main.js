@@ -22,7 +22,6 @@ const renderHeader = () => {
   });
   tripPresenter.init();
 
-  //render(new TripInfoView(), headerMainElement, RenderPosition.AFTERBEGIN);
   render(new FilterView(), tripControlElement);
 };
 
