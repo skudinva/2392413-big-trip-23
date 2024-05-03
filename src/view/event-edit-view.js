@@ -1,4 +1,4 @@
-import { TYPE_EVENTS } from '../const';
+import { EVENT_TYPES } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 import { getInputDateTime } from '../utils';
 
@@ -7,7 +7,7 @@ const createEventTypeListTemplate = (type) => {
   eventTypeListTemplate.push(`<fieldset class="event__type-group">
   <legend class="visually-hidden">Event type</legend>`);
 
-  TYPE_EVENTS.forEach((typeEvent) => {
+  EVENT_TYPES.forEach((typeEvent) => {
     const typeEventCode = typeEvent.toLowerCase();
     const checkedProperty = typeEventCode === type ? 'checked' : '';
     eventTypeListTemplate.push(`<div class="event__type-item">

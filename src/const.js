@@ -1,6 +1,6 @@
 const EVENT_COUNT = 5;
 
-const TYPE_EVENTS = [
+const EVENT_TYPES = [
   'Taxi',
   'Bus',
   'Train',
@@ -34,4 +34,4 @@ const DateFormat = {
   YEARMONTH: 'YYYY-MM',
 };
 
-export { DEFAULT_EVENT_PROPS, DateFormat, EVENT_COUNT, TYPE_EVENTS };
+export { DEFAULT_EVENT_PROPS, DateFormat, EVENT_COUNT, EVENT_TYPES };

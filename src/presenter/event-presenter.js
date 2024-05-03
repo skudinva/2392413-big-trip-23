@@ -1,10 +1,8 @@
-import { DEFAULT_EVENT_PROPS } from '../const';
-import { render, replace } from '../framework/render';
-import EventEditView from '../view/event-edit-view';
+import { render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
-import EventView from '../view/event-view';
 import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
+import EventEngine from './event-engine';
 
 export default class EventPresenter {
   #sortComponent = new SortView();
@@ -13,6 +11,7 @@ export default class EventPresenter {
   #eventsModel = null;
   #events = null;
   #cities = null;
+  #currentEventEditForm = null;
 
   constructor({ container, eventsModel }) {
     this.#container = container;
@@ -25,6 +24,44 @@ export default class EventPresenter {
     callback(itemComponent);
   }
 
+  #eventEditStateChange = (event) => {
+    const oldEditState = event.editState;
+    if (!oldEditState && this.#currentEventEditForm) {
+      this.#currentEventEditForm.closeEditForm();
+    }
+    this.#currentEventEditForm = !oldEditState ? event : null;
+    return true;
+  };
+
+  #renderTripPoint(event) {
+    this.#renderEventItem((container) => {
+      new EventEngine({
+        event,
+        eventsModel: this.#eventsModel,
+        cities: this.#cities,
+        container,
+        editStateChange: this.#eventEditStateChange,
+      });
+    });
+  }
+
+  #renderTripPoints() {
+    for (let i = 0; i < this.#events.length; i++) {
+      this.#renderTripPoint(this.#events[i]);
+    }
+  }
+
+  init() {
+    this.#events = [...this.#eventsModel.events];
+    this.#cities = [...this.#eventsModel.cities];
+    render(this.#sortComponent, this.#container);
+    render(this.#eventListComponent, this.#container);
+    this.#renderTripPoints();
+  }
+}
+
+/*
+пусть полежит в подвале
   #renderEventNew() {
     this.#renderEventEdit(DEFAULT_EVENT_PROPS);
   }
@@ -43,83 +80,4 @@ export default class EventPresenter {
         container.element
       );
     });
-  }
-
-  #renderTripPoint(event) {
-    this.#renderEventItem((container) => {
-      const city = this.#eventsModel.getCityById(event.destination);
-      const offers = this.#eventsModel.getOffersByType(event.type);
-      const selectedOffers = this.#eventsModel.getSelectedOffers(
-        event.type,
-        event.offers
-      );
-
-      const onEscKeyDown = (evt) => {
-        if (evt.key === 'Escape') {
-          evt.preventDefault();
-          closeEditForm();
-        }
-      };
-
-      const eventComponent = new EventView({
-        event,
-        city,
-        selectedOffers,
-        onEditClick: () => {
-          //это кривость, но не смог сообразить как нормально сделать
-          document.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'Escape' })
-          );
-          replaceCardToForm();
-          document.addEventListener('keydown', onEscKeyDown);
-        },
-      });
-
-      const eventEditComponent = new EventEditView({
-        event: event,
-        city: city,
-        cities: this.#cities,
-        offers: offers,
-        onSubmit: () => {
-          closeEditForm();
-        },
-        onCancel: () => {
-          closeEditForm();
-        },
-        onReset: () => {
-          closeEditForm();
-        },
-      });
-
-      function closeEditForm() {
-        replaceFormToCard();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-
-      function replaceCardToForm() {
-        replace(eventEditComponent, eventComponent);
-      }
-
-      function replaceFormToCard() {
-        replace(eventComponent, eventEditComponent);
-      }
-
-      render(eventComponent, container.element);
-    });
-  }
-
-  #renderTripPoints() {
-    for (let i = 0; i < this.#events.length; i++) {
-      this.#renderTripPoint(this.#events[i]);
-    }
-  }
-
-  init() {
-    this.#events = [...this.#eventsModel.events];
-    this.#cities = [...this.#eventsModel.cities];
-
-    render(this.#sortComponent, this.#container);
-    render(this.#eventListComponent, this.#container);
-    this.#renderTripPoints();
-  }
-}
+  }*/
