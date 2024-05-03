@@ -150,15 +150,13 @@ export default class EventEditView extends AbstractView {
     }
   };
 
-  #onCancel = (evt) => {
-    evt.preventDefault();
+  #onCancel = () => {
     if (this.#handleCancel) {
       this.#handleCancel();
     }
   };
 
-  #onReset = (evt) => {
-    evt.preventDefault();
+  #onReset = () => {
     if (this.#handleReset) {
       this.#handleReset();
     }

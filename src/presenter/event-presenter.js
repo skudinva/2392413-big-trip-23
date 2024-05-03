@@ -27,7 +27,7 @@ export default class EventPresenter {
   #eventEditStateChange = (event) => {
     const oldEditState = event.editState;
     if (!oldEditState && this.#currentEventEditForm) {
-      this.#currentEventEditForm.closeEditForm();
+      this.#currentEventEditForm.resetEditForm();
     }
     this.#currentEventEditForm = !oldEditState ? event : null;
     return true;

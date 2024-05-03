@@ -19,6 +19,10 @@ export default class EventEngine {
   }
 
   set editState(value) {
+    if (value === this.#editState) {
+      return;
+    }
+
     const handledState = this.#editStateChange
       ? this.#editStateChange(this)
       : true;
@@ -62,13 +66,13 @@ export default class EventEngine {
       cities: this.#cities,
       offers: this.#offers,
       onSubmit: () => {
-        this.closeEditForm();
+        this.#closeEditForm();
       },
       onCancel: () => {
-        this.closeEditForm();
+        this.#closeEditForm();
       },
       onReset: () => {
-        this.closeEditForm();
+        this.#closeEditForm();
       },
     });
 
@@ -78,12 +82,17 @@ export default class EventEngine {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.closeEditForm();
+      this.#closeEditForm();
     }
   };
 
-  closeEditForm = () => {
+  #closeEditForm = () => {
     this.editState = false;
     document.removeEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  resetEditForm = () => {
+    const formElement = this.#eventEditComponent.element;
+    formElement.reset();
   };
 }
