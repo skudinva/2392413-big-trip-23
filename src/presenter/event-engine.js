@@ -1,3 +1,4 @@
+import { EditFormMode } from '../const';
 import { render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
@@ -14,6 +15,15 @@ export default class EventEngine {
   #editState = false;
   #editStateChange = null;
   #formMode = null;
+  #container = null;
+
+  get container() {
+    return this.#container;
+  }
+
+  get formMode() {
+    return this.#formMode;
+  }
 
   get editState() {
     return this.#editState;
@@ -48,6 +58,7 @@ export default class EventEngine {
     editStateChange,
     formMode,
   }) {
+    this.#container = container;
     this.#eventsModel = eventsModel;
     this.#event = event;
     this.#cities = cities;
@@ -87,6 +98,7 @@ export default class EventEngine {
     });
 
     render(this.#eventComponent, container.element);
+    this.editState = this.#formMode === EditFormMode.NEW;
   }
 
   #onEscKeyDown = (evt) => {

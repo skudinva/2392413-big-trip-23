@@ -36,12 +36,12 @@ const createEventTypeTemplate = ({ type } = {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = (cities, selectedCity) => {
+const createDestinationTemplate = (type, cities, selectedCity) => {
   const elements = [];
   const selectedCityName = selectedCity?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
-    Flight
+    ${type}
   </label>
   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCityName}" list="destination-list-1">
   <datalist id="destination-list-1">`);
@@ -176,6 +176,7 @@ export default class EventEditView extends AbstractView {
   get template() {
     const eventTypeTemplate = createEventTypeTemplate(this.#event);
     const destinationTemplate = createDestinationTemplate(
+      this.#event.type,
       this.#cities,
       this.#city
     );

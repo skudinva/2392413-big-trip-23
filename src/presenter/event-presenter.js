@@ -1,5 +1,5 @@
 import { DEFAULT_EVENT_PROPS, EditFormMode } from '../const';
-import { RenderPosition, render } from '../framework/render';
+import { RenderPosition, remove, render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
@@ -35,10 +35,19 @@ export default class EventPresenter {
 
   #eventEditStateChange = (event) => {
     const oldEditState = event.editState;
-    if (!oldEditState && this.#currentEventEditForm) {
-      this.#currentEventEditForm.resetEditForm();
+    if (this.#currentEventEditForm) {
+      //Значит есть уже открытая форма редактирования/добавления
+      if (this.#currentEventEditForm.formMode === EditFormMode.NEW) {
+        //Открыта форма добавления. Удаляем ее.
+        remove(this.#currentEventEditForm.container);
+      } else if (!oldEditState) {
+        //Пытаемся открыть еще одну форму редактирования/добавления.
+        //Надо закрыть текущую.
+        this.#currentEventEditForm.resetEditForm();
+      }
     }
     this.#currentEventEditForm = !oldEditState ? event : null;
+
     return true;
   };
 
