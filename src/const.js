@@ -1,6 +1,6 @@
 const EVENT_COUNT = 5;
 
-const TYPE_EVENTS = [
+const EVENT_TYPES = [
   'Taxi',
   'Bus',
   'Train',
@@ -25,10 +25,13 @@ const DEFAULT_EVENT_PROPS = {
 
 const DateFormat = {
   HUMANIZE: 'MMMM D',
+  HUMANIZE_FIRSTDAY: 'D MMMM',
+  DAYONLY: 'D',
   MACHINIZE_DATE: 'YYYY-MM-DD',
   MACHINIZE_DATETIME: 'YYYY-MM-DDTHH:mm',
   SHORT_TIME: 'HH:mm',
   INPUT_DATETIME: 'DD/MM/YY HH:mm',
+  YEARMONTH: 'YYYY-MM',
 };
 
-export { DEFAULT_EVENT_PROPS, DateFormat, EVENT_COUNT, TYPE_EVENTS };
+export { DEFAULT_EVENT_PROPS, DateFormat, EVENT_COUNT, EVENT_TYPES };

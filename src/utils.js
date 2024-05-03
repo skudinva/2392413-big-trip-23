@@ -53,12 +53,26 @@ const getDurationString = (dateFrom, dateTo) => {
   return duration.strings.join(' ');
 };
 
+const getPeriodString = (dateFrom, dateTo, delimiter) => {
+  const period = [];
+  const dateFromFormat =
+    getDateString(dateFrom, DateFormat.YEARMONTH) ===
+    getDateString(dateTo, DateFormat.YEARMONTH)
+      ? DateFormat.DAYONLY
+      : DateFormat.HUMANIZE_FIRSTDAY;
+  period.push(getDateString(dateFrom, dateFromFormat));
+  period.push(getDateString(dateTo, DateFormat.HUMANIZE_FIRSTDAY));
+
+  return period.join(delimiter);
+};
+
 export {
   getDurationString,
   getHumanizeDate,
   getInputDateTime,
   getMachinizeDate,
   getMachinizeDateTime,
+  getPeriodString,
   getRandomArrayElement,
   getShortTime,
   guid,
