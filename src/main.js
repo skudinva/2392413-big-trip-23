@@ -10,7 +10,6 @@ const renderHeader = () => {
   const headerContainer = document.querySelector(
     '.page-header .page-header__container'
   );
-  //const headerMainElement = headerContainer.querySelector('.trip-main');
   const tripControlElement = headerContainer.querySelector(
     '.trip-controls__filters'
   );
