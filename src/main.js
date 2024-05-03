@@ -27,9 +27,14 @@ const renderHeader = () => {
 
 const renderMain = () => {
   const containerElement = document.querySelector('.page-main .trip-events');
+  const newEventButtonElement = document.querySelector(
+    '.trip-main__event-add-btn'
+  );
+
   const eventPresenter = new EventPresenter({
     container: containerElement,
     eventsModel,
+    newEventButtonElement: newEventButtonElement,
   });
   eventPresenter.init();
 };

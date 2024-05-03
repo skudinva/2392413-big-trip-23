@@ -1,4 +1,4 @@
-import { EVENT_TYPES } from '../const';
+import { EVENT_TYPES, EditFormMode } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 import { getInputDateTime } from '../utils';
 
@@ -125,13 +125,24 @@ export default class EventEditView extends AbstractView {
   #handleSubmit = null;
   #handleCancel = null;
   #handleReset = null;
+  #formMode = null;
 
-  constructor({ event, city, cities, offers, onSubmit, onCancel, onReset }) {
+  constructor({
+    event,
+    city,
+    cities,
+    offers,
+    formMode,
+    onSubmit,
+    onCancel,
+    onReset,
+  }) {
     super();
     this.#event = event;
     this.#city = city;
     this.#cities = cities;
     this.#offers = offers;
+    this.#formMode = formMode;
     this.#handleSubmit = onSubmit;
     this.#handleCancel = onCancel;
     this.#handleReset = onReset;
@@ -177,6 +188,9 @@ export default class EventEditView extends AbstractView {
     const destinationDetailTemplate = createDestinationDetailTemplate(
       this.#city
     );
+
+    const resetButtonCaption =
+      this.#formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       ${eventTypeTemplate}
@@ -184,7 +198,7 @@ export default class EventEditView extends AbstractView {
       ${eventDateTemplate}
       ${priceTemplate}
       <button class="event__save-btn btn btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__reset-btn" type="reset">${resetButtonCaption}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>

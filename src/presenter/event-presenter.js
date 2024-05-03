@@ -1,4 +1,5 @@
-import { render } from '../framework/render';
+import { DEFAULT_EVENT_PROPS, EditFormMode } from '../const';
+import { RenderPosition, render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
@@ -12,15 +13,23 @@ export default class EventPresenter {
   #events = null;
   #cities = null;
   #currentEventEditForm = null;
+  #newEventButtonElement = null;
 
-  constructor({ container, eventsModel }) {
+  constructor({ container, eventsModel, newEventButtonElement }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+    this.#newEventButtonElement = newEventButtonElement;
   }
 
-  #renderEventItem(callback) {
+  #renderEventItem(formMode, callback) {
     const itemComponent = new EventItemView();
-    render(itemComponent, this.#eventListComponent.element);
+    render(
+      itemComponent,
+      this.#eventListComponent.element,
+      formMode === EditFormMode.NEW
+        ? RenderPosition.AFTERBEGIN
+        : RenderPosition.BEFOREEND
+    );
     callback(itemComponent);
   }
 
@@ -33,21 +42,26 @@ export default class EventPresenter {
     return true;
   };
 
-  #renderTripPoint(event) {
-    this.#renderEventItem((container) => {
+  #renderEventNew() {
+    this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
+  }
+
+  #renderTripPoint(event, formMode) {
+    this.#renderEventItem(formMode, (container) => {
       new EventEngine({
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
         container,
         editStateChange: this.#eventEditStateChange,
+        formMode,
       });
     });
   }
 
   #renderTripPoints() {
     for (let i = 0; i < this.#events.length; i++) {
-      this.#renderTripPoint(this.#events[i]);
+      this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
     }
   }
 
@@ -57,27 +71,8 @@ export default class EventPresenter {
     render(this.#sortComponent, this.#container);
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
+    this.#newEventButtonElement.addEventListener('click', () =>
+      this.#renderEventNew()
+    );
   }
 }
-
-/*
-пусть полежит в подвале
-  #renderEventNew() {
-    this.#renderEventEdit(DEFAULT_EVENT_PROPS);
-  }
-
-  #renderEventEdit(event) {
-    this.#renderEventItem((container) => {
-      const city = this.#eventsModel.getCityById(event.destination);
-      const offers = this.#eventsModel.getOffersByType(event.type);
-      render(
-        new EventEditView({
-          event: event,
-          city: city,
-          cities: this.#cities,
-          offers: offers,
-        }),
-        container.element
-      );
-    });
-  }*/

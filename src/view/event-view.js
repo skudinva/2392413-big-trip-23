@@ -59,7 +59,7 @@ export default class EventView extends AbstractView {
 
   get template() {
     const { basePrice, isFavorite, type, dateFrom, dateTo } = this.#event;
-    const { name: cityName } = this.#city;
+    const { name: cityName } = this.#city || {};
 
     const machinizeDate = getMachinizeDate(dateFrom);
     const humanizeDate = getHumanizeDate(dateFrom);

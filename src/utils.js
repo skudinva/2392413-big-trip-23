@@ -22,6 +22,9 @@ const getShortTime = (date) => getDateString(date, DateFormat.SHORT_TIME);
 const getInputDateTime = (date) =>
   getDateString(date, DateFormat.INPUT_DATETIME);
 const getDurationString = (dateFrom, dateTo) => {
+  if (!dateFrom || !dateTo) {
+    return '';
+  }
   const date1 = dayjs(dateTo);
   const date2 = dayjs(dateFrom);
   const duration = {

@@ -34,4 +34,12 @@ const DateFormat = {
   YEARMONTH: 'YYYY-MM',
 };
 
-export { DEFAULT_EVENT_PROPS, DateFormat, EVENT_COUNT, EVENT_TYPES };
+const EditFormMode = { NEW: 'New', EDIT: 'Edit' };
+
+export {
+  DEFAULT_EVENT_PROPS,
+  DateFormat,
+  EVENT_COUNT,
+  EVENT_TYPES,
+  EditFormMode,
+};

@@ -13,6 +13,7 @@ export default class EventEngine {
   #eventEditComponent = null;
   #editState = false;
   #editStateChange = null;
+  #formMode = null;
 
   get editState() {
     return this.#editState;
@@ -39,7 +40,14 @@ export default class EventEngine {
     this.#editState = value;
   }
 
-  constructor({ event, eventsModel, container, cities, editStateChange }) {
+  constructor({
+    event,
+    eventsModel,
+    container,
+    cities,
+    editStateChange,
+    formMode,
+  }) {
     this.#eventsModel = eventsModel;
     this.#event = event;
     this.#cities = cities;
@@ -49,6 +57,7 @@ export default class EventEngine {
     this.#selectedOffers = [
       ...this.#eventsModel.getSelectedOffers(event.type, event.offers),
     ];
+    this.#formMode = formMode;
 
     this.#eventComponent = new EventView({
       event: this.#event,
@@ -65,6 +74,7 @@ export default class EventEngine {
       city: this.#city,
       cities: this.#cities,
       offers: this.#offers,
+      formMode: this.#formMode,
       onSubmit: () => {
         this.#closeEditForm();
       },
