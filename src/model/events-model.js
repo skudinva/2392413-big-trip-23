@@ -15,52 +15,6 @@ export default class EventsModel {
     return this.#offers;
   }
 
-  get getTripInfo() {
-    const tripInfo = {
-      destinationInfo: [],
-      cost: 0,
-    };
-
-    const destinationDummy = {
-      date: null,
-      cityName: '...',
-    };
-
-    tripInfo.cost = this.events
-      .map((event) => event.basePrice)
-      .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-
-    const sortEvents = [...this.events].sort(
-      (nextEvent, currentEvent) =>
-        new Date(nextEvent.dateFrom) - new Date(currentEvent.dateFrom)
-    );
-
-    const getInfo = (date, destination) => ({
-      date: date,
-      cityName: this.getCityById(destination).name,
-    });
-
-    const pushInfo = (index, dateField) => {
-      tripInfo.destinationInfo.push(
-        getInfo(sortEvents[index][dateField], sortEvents[index].destination)
-      );
-    };
-
-    pushInfo(0, 'dateFrom');
-
-    if (sortEvents.length > 3) {
-      tripInfo.destinationInfo.push(destinationDummy);
-    } else if (sortEvents.length === 3) {
-      pushInfo(1, 'dateFrom');
-    }
-
-    if (sortEvents.length > 1) {
-      pushInfo(sortEvents.length - 1, 'dateTo');
-    }
-
-    return tripInfo;
-  }
-
   getOffersByType(type) {
     const offer = this.offers.find((offerItem) => offerItem.type === type);
     return offer.offers;
