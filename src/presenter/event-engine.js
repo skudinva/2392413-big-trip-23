@@ -1,5 +1,5 @@
-import { EditFormMode } from '../const';
-import { render, replace } from '../framework/render';
+import { EventStateAction } from '../const';
+import { remove, render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -12,42 +12,13 @@ export default class EventEngine {
   #selectedOffers = null;
   #eventComponent = null;
   #eventEditComponent = null;
-  #editState = false;
-  #editStateChange = null;
+  #eventStateChange = null;
   #formMode = null;
+  #activeComponent = null;
   #container = null;
-
-  get container() {
-    return this.#container;
-  }
 
   get formMode() {
     return this.#formMode;
-  }
-
-  get editState() {
-    return this.#editState;
-  }
-
-  set editState(value) {
-    if (value === this.#editState) {
-      return;
-    }
-
-    const handledState = this.#editStateChange
-      ? this.#editStateChange(this)
-      : true;
-    if (!handledState) {
-      return;
-    }
-
-    if (value) {
-      replace(this.#eventEditComponent, this.#eventComponent);
-    } else {
-      replace(this.#eventComponent, this.#eventEditComponent);
-    }
-
-    this.#editState = value;
   }
 
   constructor({
@@ -55,28 +26,33 @@ export default class EventEngine {
     eventsModel,
     container,
     cities,
-    editStateChange,
+    eventStateChange,
     formMode,
   }) {
+    if (!eventStateChange) {
+      throw new Error('Parametr "eventStateChange" doesn\'t exist');
+    }
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#event = event;
     this.#cities = cities;
-    this.#editStateChange = editStateChange;
+    this.#eventStateChange = eventStateChange;
     this.#city = this.#eventsModel.getCityById(event.destination);
     this.#offers = [...this.#eventsModel.getOffersByType(event.type)];
     this.#selectedOffers = [
       ...this.#eventsModel.getSelectedOffers(event.type, event.offers),
     ];
     this.#formMode = formMode;
+    this.#render();
+  }
 
+  #render = () => {
     this.#eventComponent = new EventView({
       event: this.#event,
       city: this.#city,
       selectedOffers: this.#selectedOffers,
       onEditClick: () => {
-        this.editState = true;
-        document.addEventListener('keydown', this.#onEscKeyDown);
+        this.#eventStateChange(this, EventStateAction.OPEN_EDIT_FORM);
       },
     });
 
@@ -87,34 +63,43 @@ export default class EventEngine {
       offers: this.#offers,
       formMode: this.#formMode,
       onSubmit: () => {
-        this.#closeEditForm();
+        this.#eventStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancel: () => {
-        this.#closeEditForm();
+        this.#eventStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
       },
       onReset: () => {
-        this.#closeEditForm();
+        this.#eventStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });
 
-    render(this.#eventComponent, container.element);
-    this.editState = this.#formMode === EditFormMode.NEW;
-  }
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#closeEditForm();
-    }
+    this.#activeComponent = this.#eventComponent;
+    render(this.#activeComponent, this.#container.element);
+    this.#eventStateChange(this, EventStateAction.CREATE_NEW_FORM);
   };
 
-  #closeEditForm = () => {
-    this.editState = false;
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+  #swithToComponent = (targetComponent) => {
+    if (targetComponent === this.#activeComponent) {
+      return;
+    }
+    replace(targetComponent, this.#activeComponent);
+    this.#activeComponent = targetComponent;
   };
 
   resetEditForm = () => {
     const formElement = this.#eventEditComponent.element;
     formElement.reset();
+  };
+
+  swithToEdit = () => {
+    this.#swithToComponent(this.#eventEditComponent);
+  };
+
+  swithToView = () => {
+    this.#swithToComponent(this.#eventComponent);
+  };
+
+  destroy = () => {
+    remove(this.#container);
   };
 }

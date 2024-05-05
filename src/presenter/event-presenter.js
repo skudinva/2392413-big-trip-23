@@ -1,5 +1,5 @@
-import { DEFAULT_EVENT_PROPS, EditFormMode } from '../const';
-import { RenderPosition, remove, render } from '../framework/render';
+import { DEFAULT_EVENT_PROPS, EditFormMode, EventStateAction } from '../const';
+import { RenderPosition, render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
@@ -12,7 +12,7 @@ export default class EventPresenter {
   #eventsModel = null;
   #events = null;
   #cities = null;
-  #currentEventEditForm = null;
+  #activeEventEditForm = null;
   #newEventButtonElement = null;
 
   constructor({ container, eventsModel, newEventButtonElement }) {
@@ -33,22 +33,56 @@ export default class EventPresenter {
     callback(itemComponent);
   }
 
-  #eventEditStateChange = (event) => {
-    const oldEditState = event.editState;
-    if (this.#currentEventEditForm) {
-      //Значит есть уже открытая форма редактирования/добавления
-      if (this.#currentEventEditForm.formMode === EditFormMode.NEW) {
-        //Открыта форма добавления. Удаляем ее.
-        remove(this.#currentEventEditForm.container);
-      } else if (!oldEditState) {
-        //Пытаемся открыть еще одну форму редактирования/добавления.
-        //Надо закрыть текущую.
-        this.#currentEventEditForm.resetEditForm();
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#activeEventEditForm.resetEditForm();
+    }
+  };
+
+  #openEditForm = (event) => {
+    if (this.#activeEventEditForm) {
+      this.#activeEventEditForm.resetEditForm();
+    }
+
+    if (!this.#activeEventEditForm) {
+      event.swithToEdit();
+      this.#activeEventEditForm = event;
+      document.addEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
+
+  /**
+   *
+   * @param {EventEngine} event
+   * @param {EventStateAction} stateAction
+   */
+  #eventEditStateChange = (event, stateAction) => {
+    if (
+      event.formMode === EditFormMode.NEW &&
+      stateAction === EventStateAction.CREATE_NEW_FORM
+    ) {
+      this.#openEditForm(event);
+      this.#newEventButtonElement.disabled = true;
+    } else if (stateAction === EventStateAction.OPEN_EDIT_FORM) {
+      this.#openEditForm(event);
+    } else {
+      if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {
+        event.resetEditForm();
+      }
+      if (event.formMode === EditFormMode.NEW) {
+        if (stateAction === EventStateAction.CANCEL_EDIT_FORM) {
+          event.destroy();
+        }
+      } else {
+        event.swithToView();
+      }
+      this.#activeEventEditForm = null;
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+      if (this.#newEventButtonElement.disabled) {
+        this.#newEventButtonElement.disabled = false;
       }
     }
-    this.#currentEventEditForm = !oldEditState ? event : null;
-
-    return true;
   };
 
   #renderEventNew() {
@@ -62,7 +96,7 @@ export default class EventPresenter {
         eventsModel: this.#eventsModel,
         cities: this.#cities,
         container,
-        editStateChange: this.#eventEditStateChange,
+        eventStateChange: this.#eventEditStateChange,
         formMode,
       });
     });

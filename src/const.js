@@ -36,10 +36,20 @@ const DateFormat = {
 
 const EditFormMode = { NEW: 'New', EDIT: 'Edit' };
 
+const EventStateAction = {
+  CREATE_NEW_FORM: 'Create new from',
+  OPEN_EDIT_FORM: 'Open edit form',
+  CLOSE_EDIT_FORM: 'Close edit from',
+  SUBMIT_EDIT_FORM: 'Submit edit form',
+  CANCEL_EDIT_FORM: 'Cancel edit form',
+  DELETE_EDIT_FORM: 'Delete edit form',
+};
+
 export {
   DEFAULT_EVENT_PROPS,
   DateFormat,
   EVENT_COUNT,
   EVENT_TYPES,
   EditFormMode,
+  EventStateAction,
 };
