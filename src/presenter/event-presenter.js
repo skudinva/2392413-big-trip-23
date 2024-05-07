@@ -21,17 +21,16 @@ export default class EventPresenter {
     this.#newEventButtonElement = newEventButtonElement;
   }
 
-  #renderEventItem(formMode, callback) {
-    const itemComponent = new EventItemView();
-    render(
-      itemComponent,
-      this.#eventListComponent.element,
-      formMode === EditFormMode.NEW
-        ? RenderPosition.AFTERBEGIN
-        : RenderPosition.BEFOREEND
-    );
-    callback(itemComponent);
-  }
+  #setActiveEventEditForm = (value) => {
+    this.#activeEventEditForm = value;
+    this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
+
+    if (this.#activeEventEditForm) {
+      document.addEventListener('keydown', this.#onEscKeyDown);
+    } else {
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
@@ -40,30 +39,19 @@ export default class EventPresenter {
     }
   };
 
-  #openEditForm = (event) => {
-    if (this.#activeEventEditForm) {
-      this.#activeEventEditForm.resetEditForm();
-    }
-
+  #isNewEventFormActive = () => {
     if (!this.#activeEventEditForm) {
-      event.swithToEdit();
-      this.#activeEventEditForm = event;
-      document.addEventListener('keydown', this.#onEscKeyDown);
+      return false;
     }
+    return this.#activeEventEditForm.formMode === EditFormMode.NEW;
   };
 
-  /**
-   *
-   * @param {EventEngine} event
-   * @param {EventStateAction} stateAction
-   */
   #eventEditStateChange = (event, stateAction) => {
     if (
       event.formMode === EditFormMode.NEW &&
       stateAction === EventStateAction.CREATE_NEW_FORM
     ) {
       this.#openEditForm(event);
-      this.#newEventButtonElement.disabled = true;
     } else if (stateAction === EventStateAction.OPEN_EDIT_FORM) {
       this.#openEditForm(event);
     } else {
@@ -77,13 +65,32 @@ export default class EventPresenter {
       } else {
         event.swithToView();
       }
-      this.#activeEventEditForm = null;
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-      if (this.#newEventButtonElement.disabled) {
-        this.#newEventButtonElement.disabled = false;
-      }
+      this.#setActiveEventEditForm(null);
     }
   };
+
+  #openEditForm = (event) => {
+    if (this.#activeEventEditForm) {
+      this.#activeEventEditForm.resetEditForm();
+    }
+
+    if (!this.#activeEventEditForm) {
+      event.swithToEdit();
+      this.#setActiveEventEditForm(event);
+    }
+  };
+
+  #renderEventItem(formMode, callback) {
+    const itemComponent = new EventItemView();
+    render(
+      itemComponent,
+      this.#eventListComponent.element,
+      formMode === EditFormMode.NEW
+        ? RenderPosition.AFTERBEGIN
+        : RenderPosition.BEFOREEND
+    );
+    callback(itemComponent);
+  }
 
   #renderEventNew() {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
