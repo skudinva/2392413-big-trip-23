@@ -19,15 +19,13 @@ export default class TripPresenter {
   get getTripInfo() {
     const tripInfo = {
       destinationInfo: [],
-      cost: 0,
+      cost: this.cost,
     };
 
     const destinationDummy = {
       date: null,
       cityName: '...',
     };
-
-    tripInfo.cost = this.cost;
 
     const sortEvents = this.#events.sort(
       (nextEvent, currentEvent) =>
