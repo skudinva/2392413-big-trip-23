@@ -38,9 +38,9 @@ export default class TripPresenter {
     });
 
     const pushInfo = (index, dateField) => {
-      tripInfo.destinationInfo.push(
-        getInfo(sortEvents[index][dateField], sortEvents[index].destination)
-      );
+      const date = sortEvents[index][dateField];
+      const destination = sortEvents[index].destination;
+      tripInfo.destinationInfo.push(getInfo(date, destination));
     };
 
     pushInfo(0, 'dateFrom');
