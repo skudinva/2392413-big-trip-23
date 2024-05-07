@@ -55,13 +55,8 @@ export default class EventPresenter {
     } else if (stateAction === EventStateAction.OPEN_EDIT_FORM) {
       this.#openEditForm(event);
     } else {
-      if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {
-        event.resetEditForm();
-      }
       if (event.formMode === EditFormMode.NEW) {
-        if (stateAction === EventStateAction.CANCEL_EDIT_FORM) {
-          event.destroy();
-        }
+        event.destroy();
       } else {
         event.swithToView();
       }
