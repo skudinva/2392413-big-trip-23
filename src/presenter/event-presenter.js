@@ -72,7 +72,7 @@ export default class EventPresenter {
     this.#setActiveEventEditForm(event);
   };
 
-  #renderEventItem(formMode, callback) {
+  #renderEventItem = (formMode, callback) => {
     const itemComponent = new EventItemView();
     render(
       itemComponent,
@@ -82,13 +82,13 @@ export default class EventPresenter {
         : RenderPosition.BEFOREEND
     );
     callback(itemComponent);
-  }
+  };
 
-  #renderEventNew() {
+  #renderEventNew = () => {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
-  }
+  };
 
-  #renderTripPoint(event, formMode) {
+  #renderTripPoint = (event, formMode) => {
     this.#renderEventItem(formMode, (container) => {
       new EventEngine({
         event,
@@ -99,22 +99,26 @@ export default class EventPresenter {
         formMode,
       });
     });
-  }
+  };
 
-  #renderTripPoints() {
+  #renderTripPoints = () => {
     for (let i = 0; i < this.#events.length; i++) {
       this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
     }
-  }
+  };
 
-  init() {
+  init = () => {
     this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
-    render(this.#sortComponent, this.#container);
-    render(this.#eventListComponent, this.#container);
-    this.#renderTripPoints();
+    this.#renderTripBoard();
     this.#newEventButtonElement.addEventListener('click', () =>
       this.#renderEventNew()
     );
-  }
+  };
+
+  #renderTripBoard = () => {
+    render(this.#sortComponent, this.#container);
+    render(this.#eventListComponent, this.#container);
+    this.#renderTripPoints();
+  };
 }

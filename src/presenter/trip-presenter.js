@@ -58,14 +58,14 @@ export default class TripPresenter {
     return tripInfo;
   }
 
-  #renderTripInfo() {
+  #renderTripInfo = () => {
     const tripInfo = this.getTripInfo;
     const tripInfoComponent = new TripInfoView({ tripInfo });
     render(tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
-  }
+  };
 
-  init() {
+  init = () => {
     this.#events = [...this.#eventsModel.events];
     this.#renderTripInfo();
-  }
+  };
 }
