@@ -1,3 +1,4 @@
+import { generateFilter } from './filter';
 import { render } from './framework/render';
 import EventsModel from './model/events-model';
 import EventPresenter from './presenter/event-presenter';
@@ -21,7 +22,8 @@ const renderHeader = () => {
   });
   tripPresenter.init();
 
-  render(new FilterView(), tripControlElement);
+  const filters = generateFilter(eventsModel.events);
+  render(new FilterView({ filters }), tripControlElement);
 };
 
 const renderMain = () => {
