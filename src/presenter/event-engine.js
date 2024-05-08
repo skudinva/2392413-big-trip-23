@@ -51,7 +51,7 @@ export default class EventEngine {
       event: this.#event,
       city: this.#city,
       selectedOffers: this.#selectedOffers,
-      onEditClick: () => {
+      handleEditClick: () => {
         this.#eventStateChange(this, EventStateAction.OPEN_EDIT_FORM);
       },
     });

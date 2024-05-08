@@ -39,12 +39,12 @@ export default class EventView extends AbstractView {
   #selectedOffers = null;
   #handleEditClick = null;
 
-  constructor({ event, city, selectedOffers, onEditClick }) {
+  constructor({ event, city, selectedOffers, handleEditClick }) {
     super();
     this.#event = event;
     this.#city = city;
     this.#selectedOffers = selectedOffers;
-    this.#handleEditClick = onEditClick;
+    this.#handleEditClick = handleEditClick;
 
     const editElement = this.element.querySelector('button.event__rollup-btn');
     editElement.addEventListener('click', this.#onEditButtonClick);
