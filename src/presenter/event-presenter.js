@@ -2,6 +2,7 @@ import { DEFAULT_EVENT_PROPS, EditFormMode, EventStateAction } from '../const';
 import { RenderPosition, render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
+import NoEventView from '../view/no-event-view';
 import SortView from '../view/sort-view';
 import EventEngine from './event-engine';
 
@@ -107,6 +108,17 @@ export default class EventPresenter {
     }
   };
 
+  #renderTripBoard = () => {
+    if (this.#events.length === 0) {
+      render(new NoEventView(), this.#container);
+      return;
+    }
+
+    render(this.#sortComponent, this.#container);
+    render(this.#eventListComponent, this.#container);
+    this.#renderTripPoints();
+  };
+
   init = () => {
     this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
@@ -114,11 +126,5 @@ export default class EventPresenter {
     this.#newEventButtonElement.addEventListener('click', () =>
       this.#renderEventNew()
     );
-  };
-
-  #renderTripBoard = () => {
-    render(this.#sortComponent, this.#container);
-    render(this.#eventListComponent, this.#container);
-    this.#renderTripPoints();
   };
 }
