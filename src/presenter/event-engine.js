@@ -78,7 +78,7 @@ export default class EventEngine {
     this.#eventStateChange(this, EventStateAction.CREATE_NEW_FORM);
   };
 
-  #swithToComponent = (targetComponent) => {
+  #switchToComponent = (targetComponent) => {
     if (targetComponent === this.#activeComponent) {
       return;
     }
@@ -91,12 +91,12 @@ export default class EventEngine {
     formElement.reset();
   };
 
-  swithToEdit = () => {
-    this.#swithToComponent(this.#eventEditComponent);
+  switchToEdit = () => {
+    this.#switchToComponent(this.#eventEditComponent);
   };
 
-  swithToView = () => {
-    this.#swithToComponent(this.#eventComponent);
+  switchToView = () => {
+    this.#switchToComponent(this.#eventComponent);
   };
 
   destroy = () => {

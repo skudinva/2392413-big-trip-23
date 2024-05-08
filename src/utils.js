@@ -68,6 +68,9 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
   return period.join(delimiter);
 };
 
+const isFunction = (chechFunction) =>
+  chechFunction && chechFunction instanceof Function;
+
 export {
   getDurationString,
   getHumanizeDate,
@@ -78,4 +81,5 @@ export {
   getRandomArrayElement,
   getShortTime,
   guid,
+  isFunction,
 };

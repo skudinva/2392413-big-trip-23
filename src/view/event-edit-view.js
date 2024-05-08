@@ -1,6 +1,6 @@
 import { EVENT_TYPES, EditFormMode } from '../const';
 import AbstractView from '../framework/view/abstract-view';
-import { getInputDateTime } from '../utils';
+import { getInputDateTime, isFunction } from '../utils';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -156,19 +156,19 @@ export default class EventEditView extends AbstractView {
 
   #onSubmit = (evt) => {
     evt.preventDefault();
-    if (this.#handleSubmit) {
+    if (isFunction(this.#handleSubmit)) {
       this.#handleSubmit();
     }
   };
 
   #onCancel = () => {
-    if (this.#handleCancel) {
+    if (isFunction(this.#handleCancel)) {
       this.#handleCancel();
     }
   };
 
   #onReset = () => {
-    if (this.#handleReset) {
+    if (isFunction(this.#handleReset)) {
       this.#handleReset();
     }
   };

@@ -48,17 +48,16 @@ export default class EventPresenter {
 
   #eventEditStateChange = (event, stateAction) => {
     if (
-      event.formMode === EditFormMode.NEW &&
-      stateAction === EventStateAction.CREATE_NEW_FORM
+      (event.formMode === EditFormMode.NEW &&
+        stateAction === EventStateAction.CREATE_NEW_FORM) ||
+      stateAction === EventStateAction.OPEN_EDIT_FORM
     ) {
-      this.#openEditForm(event);
-    } else if (stateAction === EventStateAction.OPEN_EDIT_FORM) {
       this.#openEditForm(event);
     } else {
       if (event.formMode === EditFormMode.NEW) {
         event.destroy();
       } else {
-        event.swithToView();
+        event.switchToView();
       }
       this.#setActiveEventEditForm(null);
     }
@@ -69,10 +68,8 @@ export default class EventPresenter {
       this.#activeEventEditForm.resetEditForm();
     }
 
-    if (!this.#activeEventEditForm) {
-      event.swithToEdit();
-      this.#setActiveEventEditForm(event);
-    }
+    event.switchToEdit();
+    this.#setActiveEventEditForm(event);
   };
 
   #renderEventItem(formMode, callback) {
