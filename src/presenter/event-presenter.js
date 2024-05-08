@@ -1,90 +1,120 @@
-import { render } from '../render';
-import EventEditView from '../view/event-edit-view';
+import { DEFAULT_EVENT_PROPS, EditFormMode, EventStateAction } from '../const';
+import { RenderPosition, render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
-import EventView from '../view/event-view';
 import EventsListView from '../view/events-list-view';
 import SortView from '../view/sort-view';
+import EventEngine from './event-engine';
 
 export default class EventPresenter {
-  sortComponent = new SortView();
-  eventListComponent = new EventsListView();
+  #sortComponent = new SortView();
+  #eventListComponent = new EventsListView();
+  #container = null;
+  #eventsModel = null;
+  #events = null;
+  #cities = null;
+  #activeEventEditForm = null;
+  #newEventButtonElement = null;
 
-  constructor({ container, eventsModel }) {
-    this.container = container;
-    this.eventsModel = eventsModel;
+  constructor({ container, eventsModel, newEventButtonElement }) {
+    this.#container = container;
+    this.#eventsModel = eventsModel;
+    this.#newEventButtonElement = newEventButtonElement;
   }
 
-  renderEventItem(callback) {
+  #setActiveEventEditForm = (value) => {
+    this.#activeEventEditForm = value;
+    this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
+
+    if (this.#activeEventEditForm) {
+      document.addEventListener('keydown', this.#onEscKeyDown);
+    } else {
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#activeEventEditForm.resetEditForm();
+    }
+  };
+
+  #isNewEventFormActive = () => {
+    if (!this.#activeEventEditForm) {
+      return false;
+    }
+    return this.#activeEventEditForm.formMode === EditFormMode.NEW;
+  };
+
+  #eventEditStateChange = (event, stateAction) => {
+    if (
+      (event.formMode === EditFormMode.NEW &&
+        stateAction === EventStateAction.CREATE_NEW_FORM) ||
+      stateAction === EventStateAction.OPEN_EDIT_FORM
+    ) {
+      this.#openEditForm(event);
+    } else {
+      if (event.formMode === EditFormMode.NEW) {
+        event.destroy();
+      } else {
+        event.switchToView();
+      }
+      this.#setActiveEventEditForm(null);
+    }
+  };
+
+  #openEditForm = (event) => {
+    if (this.#activeEventEditForm) {
+      this.#activeEventEditForm.resetEditForm();
+    }
+
+    event.switchToEdit();
+    this.#setActiveEventEditForm(event);
+  };
+
+  #renderEventItem(formMode, callback) {
     const itemComponent = new EventItemView();
-    render(itemComponent, this.eventListComponent.getElement());
+    render(
+      itemComponent,
+      this.#eventListComponent.element,
+      formMode === EditFormMode.NEW
+        ? RenderPosition.AFTERBEGIN
+        : RenderPosition.BEFOREEND
+    );
     callback(itemComponent);
   }
 
-  renderEventNew() {
-    this.renderEventItem((container) => {
-      const event = {
-        id: null,
-        basePrice: 0,
-        dateFrom: null,
-        dateTo: null,
-        destination: null,
-        isFavorite: null,
-        offers: [],
-        type: 'flight',
-      };
-      const offers = this.eventsModel.getOffersByType(event.type);
-      render(
-        new EventEditView({
-          event: event,
-          cities: this.cities,
-          offers: offers,
-        }),
-        container.getElement()
-      );
-    });
+  #renderEventNew() {
+    this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   }
 
-  renderEventEdit(event) {
-    this.renderEventItem((container) => {
-      const city = this.eventsModel.getCityById(event.destination);
-      const offers = this.eventsModel.getOffersByType(event.type);
-      render(
-        new EventEditView({
-          event: event,
-          city: city,
-          cities: this.cities,
-          offers: offers,
-        }),
-        container.getElement()
-      );
-    });
-  }
-
-  renderTripPoints() {
-    for (let i = 0; i < this.events.length; i++) {
-      this.renderEventItem((container) => {
-        const event = this.events[i];
-        const city = this.eventsModel.getCityById(event.destination);
-        const offers = this.eventsModel.getSelectedOffers(
-          event.type,
-          event.offers
-        );
-        render(
-          new EventView({ event: event, city: city, offers: offers }),
-          container.getElement()
-        );
+  #renderTripPoint(event, formMode) {
+    this.#renderEventItem(formMode, (container) => {
+      new EventEngine({
+        event,
+        eventsModel: this.#eventsModel,
+        cities: this.#cities,
+        container,
+        eventStateChange: this.#eventEditStateChange,
+        formMode,
       });
+    });
+  }
+
+  #renderTripPoints() {
+    for (let i = 0; i < this.#events.length; i++) {
+      this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
     }
   }
 
   init() {
-    this.events = [...this.eventsModel.getEvents()];
-    this.cities = [...this.eventsModel.getCities()];
-    this.offers = [...this.eventsModel.getOffers()];
-
-    render(this.sortComponent, this.container);
-    render(this.eventListComponent, this.container);
-    this.renderEventEdit(this.events[0]);
-    this.renderTripPoints();
+    this.#events = [...this.#eventsModel.events];
+    this.#cities = [...this.#eventsModel.cities];
+    render(this.#sortComponent, this.#container);
+    render(this.#eventListComponent, this.#container);
+    this.#renderTripPoints();
+    this.#newEventButtonElement.addEventListener('click', () =>
+      this.#renderEventNew()
+    );
   }
 }

@@ -1,7 +1,7 @@
-import ComponentSimpleView from './component-simple-view';
+import AbstractView from '../framework/view/abstract-view';
 
-export default class EventItemView extends ComponentSimpleView {
-  createComponentTemplate() {
+export default class EventItemView extends AbstractView {
+  get template() {
     return '<li class="trip-events__item"></li>';
   }
 }

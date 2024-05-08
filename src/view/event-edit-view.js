@@ -1,13 +1,13 @@
-import { TYPE_EVENTS } from '../const';
-import { getInputDateTime } from '../utils';
-import ComponentSimpleView from './component-simple-view';
+import { EVENT_TYPES, EditFormMode } from '../const';
+import AbstractView from '../framework/view/abstract-view';
+import { getInputDateTime, isFunction } from '../utils';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
   eventTypeListTemplate.push(`<fieldset class="event__type-group">
   <legend class="visually-hidden">Event type</legend>`);
 
-  TYPE_EVENTS.forEach((typeEvent) => {
+  EVENT_TYPES.forEach((typeEvent) => {
     const typeEventCode = typeEvent.toLowerCase();
     const checkedProperty = typeEventCode === type ? 'checked' : '';
     eventTypeListTemplate.push(`<div class="event__type-item">
@@ -20,7 +20,7 @@ const createEventTypeListTemplate = (type) => {
   return eventTypeListTemplate.join('');
 };
 
-const createEventTypeTemplate = ({ type } = undefined || {}) => {
+const createEventTypeTemplate = ({ type } = {}) => {
   const eventTypeTemplate = [];
   const eventTypeListTemplate = createEventTypeListTemplate(type);
   eventTypeTemplate.push(`<div class="event__type-wrapper">
@@ -36,12 +36,12 @@ const createEventTypeTemplate = ({ type } = undefined || {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = (cities, selectedCity) => {
+const createDestinationTemplate = (type, cities, selectedCity) => {
   const elements = [];
   const selectedCityName = selectedCity?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
-    Flight
+    ${type}
   </label>
   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCityName}" list="destination-list-1">
   <datalist id="destination-list-1">`);
@@ -52,7 +52,7 @@ const createDestinationTemplate = (cities, selectedCity) => {
   return elements.join('');
 };
 
-const createEventDateTemplate = ({ dateFrom, dateTo } = undefined || {}) => {
+const createEventDateTemplate = ({ dateFrom, dateTo } = {}) => {
   const dateFromInput = getInputDateTime(dateFrom);
   const dateToInput = getInputDateTime(dateTo);
   return `<div class="event__field-group  event__field-group--time">
@@ -64,9 +64,9 @@ const createEventDateTemplate = ({ dateFrom, dateTo } = undefined || {}) => {
 </div>`;
 };
 
-const createPriceTemplate = (
-  { basePrice } = undefined || {}
-) => `<div class="event__field-group  event__field-group--price">
+const createPriceTemplate = ({
+  basePrice,
+} = {}) => `<div class="event__field-group  event__field-group--price">
 <label class="event__label" for="event-price-1">
   <span class="visually-hidden">Price</span>
   &euro;
@@ -83,7 +83,7 @@ const createOffersTemplate = (offers, selectedOffers) => {
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">`);
   offers.forEach((offer) => {
-    const checkedState = selectedOffers.indexOf(offer.id) > -1 ? 'checked' : '';
+    const checkedState = selectedOffers.includes(offer.id) ? 'checked' : '';
     offersTemplate.push(`<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-luggage" ${checkedState}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
@@ -97,9 +97,7 @@ const createOffersTemplate = (offers, selectedOffers) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate = (
-  { description, pictures } = undefined || {}
-) => {
+const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
   if (!description && !pictures) {
     return '';
   }
@@ -119,38 +117,92 @@ const createDestinationDetailTemplate = (
 
   return destDetalInfo.join('');
 };
-export default class EventEditView extends ComponentSimpleView {
-  constructor({ event, city, cities, offers }) {
+export default class EventEditView extends AbstractView {
+  #event = null;
+  #city = null;
+  #cities = null;
+  #offers = null;
+  #handleSubmit = null;
+  #handleCancel = null;
+  #handleReset = null;
+  #formMode = null;
+
+  constructor({
+    event,
+    city,
+    cities,
+    offers,
+    formMode,
+    onSubmit,
+    onCancel,
+    onReset,
+  }) {
     super();
-    this.event = event;
-    this.city = city;
-    this.cities = cities;
-    this.offers = offers;
+    this.#event = event;
+    this.#city = city;
+    this.#cities = cities;
+    this.#offers = offers;
+    this.#formMode = formMode;
+    this.#handleSubmit = onSubmit;
+    this.#handleCancel = onCancel;
+    this.#handleReset = onReset;
+    this.element.addEventListener('submit', this.#onSubmit);
+    this.element.addEventListener('reset', this.#onReset);
+    const cancelEditElement = this.element.querySelector(
+      'button.event__rollup-btn'
+    );
+    cancelEditElement.addEventListener('click', this.#onCancel);
   }
 
-  createComponentTemplate() {
-    const eventTypeTemplate = createEventTypeTemplate(this.event);
+  #onSubmit = (evt) => {
+    evt.preventDefault();
+    if (isFunction(this.#handleSubmit)) {
+      this.#handleSubmit();
+    }
+  };
+
+  #onCancel = () => {
+    if (isFunction(this.#handleCancel)) {
+      this.#handleCancel();
+    }
+  };
+
+  #onReset = () => {
+    if (isFunction(this.#handleReset)) {
+      this.#handleReset();
+    }
+  };
+
+  get template() {
+    const eventTypeTemplate = createEventTypeTemplate(this.#event);
     const destinationTemplate = createDestinationTemplate(
-      this.cities,
-      this.city
+      this.#event.type,
+      this.#cities,
+      this.#city
     );
-    const eventDateTemplate = createEventDateTemplate(this.event);
-    const priceTemplate = createPriceTemplate(this.event);
+    const eventDateTemplate = createEventDateTemplate(this.#event);
+    const priceTemplate = createPriceTemplate(this.#event);
     const offersTemplate = createOffersTemplate(
-      this.offers,
-      this.event?.offers
+      this.#offers,
+      this.#event?.offers
     );
     const destinationDetailTemplate = createDestinationDetailTemplate(
-      this.city
+      this.#city
     );
+
+    const resetButtonCaption =
+      this.#formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
     return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       ${eventTypeTemplate}
       ${destinationTemplate}
       ${eventDateTemplate}
       ${priceTemplate}
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__save-btn btn btn--blue" type="submit">Save</button>
+      <button class="event__reset-btn" type="reset">${resetButtonCaption}</button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
     </header>
     <section class="event__details">
       ${offersTemplate}

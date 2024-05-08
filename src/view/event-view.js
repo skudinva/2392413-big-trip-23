@@ -1,3 +1,4 @@
+import AbstractView from '../framework/view/abstract-view';
 import {
   getDurationString,
   getHumanizeDate,
@@ -5,7 +6,6 @@ import {
   getMachinizeDateTime,
   getShortTime,
 } from '../utils';
-import ComponentSimpleView from './component-simple-view';
 
 const createFavoriteButtonTemplate = (isFavoriteFlag) => {
   const favoriteClassName = isFavoriteFlag ? 'event__favorite-btn--active' : '';
@@ -17,12 +17,12 @@ const createFavoriteButtonTemplate = (isFavoriteFlag) => {
   </svg></button>`;
 };
 
-const createOfferTemplate = (offers) => {
-  if (offers.length === 0) {
+const createOfferTemplate = (selectedOffers) => {
+  if (selectedOffers.length === 0) {
     return '';
   }
   const offersElement = ['<ul class="event__selected-offers">'];
-  offers.forEach((offer) => {
+  selectedOffers.forEach((offer) => {
     offersElement.push(`<li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
@@ -33,17 +33,33 @@ const createOfferTemplate = (offers) => {
   offersElement.push('</ul>');
   return offersElement.join('');
 };
-export default class EventView extends ComponentSimpleView {
-  constructor({ event, city, offers }) {
+export default class EventView extends AbstractView {
+  #event = null;
+  #city = null;
+  #selectedOffers = null;
+  #handleEditClick = null;
+
+  constructor({ event, city, selectedOffers, handleEditClick }) {
     super();
-    this.event = event;
-    this.city = city;
-    this.offers = offers;
+    this.#event = event;
+    this.#city = city;
+    this.#selectedOffers = selectedOffers;
+    this.#handleEditClick = handleEditClick;
+
+    const editElement = this.element.querySelector('button.event__rollup-btn');
+    editElement.addEventListener('click', this.#onEditButtonClick);
   }
 
-  createComponentTemplate() {
-    const { basePrice, isFavorite, type, dateFrom, dateTo } = this.event;
-    const { name: cityName } = this.city;
+  #onEditButtonClick = (evt) => {
+    evt.preventDefault();
+    if (this.#handleEditClick) {
+      this.#handleEditClick();
+    }
+  };
+
+  get template() {
+    const { basePrice, isFavorite, type, dateFrom, dateTo } = this.#event;
+    const { name: cityName } = this.#city || {};
 
     const machinizeDate = getMachinizeDate(dateFrom);
     const humanizeDate = getHumanizeDate(dateFrom);
@@ -52,7 +68,7 @@ export default class EventView extends ComponentSimpleView {
     const shortTimeFrom = getShortTime(dateFrom);
     const shortTimeTo = getShortTime(dateTo);
     const eventDuration = getDurationString(dateFrom, dateTo);
-    const offerTemplate = createOfferTemplate(this.offers);
+    const offerTemplate = createOfferTemplate(this.#selectedOffers);
     const favoriteButtonTemplate = createFavoriteButtonTemplate(isFavorite);
 
     return `<div class="event">
