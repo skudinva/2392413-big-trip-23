@@ -1,13 +1,13 @@
 import { FilterType } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-const getFilterItemTemplate = (
-  filterType,
-  checked
-) => `<div class="trip-filters__filter">
-  <input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}" ${checked}>
-  <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType}</label>
+const getFilterItemTemplate = (filterTypeName, checked) => {
+  const filterTypeCode = filterTypeName.toLowerCase();
+  return `<div class="trip-filters__filter">
+  <input id="filter-${filterTypeCode}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterTypeCode}" ${checked}>
+  <label class="trip-filters__filter-label" for="filter-${filterTypeCode}">${filterTypeName}</label>
 </div>`;
+};
 export default class FilterView extends AbstractView {
   get template() {
     const filterTemplate = [];
