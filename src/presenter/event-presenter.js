@@ -114,7 +114,6 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
-    this.#events.length = 0;
     if (this.#events.length === 0) {
       render(
         new NoEventView({ currentFilter: FilterType.EVERYTHING }),
