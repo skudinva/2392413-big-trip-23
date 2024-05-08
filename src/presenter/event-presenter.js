@@ -1,4 +1,9 @@
-import { DEFAULT_EVENT_PROPS, EditFormMode, EventStateAction } from '../const';
+import {
+  DEFAULT_EVENT_PROPS,
+  EditFormMode,
+  EventStateAction,
+  FilterType,
+} from '../const';
 import { RenderPosition, render } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
@@ -109,11 +114,14 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
+    this.#events.length = 0;
     if (this.#events.length === 0) {
-      render(new NoEventView(), this.#container);
+      render(
+        new NoEventView({ currentFilter: FilterType.EVERYTHING }),
+        this.#container
+      );
       return;
     }
-
     render(this.#sortComponent, this.#container);
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
