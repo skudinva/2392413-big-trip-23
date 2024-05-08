@@ -1,29 +1,22 @@
+import { FilterType } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
+const getFilterItemTemplate = (
+  filterType,
+  checked
+) => `<div class="trip-filters__filter">
+  <input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}" ${checked}>
+  <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType}</label>
+</div>`;
 export default class FilterView extends AbstractView {
   get template() {
-    return `<form class="trip-filters" action="#" method="get">
-        <div class="trip-filters__filter">
-          <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-          <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-        </div>
-
-        <div class="trip-filters__filter">
-          <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-          <label class="trip-filters__filter-label" for="filter-future">Future</label>
-        </div>
-
-        <div class="trip-filters__filter">
-          <input id="filter-present" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="present">
-          <label class="trip-filters__filter-label" for="filter-present">Present</label>
-        </div>
-
-        <div class="trip-filters__filter">
-          <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-          <label class="trip-filters__filter-label" for="filter-past">Past</label>
-        </div>
-
-        <button class="visually-hidden" type="submit">Accept filter</button>
-      </form>`;
+    const filterTemplate = [];
+    filterTemplate.push('<form class="trip-filters" action="#" method="get">');
+    for (const key in FilterType) {
+      const filterItem = getFilterItemTemplate(FilterType[key], '');
+      filterTemplate.push(filterItem);
+    }
+    filterTemplate.push('</form>');
+    return filterTemplate.join('');
   }
 }

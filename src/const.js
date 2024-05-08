@@ -45,6 +45,13 @@ const EventStateAction = {
   DELETE_EDIT_FORM: 'Delete edit form',
 };
 
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
 export {
   DEFAULT_EVENT_PROPS,
   DateFormat,
@@ -52,4 +59,5 @@ export {
   EVENT_TYPES,
   EditFormMode,
   EventStateAction,
+  FilterType,
 };
