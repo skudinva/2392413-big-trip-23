@@ -3,7 +3,7 @@ import { remove, render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
-export default class EventEngine {
+export default class EventPointPresenter {
   #event = null;
   #eventsModel = null;
   #city = null;

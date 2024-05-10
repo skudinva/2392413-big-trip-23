@@ -10,7 +10,7 @@ import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import NoEventsView from '../view/no-events-view';
 import SortView from '../view/sort-view';
-import EventEngine from './event-engine';
+import EventPointPresenter from './event-point-presenter';
 
 export default class EventPresenter {
   #sortComponent = new SortView();
@@ -103,7 +103,7 @@ export default class EventPresenter {
 
   #renderTripPoint = (event, formMode) => {
     this.#renderEventItem(formMode, (container) => {
-      const eventEngine = new EventEngine({
+      const eventPointPresenter = new EventPointPresenter({
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
@@ -112,7 +112,7 @@ export default class EventPresenter {
         onDataChange: this.#onEventDataChange,
         formMode,
       });
-      this.#eventPresenters.set(event.id, eventEngine);
+      this.#eventPresenters.set(event.id, eventPointPresenter);
     });
   };
 
