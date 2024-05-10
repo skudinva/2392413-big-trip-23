@@ -54,7 +54,7 @@ export default class EventPointPresenter {
     this.#render();
   }
 
-  init = (event) => {
+  setEvent = (event) => {
     this.#event = event;
     remove(this.#eventComponent);
     remove(this.#eventEditComponent);

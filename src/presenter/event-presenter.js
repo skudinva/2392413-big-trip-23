@@ -73,7 +73,7 @@ export default class EventPresenter {
 
   #onEventDataChange = (event) => {
     this.#events = updateEvent(this.#events, event);
-    this.#eventPresenters.get(event.id).init(event);
+    this.#eventPresenters.get(event.id).setEvent(event);
   };
 
   #openEditForm = (event) => {
