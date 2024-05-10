@@ -17,7 +17,7 @@ export default class FilterView extends AbstractView {
 
   get template() {
     const filterTemplate = this.#filters
-      .map((filter, index) => getFilterItemTemplate(filter, index === 0))
+      .map((filter, index) => getFilterItemTemplate(filter, !index))
       .join('');
     return `<form class="trip-filters" action="#" method="get">
       ${filterTemplate}

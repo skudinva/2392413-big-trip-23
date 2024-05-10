@@ -1,7 +1,7 @@
 import { NoEventMessage } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-export default class NoEventView extends AbstractView {
+export default class NoEventsView extends AbstractView {
   #currentFilter = null;
   constructor({ currentFilter }) {
     super();

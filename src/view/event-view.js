@@ -6,7 +6,7 @@ import {
   getMachinizeDateTime,
   getShortTime,
   isFunction,
-} from '../utils';
+} from '../utils/event';
 
 const createFavoriteButtonTemplate = (isFavoriteFlag) => {
   const favoriteClassName = isFavoriteFlag ? 'event__favorite-btn--active' : '';
@@ -19,7 +19,7 @@ const createFavoriteButtonTemplate = (isFavoriteFlag) => {
 };
 
 const createOfferTemplate = (selectedOffers) => {
-  if (selectedOffers.length === 0) {
+  if (!selectedOffers.length) {
     return '';
   }
   const offersElement = ['<ul class="event__selected-offers">'];

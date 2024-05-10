@@ -22,7 +22,7 @@ export default class TripPresenter {
       cost: this.cost,
     };
 
-    if (this.#events.length === 0) {
+    if (!this.#events.length) {
       return tripInfo;
     }
 
@@ -63,7 +63,7 @@ export default class TripPresenter {
   }
 
   #renderTripInfo = () => {
-    if (this.#events.length === 0) {
+    if (!this.#events.length) {
       return;
     }
     const tripInfo = this.getTripInfo;

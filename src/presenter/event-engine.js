@@ -32,11 +32,11 @@ export default class EventEngine {
     onDataChange,
   }) {
     if (!onStateChange) {
-      throw new Error('Parametr "onStateChange" doesn\'t exist');
+      throw new Error('Parameter "onStateChange" doesn\'t exist');
     }
 
     if (!onDataChange) {
-      throw new Error('Parametr "onDataChange" doesn\'t exist');
+      throw new Error('Parameter "onDataChange" doesn\'t exist');
     }
 
     this.#container = container;

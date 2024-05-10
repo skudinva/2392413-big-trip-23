@@ -1,4 +1,3 @@
-import { updateEvent } from '../common';
 import {
   DEFAULT_EVENT_PROPS,
   EditFormMode,
@@ -6,9 +5,10 @@ import {
   FilterType,
 } from '../const';
 import { RenderPosition, render } from '../framework/render';
+import { updateEvent } from '../utils/common';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
-import NoEventView from '../view/no-event-view';
+import NoEventsView from '../view/no-events-view';
 import SortView from '../view/sort-view';
 import EventEngine from './event-engine';
 
@@ -123,9 +123,9 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
-    if (this.#events.length === 0) {
+    if (!this.#events.length) {
       render(
-        new NoEventView({ currentFilter: FilterType.EVERYTHING }),
+        new NoEventsView({ currentFilter: FilterType.EVERYTHING }),
         this.#container
       );
       return;

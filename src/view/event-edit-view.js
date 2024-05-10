@@ -1,6 +1,6 @@
 import { EVENT_TYPES, EditFormMode } from '../const';
 import AbstractView from '../framework/view/abstract-view';
-import { getInputDateTime, isFunction } from '../utils';
+import { getInputDateTime, isFunction } from '../utils/event';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -75,7 +75,7 @@ const createPriceTemplate = ({
 </div>`;
 
 const createOffersTemplate = (offers, selectedOffers) => {
-  if (!offers || offers.length === 0) {
+  if (!offers || !offers.length) {
     return '';
   }
   const offersTemplate = [];

@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { getPeriodString } from '../utils';
+import { getPeriodString } from '../utils/event';
 
 export default class TripInfoView extends AbstractView {
   #tripInfo = null;
