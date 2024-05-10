@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { getPeriodString } from '../utils';
+import { getPeriodString } from '../utils/event';
 
 export default class TripInfoView extends AbstractView {
   #tripInfo = null;
@@ -15,8 +15,8 @@ export default class TripInfoView extends AbstractView {
       .join(' &mdash; ');
 
     const dateInfo = getPeriodString(
-      destinationInfo[0].date,
-      destinationInfo[destinationInfo.length - 1].date,
+      destinationInfo[0]?.date,
+      destinationInfo[destinationInfo.length - 1]?.date,
       '&nbsp;&mdash;&nbsp;'
     );
     return `<section class="trip-main__trip-info  trip-info">

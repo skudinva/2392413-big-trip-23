@@ -1,7 +1,14 @@
-import { DEFAULT_EVENT_PROPS, EditFormMode, EventStateAction } from '../const';
+import {
+  DEFAULT_EVENT_PROPS,
+  EditFormMode,
+  EventStateAction,
+  FilterType,
+} from '../const';
 import { RenderPosition, render } from '../framework/render';
+import { updateEvent } from '../utils/common';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
+import NoEventsView from '../view/no-events-view';
 import SortView from '../view/sort-view';
 import EventEngine from './event-engine';
 
@@ -14,6 +21,7 @@ export default class EventPresenter {
   #cities = null;
   #activeEventEditForm = null;
   #newEventButtonElement = null;
+  #eventPresenters = new Map();
 
   constructor({ container, eventsModel, newEventButtonElement }) {
     this.#container = container;
@@ -63,6 +71,11 @@ export default class EventPresenter {
     }
   };
 
+  #onEventDataChange = (event) => {
+    this.#events = updateEvent(this.#events, event);
+    this.#eventPresenters.get(event.id).init(event);
+  };
+
   #openEditForm = (event) => {
     if (this.#activeEventEditForm) {
       this.#activeEventEditForm.resetEditForm();
@@ -72,7 +85,7 @@ export default class EventPresenter {
     this.#setActiveEventEditForm(event);
   };
 
-  #renderEventItem(formMode, callback) {
+  #renderEventItem = (formMode, callback) => {
     const itemComponent = new EventItemView();
     render(
       itemComponent,
@@ -82,39 +95,52 @@ export default class EventPresenter {
         : RenderPosition.BEFOREEND
     );
     callback(itemComponent);
-  }
+  };
 
-  #renderEventNew() {
+  #renderEventNew = () => {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
-  }
+  };
 
-  #renderTripPoint(event, formMode) {
+  #renderTripPoint = (event, formMode) => {
     this.#renderEventItem(formMode, (container) => {
-      new EventEngine({
+      const eventEngine = new EventEngine({
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
         container,
-        eventStateChange: this.#eventEditStateChange,
+        onStateChange: this.#eventEditStateChange,
+        onDataChange: this.#onEventDataChange,
         formMode,
       });
+      this.#eventPresenters.set(event.id, eventEngine);
     });
-  }
+  };
 
-  #renderTripPoints() {
+  #renderTripPoints = () => {
     for (let i = 0; i < this.#events.length; i++) {
       this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
     }
-  }
+  };
 
-  init() {
-    this.#events = [...this.#eventsModel.events];
-    this.#cities = [...this.#eventsModel.cities];
+  #renderTripBoard = () => {
+    if (!this.#events.length) {
+      render(
+        new NoEventsView({ currentFilter: FilterType.EVERYTHING }),
+        this.#container
+      );
+      return;
+    }
     render(this.#sortComponent, this.#container);
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
+  };
+
+  init = () => {
+    this.#events = [...this.#eventsModel.events];
+    this.#cities = [...this.#eventsModel.cities];
+    this.#renderTripBoard();
     this.#newEventButtonElement.addEventListener('click', () =>
       this.#renderEventNew()
     );
-  }
+  };
 }

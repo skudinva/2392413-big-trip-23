@@ -22,6 +22,10 @@ export default class TripPresenter {
       cost: this.cost,
     };
 
+    if (!this.#events.length) {
+      return tripInfo;
+    }
+
     const destinationDummy = {
       date: null,
       cityName: '...',
@@ -58,14 +62,17 @@ export default class TripPresenter {
     return tripInfo;
   }
 
-  #renderTripInfo() {
+  #renderTripInfo = () => {
+    if (!this.#events.length) {
+      return;
+    }
     const tripInfo = this.getTripInfo;
     const tripInfoComponent = new TripInfoView({ tripInfo });
     render(tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
-  }
+  };
 
-  init() {
+  init = () => {
     this.#events = [...this.#eventsModel.events];
     this.#renderTripInfo();
-  }
+  };
 }
