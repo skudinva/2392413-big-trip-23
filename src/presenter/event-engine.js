@@ -54,6 +54,13 @@ export default class EventEngine {
     this.#render();
   }
 
+  init = (event) => {
+    this.#event = event;
+    remove(this.#eventComponent);
+    remove(this.#eventEditComponent);
+    this.#render();
+  };
+
   #render = () => {
     this.#eventComponent = new EventView({
       event: this.#event,

@@ -1,3 +1,4 @@
+import { updateEvent } from '../common';
 import {
   DEFAULT_EVENT_PROPS,
   EditFormMode,
@@ -20,6 +21,7 @@ export default class EventPresenter {
   #cities = null;
   #activeEventEditForm = null;
   #newEventButtonElement = null;
+  #eventPresenters = new Map();
 
   constructor({ container, eventsModel, newEventButtonElement }) {
     this.#container = container;
@@ -69,10 +71,9 @@ export default class EventPresenter {
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   #onEventDataChange = (event) => {
-    //Тут надо обновить #events и наверное перерисоваться
-    //console.log(event);
+    this.#events = updateEvent(this.#events, event);
+    this.#eventPresenters.get(event.id).init(event);
   };
 
   #openEditForm = (event) => {
@@ -102,7 +103,7 @@ export default class EventPresenter {
 
   #renderTripPoint = (event, formMode) => {
     this.#renderEventItem(formMode, (container) => {
-      new EventEngine({
+      const eventEngine = new EventEngine({
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
@@ -111,6 +112,7 @@ export default class EventPresenter {
         onDataChange: this.#onEventDataChange,
         formMode,
       });
+      this.#eventPresenters.set(event.id, eventEngine);
     });
   };
 
