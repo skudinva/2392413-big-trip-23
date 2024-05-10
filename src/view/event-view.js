@@ -5,6 +5,7 @@ import {
   getMachinizeDate,
   getMachinizeDateTime,
   getShortTime,
+  isFunction,
 } from '../utils';
 
 const createFavoriteButtonTemplate = (isFavoriteFlag) => {
@@ -39,12 +40,12 @@ export default class EventView extends AbstractView {
   #selectedOffers = null;
   #handleEditClick = null;
 
-  constructor({ event, city, selectedOffers, handleEditClick }) {
+  constructor({ event, city, selectedOffers, onEditButtonClick }) {
     super();
     this.#event = event;
     this.#city = city;
     this.#selectedOffers = selectedOffers;
-    this.#handleEditClick = handleEditClick;
+    this.#handleEditClick = onEditButtonClick;
 
     const editElement = this.element.querySelector('button.event__rollup-btn');
     editElement.addEventListener('click', this.#onEditButtonClick);
@@ -52,7 +53,7 @@ export default class EventView extends AbstractView {
 
   #onEditButtonClick = (evt) => {
     evt.preventDefault();
-    if (this.#handleEditClick) {
+    if (isFunction(this.#handleEditClick)) {
       this.#handleEditClick();
     }
   };
