@@ -69,9 +69,10 @@ export default class EventPresenter {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   #onEventDataChange = (event) => {
     //Тут надо обновить #events и наверное перерисоваться
-    console.log(event);
+    //console.log(event);
   };
 
   #openEditForm = (event) => {
