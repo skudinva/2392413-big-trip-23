@@ -69,6 +69,11 @@ export default class EventPresenter {
     }
   };
 
+  #onEventDataChange = (event) => {
+    //Тут надо обновить #events и наверное перерисоваться
+    console.log(event);
+  };
+
   #openEditForm = (event) => {
     if (this.#activeEventEditForm) {
       this.#activeEventEditForm.resetEditForm();
@@ -101,7 +106,8 @@ export default class EventPresenter {
         eventsModel: this.#eventsModel,
         cities: this.#cities,
         container,
-        eventStateChange: this.#eventEditStateChange,
+        onStateChange: this.#eventEditStateChange,
+        onDataChange: this.#onEventDataChange,
         formMode,
       });
     });

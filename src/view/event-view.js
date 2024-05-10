@@ -39,22 +39,42 @@ export default class EventView extends AbstractView {
   #city = null;
   #selectedOffers = null;
   #handleEditClick = null;
+  #handleFavoriteButtonClick = null;
 
-  constructor({ event, city, selectedOffers, onEditButtonClick }) {
+  constructor({
+    event,
+    city,
+    selectedOffers,
+    onEditButtonClick,
+    onFavoriteButtonClick,
+  }) {
     super();
     this.#event = event;
     this.#city = city;
     this.#selectedOffers = selectedOffers;
     this.#handleEditClick = onEditButtonClick;
+    this.#handleFavoriteButtonClick = onFavoriteButtonClick;
 
-    const editElement = this.element.querySelector('button.event__rollup-btn');
-    editElement.addEventListener('click', this.#onEditButtonClick);
+    this.element
+      .querySelector('button.event__rollup-btn')
+      .addEventListener('click', this.#onEditButtonClick);
+
+    this.element
+      .querySelector('button.event__favorite-btn')
+      .addEventListener('click', this.#onFavoriteButtonClick);
   }
 
   #onEditButtonClick = (evt) => {
     evt.preventDefault();
     if (isFunction(this.#handleEditClick)) {
       this.#handleEditClick();
+    }
+  };
+
+  #onFavoriteButtonClick = (evt) => {
+    evt.preventDefault();
+    if (isFunction(this.#handleFavoriteButtonClick)) {
+      this.#handleFavoriteButtonClick();
     }
   };
 

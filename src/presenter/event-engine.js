@@ -12,10 +12,11 @@ export default class EventEngine {
   #selectedOffers = null;
   #eventComponent = null;
   #eventEditComponent = null;
-  #eventStateChange = null;
+  #handleStateChange = null;
   #formMode = null;
   #activeComponent = null;
   #container = null;
+  #handleDataChange = null;
 
   get formMode() {
     return this.#formMode;
@@ -26,17 +27,24 @@ export default class EventEngine {
     eventsModel,
     container,
     cities,
-    eventStateChange,
     formMode,
+    onStateChange,
+    onDataChange,
   }) {
-    if (!eventStateChange) {
-      throw new Error('Parametr "eventStateChange" doesn\'t exist');
+    if (!onStateChange) {
+      throw new Error('Parametr "onStateChange" doesn\'t exist');
     }
+
+    if (!onDataChange) {
+      throw new Error('Parametr "onDataChange" doesn\'t exist');
+    }
+
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#event = event;
     this.#cities = cities;
-    this.#eventStateChange = eventStateChange;
+    this.#handleStateChange = onStateChange;
+    this.#handleDataChange = onDataChange;
     this.#city = this.#eventsModel.getCityById(event.destination);
     this.#offers = [...this.#eventsModel.getOffersByType(event.type)];
     this.#selectedOffers = [
@@ -52,7 +60,13 @@ export default class EventEngine {
       city: this.#city,
       selectedOffers: this.#selectedOffers,
       onEditButtonClick: () => {
-        this.#eventStateChange(this, EventStateAction.OPEN_EDIT_FORM);
+        this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
+      },
+      onFavoriteButtonClick: () => {
+        this.#handleDataChange({
+          ...this.#event,
+          isFavorite: !this.#event.isFavorite,
+        });
       },
     });
 
@@ -63,19 +77,19 @@ export default class EventEngine {
       offers: this.#offers,
       formMode: this.#formMode,
       onSubmit: () => {
-        this.#eventStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
+        this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancel: () => {
-        this.#eventStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
+        this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
       },
       onReset: () => {
-        this.#eventStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
+        this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });
 
     this.#activeComponent = this.#eventComponent;
     render(this.#activeComponent, this.#container.element);
-    this.#eventStateChange(this, EventStateAction.CREATE_NEW_FORM);
+    this.#handleStateChange(this, EventStateAction.CREATE_NEW_FORM);
   };
 
   #switchToComponent = (targetComponent) => {
