@@ -29,6 +29,15 @@ export default class EventPresenter {
     this.#newEventButtonElement = newEventButtonElement;
   }
 
+  init = () => {
+    this.#events = [...this.#eventsModel.events];
+    this.#cities = [...this.#eventsModel.cities];
+    this.#renderTripBoard();
+    this.#newEventButtonElement.addEventListener('click', () =>
+      this.#renderEventNew()
+    );
+  };
+
   #setActiveEventEditForm = (value) => {
     this.#activeEventEditForm = value;
     this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
@@ -37,13 +46,6 @@ export default class EventPresenter {
       document.addEventListener('keydown', this.#onEscKeyDown);
     } else {
       document.removeEventListener('keydown', this.#onEscKeyDown);
-    }
-  };
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#activeEventEditForm.resetEditForm();
     }
   };
 
@@ -97,10 +99,6 @@ export default class EventPresenter {
     callback(itemComponent);
   };
 
-  #renderEventNew = () => {
-    this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
-  };
-
   #renderTripPoint = (event, formMode) => {
     this.#renderEventItem(formMode, (container) => {
       const eventPointPresenter = new EventPointPresenter({
@@ -135,12 +133,14 @@ export default class EventPresenter {
     this.#renderTripPoints();
   };
 
-  init = () => {
-    this.#events = [...this.#eventsModel.events];
-    this.#cities = [...this.#eventsModel.cities];
-    this.#renderTripBoard();
-    this.#newEventButtonElement.addEventListener('click', () =>
-      this.#renderEventNew()
-    );
+  #renderEventNew = () => {
+    this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#activeEventEditForm.resetEditForm();
+    }
   };
 }

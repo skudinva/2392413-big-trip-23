@@ -15,6 +15,10 @@ export default class EventsModel {
     return this.#offers;
   }
 
+  get cities() {
+    return this.#cities;
+  }
+
   getOffersByType(type) {
     const offer = this.offers.find((offerItem) => offerItem.type === type);
     return offer.offers;
@@ -24,10 +28,6 @@ export default class EventsModel {
     return this.getOffersByType(type).filter((offer) =>
       eventOffers.includes(offer.id)
     );
-  }
-
-  get cities() {
-    return this.#cities;
   }
 
   getCityById(id) {

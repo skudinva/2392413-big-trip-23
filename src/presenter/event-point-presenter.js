@@ -18,10 +18,6 @@ export default class EventPointPresenter {
   #container = null;
   #handleDataChange = null;
 
-  get formMode() {
-    return this.#formMode;
-  }
-
   constructor({
     event,
     eventsModel,
@@ -54,11 +50,32 @@ export default class EventPointPresenter {
     this.#render();
   }
 
+  get formMode() {
+    return this.#formMode;
+  }
+
   setEvent = (event) => {
     this.#event = event;
     remove(this.#eventComponent);
     remove(this.#eventEditComponent);
     this.#render();
+  };
+
+  resetEditForm = () => {
+    const formElement = this.#eventEditComponent.element;
+    formElement.reset();
+  };
+
+  switchToEdit = () => {
+    this.#switchToComponent(this.#eventEditComponent);
+  };
+
+  switchToView = () => {
+    this.#switchToComponent(this.#eventComponent);
+  };
+
+  destroy = () => {
+    remove(this.#container);
   };
 
   #render = () => {
@@ -105,22 +122,5 @@ export default class EventPointPresenter {
     }
     replace(targetComponent, this.#activeComponent);
     this.#activeComponent = targetComponent;
-  };
-
-  resetEditForm = () => {
-    const formElement = this.#eventEditComponent.element;
-    formElement.reset();
-  };
-
-  switchToEdit = () => {
-    this.#switchToComponent(this.#eventEditComponent);
-  };
-
-  switchToView = () => {
-    this.#switchToComponent(this.#eventComponent);
-  };
-
-  destroy = () => {
-    remove(this.#container);
   };
 }

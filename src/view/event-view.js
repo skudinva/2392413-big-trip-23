@@ -64,20 +64,6 @@ export default class EventView extends AbstractView {
       .addEventListener('click', this.#onFavoriteButtonClick);
   }
 
-  #onEditButtonClick = (evt) => {
-    evt.preventDefault();
-    if (isFunction(this.#handleEditClick)) {
-      this.#handleEditClick();
-    }
-  };
-
-  #onFavoriteButtonClick = (evt) => {
-    evt.preventDefault();
-    if (isFunction(this.#handleFavoriteButtonClick)) {
-      this.#handleFavoriteButtonClick();
-    }
-  };
-
   get template() {
     const { basePrice, isFavorite, type, dateFrom, dateTo } = this.#event;
     const { name: cityName } = this.#city || {};
@@ -117,4 +103,18 @@ export default class EventView extends AbstractView {
         </button>
       </div>`;
   }
+
+  #onEditButtonClick = (evt) => {
+    evt.preventDefault();
+    if (isFunction(this.#handleEditClick)) {
+      this.#handleEditClick();
+    }
+  };
+
+  #onFavoriteButtonClick = (evt) => {
+    evt.preventDefault();
+    if (isFunction(this.#handleFavoriteButtonClick)) {
+      this.#handleFavoriteButtonClick();
+    }
+  };
 }

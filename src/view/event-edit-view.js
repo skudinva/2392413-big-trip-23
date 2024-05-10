@@ -154,25 +154,6 @@ export default class EventEditView extends AbstractView {
     cancelEditElement.addEventListener('click', this.#onCancel);
   }
 
-  #onSubmit = (evt) => {
-    evt.preventDefault();
-    if (isFunction(this.#handleSubmit)) {
-      this.#handleSubmit();
-    }
-  };
-
-  #onCancel = () => {
-    if (isFunction(this.#handleCancel)) {
-      this.#handleCancel();
-    }
-  };
-
-  #onReset = () => {
-    if (isFunction(this.#handleReset)) {
-      this.#handleReset();
-    }
-  };
-
   get template() {
     const eventTypeTemplate = createEventTypeTemplate(this.#event);
     const destinationTemplate = createDestinationTemplate(
@@ -210,4 +191,23 @@ export default class EventEditView extends AbstractView {
     </section>
   </form>`;
   }
+
+  #onSubmit = (evt) => {
+    evt.preventDefault();
+    if (isFunction(this.#handleSubmit)) {
+      this.#handleSubmit();
+    }
+  };
+
+  #onCancel = () => {
+    if (isFunction(this.#handleCancel)) {
+      this.#handleCancel();
+    }
+  };
+
+  #onReset = () => {
+    if (isFunction(this.#handleReset)) {
+      this.#handleReset();
+    }
+  };
 }
