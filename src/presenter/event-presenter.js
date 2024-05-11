@@ -172,6 +172,6 @@ export default class EventPresenter {
     this.#applySorting(sortType);
     this.#clearEventsList();
     this.#renderTripPoints();
-    this.#currentSortType = null;
+    this.#currentSortType = sortType;
   };
 }
