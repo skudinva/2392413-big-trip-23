@@ -5,7 +5,6 @@ import {
   getMachinizeDate,
   getMachinizeDateTime,
   getShortTime,
-  isFunction,
 } from '../utils/event';
 
 const createFavoriteButtonTemplate = (isFavoriteFlag) => {
@@ -49,6 +48,15 @@ export default class EventView extends AbstractView {
     onFavoriteButtonClick,
   }) {
     super();
+
+    if (!onEditButtonClick) {
+      throw new Error('Parameter "onEditButtonClick" doesn\'t exist');
+    }
+
+    if (!onFavoriteButtonClick) {
+      throw new Error('Parameter "onFavoriteButtonClick" doesn\'t exist');
+    }
+
     this.#event = event;
     this.#city = city;
     this.#selectedOffers = selectedOffers;
@@ -106,15 +114,11 @@ export default class EventView extends AbstractView {
 
   #onEditButtonClick = (evt) => {
     evt.preventDefault();
-    if (isFunction(this.#handleEditClick)) {
-      this.#handleEditClick();
-    }
+    this.#handleEditClick();
   };
 
   #onFavoriteButtonClick = (evt) => {
     evt.preventDefault();
-    if (isFunction(this.#handleFavoriteButtonClick)) {
-      this.#handleFavoriteButtonClick();
-    }
+    this.#handleFavoriteButtonClick();
   };
 }

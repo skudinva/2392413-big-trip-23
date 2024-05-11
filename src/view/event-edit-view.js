@@ -1,6 +1,6 @@
 import { EVENT_TYPES, EditFormMode } from '../const';
 import AbstractView from '../framework/view/abstract-view';
-import { getInputDateTime, isFunction } from '../utils/event';
+import { getInputDateTime } from '../utils/event';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -138,6 +138,18 @@ export default class EventEditView extends AbstractView {
     onReset,
   }) {
     super();
+    if (!onSubmit) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
+    if (!onCancel) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
+    if (!onReset) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
     this.#event = event;
     this.#city = city;
     this.#cities = cities;
@@ -194,20 +206,15 @@ export default class EventEditView extends AbstractView {
 
   #onSubmit = (evt) => {
     evt.preventDefault();
-    if (isFunction(this.#handleSubmit)) {
-      this.#handleSubmit();
-    }
+
+    this.#handleSubmit();
   };
 
   #onCancel = () => {
-    if (isFunction(this.#handleCancel)) {
-      this.#handleCancel();
-    }
+    this.#handleCancel();
   };
 
   #onReset = () => {
-    if (isFunction(this.#handleReset)) {
-      this.#handleReset();
-    }
+    this.#handleReset();
   };
 }

@@ -40,18 +40,12 @@ const getInputDateTime = (date) =>
   getDateString(date, DateFormat.INPUT_DATETIME);
 
 const getDurationMinutes = (dateFrom, dateTo) => {
-  if (!dateFrom || !dateTo) {
-    return '';
-  }
   const date1 = dayjs(dateTo);
   const date2 = dayjs(dateFrom);
   return date1.diff(date2, 'm');
 };
 
 const getDurationString = (dateFrom, dateTo) => {
-  if (!dateFrom || !dateTo) {
-    return '';
-  }
   const duration = {
     minutes: 0,
     hours: 0,
