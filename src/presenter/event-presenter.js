@@ -1,11 +1,13 @@
 import {
   DEFAULT_EVENT_PROPS,
+  DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
   FilterType,
 } from '../const';
 import { RenderPosition, render } from '../framework/render';
 import { updateEvent } from '../utils/common';
+import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import NoEventsView from '../view/no-events-view';
@@ -13,7 +15,7 @@ import SortView from '../view/sort-view';
 import EventPointPresenter from './event-point-presenter';
 
 export default class EventPresenter {
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #eventListComponent = new EventsListView();
   #container = null;
   #eventsModel = null;
@@ -22,6 +24,7 @@ export default class EventPresenter {
   #activeEventEditForm = null;
   #newEventButtonElement = null;
   #eventPresenters = new Map();
+  #currentSortType = DEFAULT_SORT_TYPE;
 
   constructor({ container, eventsModel, newEventButtonElement }) {
     this.#container = container;
@@ -120,6 +123,13 @@ export default class EventPresenter {
     }
   };
 
+  #renderSort = () => {
+    this.#sortComponent = new SortView({
+      onSortButtonClick: this.#onSortButtonClick,
+    });
+    render(this.#sortComponent, this.#container);
+  };
+
   #renderTripBoard = () => {
     if (!this.#events.length) {
       render(
@@ -128,7 +138,8 @@ export default class EventPresenter {
       );
       return;
     }
-    render(this.#sortComponent, this.#container);
+    this.#applySorting(this.#currentSortType);
+    this.#renderSort();
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
   };
@@ -137,10 +148,30 @@ export default class EventPresenter {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
+  #clearEventsList = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+  };
+
+  #applySorting = (sortType) => {
+    const sortMethod = sortEvents[sortType];
+    this.#events = sortMethod(this.#events);
+  };
+
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#activeEventEditForm.resetEditForm();
     }
+  };
+
+  #onSortButtonClick = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#applySorting(sortType);
+    this.#clearEventsList();
+    this.#renderTripPoints();
+    this.#currentSortType = null;
   };
 }

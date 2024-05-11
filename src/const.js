@@ -59,8 +59,17 @@ const NoEventMessage = {
   [FilterType.PAST]: 'There are no past events now',
 };
 
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
+const DEFAULT_SORT_TYPE = SortType.DAY;
+
 export {
   DEFAULT_EVENT_PROPS,
+  DEFAULT_SORT_TYPE,
   DateFormat,
   EVENT_COUNT,
   EVENT_TYPES,
@@ -68,4 +77,5 @@ export {
   EventStateAction,
   FilterType,
   NoEventMessage,
+  SortType,
 };

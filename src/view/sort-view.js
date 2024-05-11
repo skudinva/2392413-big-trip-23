@@ -1,10 +1,23 @@
 import AbstractView from '../framework/view/abstract-view';
 
 export default class SortView extends AbstractView {
+  #handleSortButtonClick = null;
+  constructor({ onSortButtonClick }) {
+    super();
+
+    if (!onSortButtonClick) {
+      throw new Error('Parameter "onSortButtonClick" doesn\'t exist');
+    }
+
+    this.#handleSortButtonClick = onSortButtonClick;
+
+    this.element.addEventListener('click', this.#onSortButtonClick);
+  }
+
   get template() {
     return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
-      <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day">
+      <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
       <label class="trip-sort__btn" for="sort-day">Day</label>
     </div>
 
@@ -14,7 +27,7 @@ export default class SortView extends AbstractView {
     </div>
 
     <div class="trip-sort__item  trip-sort__item--time">
-      <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" checked>
+      <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
       <label class="trip-sort__btn" for="sort-time">Time</label>
     </div>
 
@@ -29,4 +42,12 @@ export default class SortView extends AbstractView {
     </div>
   </form>`;
   }
+
+  #onSortButtonClick = (evt) => {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+    const sortType = evt.target.value.split('-')[1];
+    this.#handleSortButtonClick(sortType);
+  };
 }

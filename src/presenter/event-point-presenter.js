@@ -75,6 +75,8 @@ export default class EventPointPresenter {
   };
 
   destroy = () => {
+    remove(this.#eventComponent);
+    remove(this.#eventEditComponent);
     remove(this.#container);
   };
 

@@ -4,7 +4,7 @@ import { getRandomEvent } from '../mock/event';
 import { getMockOffers } from '../mock/offer';
 
 export default class EventsModel {
-  #events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
+  #events = getRandomEvent(EVENT_COUNT);
   #cities = getMockCities();
   #offers = getMockOffers();
   get events() {

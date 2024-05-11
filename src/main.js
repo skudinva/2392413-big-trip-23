@@ -2,7 +2,7 @@ import { render } from './framework/render';
 import EventsModel from './model/events-model';
 import EventPresenter from './presenter/event-presenter';
 import TripPresenter from './presenter/trip-presenter';
-import { generateFilter } from './utils/filter-event';
+import { generateFilter } from './utils/filter-events';
 import FilterView from './view/filter-view';
 
 const eventsModel = new EventsModel();

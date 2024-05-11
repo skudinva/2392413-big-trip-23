@@ -1,4 +1,4 @@
-import { getRandomArrayElement } from '../utils/event';
+import { getUniqueRandomArrayElement } from '../utils/event';
 
 const mockEvents = [
   {
@@ -302,6 +302,7 @@ const mockEvents = [
   },
 ];
 
-const getRandomEvent = () => getRandomArrayElement(mockEvents);
+const getRandomEvent = (count) =>
+  getUniqueRandomArrayElement(mockEvents, count);
 
 export { getRandomEvent };
