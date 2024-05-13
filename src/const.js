@@ -66,9 +66,11 @@ const SortType = {
 };
 
 const DEFAULT_SORT_TYPE = SortType.DAY;
+const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
 export {
   DEFAULT_EVENT_PROPS,
+  DEFAULT_FILTER_TYPE,
   DEFAULT_SORT_TYPE,
   DateFormat,
   EVENT_COUNT,

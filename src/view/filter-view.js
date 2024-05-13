@@ -9,10 +9,16 @@ const getFilterItemTemplate = ({ type }, isChecked) => {
 </div>`;
 };
 export default class FilterView extends AbstractView {
-  #filters;
-  constructor({ filters }) {
+  #filters = null;
+  #handleFilterButtonClick = null;
+  constructor({ filters, onFilterButtonClick }) {
     super();
+    if (!onFilterButtonClick) {
+      throw new Error('Parameter "onFilterButtonClick" doesn\'t exist');
+    }
     this.#filters = filters;
+    this.#handleFilterButtonClick = onFilterButtonClick;
+    this.element.addEventListener('click', this.#onFilterButtonClick);
   }
 
   get template() {
@@ -23,4 +29,11 @@ export default class FilterView extends AbstractView {
       ${filterTemplate}
     </form>`;
   }
+
+  #onFilterButtonClick = (evt) => {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+    this.#handleFilterButtonClick(evt.target.value);
+  };
 }
