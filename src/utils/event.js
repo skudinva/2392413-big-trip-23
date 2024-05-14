@@ -11,13 +11,13 @@ const getRandomInteger = function (firstNumber, secondNumber) {
   return Math.floor(result);
 };
 const getUniqueRandomArrayElement = (elements, maxCount) => {
-  const uniqueueIndex = new Set();
-  while (uniqueueIndex.size !== Math.min(maxCount, elements.length)) {
-    uniqueueIndex.add(getRandomInteger(0, elements.length - 1));
+  const uniqueIndex = new Set();
+  while (uniqueIndex.size !== Math.min(maxCount, elements.length)) {
+    uniqueIndex.add(getRandomInteger(0, elements.length - 1));
   }
 
   const uniqueElements = [];
-  uniqueueIndex.forEach((value) => uniqueElements.push(elements[value]));
+  uniqueIndex.forEach((value) => uniqueElements.push(elements[value]));
   return uniqueElements;
 };
 const guid = () =>
@@ -86,8 +86,8 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
   return period.join(delimiter);
 };
 
-const isFunction = (chechFunction) =>
-  chechFunction && chechFunction instanceof Function;
+const isFunction = (checkFunction) =>
+  checkFunction && checkFunction instanceof Function;
 
 export {
   getDurationMinutes,

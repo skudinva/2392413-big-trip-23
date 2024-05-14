@@ -101,21 +101,21 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
   if (!description && !pictures) {
     return '';
   }
-  const destDetalInfo = [];
-  destDetalInfo.push(`<section class="event__section  event__section--destination">
+  const destDetailInfo = [];
+  destDetailInfo.push(`<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>
     <div class="event__photos-container"><div class="event__photos-tape">`);
 
   pictures.forEach((picture) => {
-    destDetalInfo.push(
+    destDetailInfo.push(
       `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
     );
   });
 
-  destDetalInfo.push('</div></div></section>');
+  destDetailInfo.push('</div></div></section>');
 
-  return destDetalInfo.join('');
+  return destDetailInfo.join('');
 };
 export default class EventEditView extends AbstractView {
   #event = null;
