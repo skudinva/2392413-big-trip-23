@@ -1,10 +1,10 @@
 import { EVENT_COUNT } from '../const';
 import { getMockCities } from '../mock/city';
-import { getRandomEvent } from '../mock/event';
+import { getRandomEvents } from '../mock/event';
 import { getMockOffers } from '../mock/offer';
 
 export default class EventsModel {
-  #events = getRandomEvent(EVENT_COUNT);
+  #events = getRandomEvents(EVENT_COUNT);
   #cities = getMockCities();
   #offers = getMockOffers();
   get events() {

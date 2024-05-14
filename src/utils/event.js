@@ -10,7 +10,7 @@ const getRandomInteger = function (firstNumber, secondNumber) {
   const result = Math.random() * (upper - lower + 1) + lower;
   return Math.floor(result);
 };
-const getUniqueRandomArrayElement = (elements, maxCount) => {
+const getUniqueRandomArrayElements = (elements, maxCount) => {
   const uniqueIndex = new Set();
   while (uniqueIndex.size !== Math.min(maxCount, elements.length)) {
     uniqueIndex.add(getRandomInteger(0, elements.length - 1));
@@ -39,11 +39,8 @@ const getShortTime = (date) => getDateString(date, DateFormat.SHORT_TIME);
 const getInputDateTime = (date) =>
   getDateString(date, DateFormat.INPUT_DATETIME);
 
-const getDurationMinutes = (dateFrom, dateTo) => {
-  const date1 = dayjs(dateTo);
-  const date2 = dayjs(dateFrom);
-  return date1.diff(date2, 'm');
-};
+const getDurationMinutes = (dateFrom, dateTo) =>
+  dayjs(dateTo).diff(dayjs(dateFrom), 'm');
 
 const getDurationString = (dateFrom, dateTo) => {
   const duration = {
@@ -99,7 +96,7 @@ export {
   getPeriodString,
   getRandomArrayElement,
   getShortTime,
-  getUniqueRandomArrayElement,
+  getUniqueRandomArrayElements,
   guid,
   isFunction,
 };

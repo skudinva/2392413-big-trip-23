@@ -18,7 +18,7 @@ export default class FilterView extends AbstractView {
     }
     this.#filters = filters;
     this.#handleFilterButtonClick = onFilterButtonClick;
-    this.element.addEventListener('click', this.#onFilterButtonClick);
+    this.element.addEventListener('change', this.#onFilterButtonClick);
   }
 
   get template() {
@@ -31,9 +31,6 @@ export default class FilterView extends AbstractView {
   }
 
   #onFilterButtonClick = (evt) => {
-    if (evt.target.tagName !== 'INPUT') {
-      return;
-    }
     this.#handleFilterButtonClick(evt.target.value);
   };
 }

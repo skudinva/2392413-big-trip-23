@@ -3,17 +3,13 @@ import EventPresenter from './presenter/event-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import TripPresenter from './presenter/trip-presenter';
 
-const headerContainer = document.querySelector(
-  '.page-header .page-header__container'
-);
+const headerContainer = document.querySelector('.page-header__container');
 const tripContainerElement = headerContainer.querySelector('.trip-main');
 const tripControlElement = headerContainer.querySelector(
   '.trip-controls__filters'
 );
 
-const eventsContainerElement = document.querySelector(
-  '.page-main .trip-events'
-);
+const eventsContainerElement = document.querySelector('.trip-events');
 const newEventButtonElement = document.querySelector(
   '.trip-main__event-add-btn'
 );

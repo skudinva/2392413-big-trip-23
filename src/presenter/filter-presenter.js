@@ -30,7 +30,7 @@ export default class FilterPresenter {
     if (this.#currentFilterType === selectedFilterType) {
       return;
     }
-    const filterMethod = filterEvents[selectedFilterType];
-    this.#events = filterMethod(this.#events); //пока смысла в этом нет
+
+    filterEvents[selectedFilterType](this.#events); //пока смысла в этом нет
   };
 }

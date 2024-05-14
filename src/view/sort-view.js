@@ -11,7 +11,7 @@ export default class SortView extends AbstractView {
 
     this.#handleSortButtonClick = onSortButtonClick;
 
-    this.element.addEventListener('click', this.#onSortButtonClick);
+    this.element.addEventListener('change', this.#onSortButtonClick);
   }
 
   get template() {
@@ -44,9 +44,6 @@ export default class SortView extends AbstractView {
   }
 
   #onSortButtonClick = (evt) => {
-    if (evt.target.tagName !== 'INPUT') {
-      return;
-    }
     const sortType = evt.target.value.split('-')[1];
     this.#handleSortButtonClick(sortType);
   };

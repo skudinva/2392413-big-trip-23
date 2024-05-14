@@ -37,7 +37,7 @@ export default class EventPresenter {
     this.#cities = [...this.#eventsModel.cities];
     this.#renderTripBoard();
     this.#newEventButtonElement.addEventListener('click', () =>
-      this.#renderEventNew()
+      this.#renderNewEvent()
     );
   };
 
@@ -144,7 +144,7 @@ export default class EventPresenter {
     this.#renderTripPoints();
   };
 
-  #renderEventNew = () => {
+  #renderNewEvent = () => {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
@@ -154,8 +154,7 @@ export default class EventPresenter {
   };
 
   #applySorting = (sortType) => {
-    const sortMethod = sortEvents[sortType];
-    this.#events = sortMethod(this.#events);
+    sortEvents[sortType](this.#events);
   };
 
   #onEscKeyDown = (evt) => {
