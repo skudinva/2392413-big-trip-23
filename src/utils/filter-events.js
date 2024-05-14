@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { FilterType } from '../const';
 
-const filterEvent = {
+const filterEvents = {
   [FilterType.EVERYTHING]: (events) => events.filter((event) => event),
   [FilterType.FUTURE]: (events) =>
     events.filter((event) => dayjs().isBefore(dayjs(event.dateFrom))),
@@ -16,10 +16,10 @@ const filterEvent = {
 };
 
 function generateFilter(events) {
-  return Object.entries(filterEvent).map(([filterType, filterEvents]) => ({
+  return Object.entries(filterEvents).map(([filterType, applyFilter]) => ({
     type: filterType,
-    count: filterEvents(events).length,
+    count: applyFilter(events).length,
   }));
 }
 
-export { generateFilter };
+export { filterEvents, generateFilter };

@@ -1,19 +1,21 @@
 import {
   DEFAULT_EVENT_PROPS,
+  DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
   FilterType,
 } from '../const';
 import { RenderPosition, render } from '../framework/render';
 import { updateEvent } from '../utils/common';
+import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import NoEventsView from '../view/no-events-view';
 import SortView from '../view/sort-view';
-import EventEngine from './event-engine';
+import EventPointPresenter from './event-point-presenter';
 
 export default class EventPresenter {
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #eventListComponent = new EventsListView();
   #container = null;
   #eventsModel = null;
@@ -22,12 +24,22 @@ export default class EventPresenter {
   #activeEventEditForm = null;
   #newEventButtonElement = null;
   #eventPresenters = new Map();
+  #currentSortType = DEFAULT_SORT_TYPE;
 
   constructor({ container, eventsModel, newEventButtonElement }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#newEventButtonElement = newEventButtonElement;
   }
+
+  init = () => {
+    this.#events = [...this.#eventsModel.events];
+    this.#cities = [...this.#eventsModel.cities];
+    this.#renderTripBoard();
+    this.#newEventButtonElement.addEventListener('click', () =>
+      this.#renderNewEvent()
+    );
+  };
 
   #setActiveEventEditForm = (value) => {
     this.#activeEventEditForm = value;
@@ -37,13 +49,6 @@ export default class EventPresenter {
       document.addEventListener('keydown', this.#onEscKeyDown);
     } else {
       document.removeEventListener('keydown', this.#onEscKeyDown);
-    }
-  };
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#activeEventEditForm.resetEditForm();
     }
   };
 
@@ -73,7 +78,7 @@ export default class EventPresenter {
 
   #onEventDataChange = (event) => {
     this.#events = updateEvent(this.#events, event);
-    this.#eventPresenters.get(event.id).init(event);
+    this.#eventPresenters.get(event.id).setEvent(event);
   };
 
   #openEditForm = (event) => {
@@ -97,13 +102,9 @@ export default class EventPresenter {
     callback(itemComponent);
   };
 
-  #renderEventNew = () => {
-    this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
-  };
-
   #renderTripPoint = (event, formMode) => {
     this.#renderEventItem(formMode, (container) => {
-      const eventEngine = new EventEngine({
+      const eventPointPresenter = new EventPointPresenter({
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
@@ -112,7 +113,7 @@ export default class EventPresenter {
         onDataChange: this.#onEventDataChange,
         formMode,
       });
-      this.#eventPresenters.set(event.id, eventEngine);
+      this.#eventPresenters.set(event.id, eventPointPresenter);
     });
   };
 
@@ -120,6 +121,13 @@ export default class EventPresenter {
     for (let i = 0; i < this.#events.length; i++) {
       this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
     }
+  };
+
+  #renderSort = () => {
+    this.#sortComponent = new SortView({
+      onSortButtonClick: this.#onSortButtonClick,
+    });
+    render(this.#sortComponent, this.#container);
   };
 
   #renderTripBoard = () => {
@@ -130,17 +138,39 @@ export default class EventPresenter {
       );
       return;
     }
-    render(this.#sortComponent, this.#container);
+    this.#applySorting(this.#currentSortType);
+    this.#renderSort();
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
   };
 
-  init = () => {
-    this.#events = [...this.#eventsModel.events];
-    this.#cities = [...this.#eventsModel.cities];
-    this.#renderTripBoard();
-    this.#newEventButtonElement.addEventListener('click', () =>
-      this.#renderEventNew()
-    );
+  #renderNewEvent = () => {
+    this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
+  };
+
+  #clearEventsList = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+  };
+
+  #applySorting = (sortType) => {
+    sortEvents[sortType](this.#events);
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#activeEventEditForm.resetEditForm();
+    }
+  };
+
+  #onSortButtonClick = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#applySorting(sortType);
+    this.#clearEventsList();
+    this.#renderTripPoints();
+    this.#currentSortType = sortType;
   };
 }

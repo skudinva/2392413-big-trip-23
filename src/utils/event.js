@@ -3,6 +3,23 @@ import { DateFormat } from '../const';
 
 const getRandomArrayElement = (items) =>
   items[Math.floor(Math.random() * items.length)];
+
+const getRandomInteger = function (firstNumber, secondNumber) {
+  const lower = Math.ceil(Math.min(firstNumber, secondNumber));
+  const upper = Math.floor(Math.max(firstNumber, secondNumber));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+const getUniqueRandomArrayElements = (elements, maxCount) => {
+  const uniqueIndex = new Set();
+  while (uniqueIndex.size !== Math.min(maxCount, elements.length)) {
+    uniqueIndex.add(getRandomInteger(0, elements.length - 1));
+  }
+
+  const uniqueElements = [];
+  uniqueIndex.forEach((value) => uniqueElements.push(elements[value]));
+  return uniqueElements;
+};
 const guid = () =>
   '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
     (
@@ -22,12 +39,10 @@ const getShortTime = (date) => getDateString(date, DateFormat.SHORT_TIME);
 const getInputDateTime = (date) =>
   getDateString(date, DateFormat.INPUT_DATETIME);
 
+const getDurationMinutes = (dateFrom, dateTo) =>
+  dayjs(dateTo).diff(dayjs(dateFrom), 'm');
+
 const getDurationString = (dateFrom, dateTo) => {
-  if (!dateFrom || !dateTo) {
-    return '';
-  }
-  const date1 = dayjs(dateTo);
-  const date2 = dayjs(dateFrom);
   const duration = {
     minutes: 0,
     hours: 0,
@@ -46,7 +61,7 @@ const getDurationString = (dateFrom, dateTo) => {
     },
   };
 
-  duration.minutes = date1.diff(date2, 'm');
+  duration.minutes = getDurationMinutes(dateFrom, dateTo);
   duration.hours = Math.floor(duration.minutes / 60);
   duration.minutes = duration.minutes % 60;
   duration.days = Math.floor(duration.hours / 24);
@@ -68,10 +83,11 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
   return period.join(delimiter);
 };
 
-const isFunction = (chechFunction) =>
-  chechFunction && chechFunction instanceof Function;
+const isFunction = (checkFunction) =>
+  checkFunction && checkFunction instanceof Function;
 
 export {
+  getDurationMinutes,
   getDurationString,
   getHumanizeDate,
   getInputDateTime,
@@ -80,6 +96,7 @@ export {
   getPeriodString,
   getRandomArrayElement,
   getShortTime,
+  getUniqueRandomArrayElements,
   guid,
   isFunction,
 };

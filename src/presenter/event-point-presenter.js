@@ -3,7 +3,7 @@ import { remove, render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
-export default class EventEngine {
+export default class EventPointPresenter {
   #event = null;
   #eventsModel = null;
   #city = null;
@@ -17,10 +17,6 @@ export default class EventEngine {
   #activeComponent = null;
   #container = null;
   #handleDataChange = null;
-
-  get formMode() {
-    return this.#formMode;
-  }
 
   constructor({
     event,
@@ -54,11 +50,34 @@ export default class EventEngine {
     this.#render();
   }
 
-  init = (event) => {
+  get formMode() {
+    return this.#formMode;
+  }
+
+  setEvent = (event) => {
     this.#event = event;
     remove(this.#eventComponent);
     remove(this.#eventEditComponent);
     this.#render();
+  };
+
+  resetEditForm = () => {
+    const formElement = this.#eventEditComponent.element;
+    formElement.reset();
+  };
+
+  switchToEdit = () => {
+    this.#switchToComponent(this.#eventEditComponent);
+  };
+
+  switchToView = () => {
+    this.#switchToComponent(this.#eventComponent);
+  };
+
+  destroy = () => {
+    remove(this.#eventComponent);
+    remove(this.#eventEditComponent);
+    remove(this.#container);
   };
 
   #render = () => {
@@ -105,22 +124,5 @@ export default class EventEngine {
     }
     replace(targetComponent, this.#activeComponent);
     this.#activeComponent = targetComponent;
-  };
-
-  resetEditForm = () => {
-    const formElement = this.#eventEditComponent.element;
-    formElement.reset();
-  };
-
-  switchToEdit = () => {
-    this.#switchToComponent(this.#eventEditComponent);
-  };
-
-  switchToView = () => {
-    this.#switchToComponent(this.#eventComponent);
-  };
-
-  destroy = () => {
-    remove(this.#container);
   };
 }

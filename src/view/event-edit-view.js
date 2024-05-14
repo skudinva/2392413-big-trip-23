@@ -1,6 +1,6 @@
 import { EVENT_TYPES, EditFormMode } from '../const';
 import AbstractView from '../framework/view/abstract-view';
-import { getInputDateTime, isFunction } from '../utils/event';
+import { getInputDateTime } from '../utils/event';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -101,21 +101,21 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
   if (!description && !pictures) {
     return '';
   }
-  const destDetalInfo = [];
-  destDetalInfo.push(`<section class="event__section  event__section--destination">
+  const destDetailInfo = [];
+  destDetailInfo.push(`<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>
     <div class="event__photos-container"><div class="event__photos-tape">`);
 
   pictures.forEach((picture) => {
-    destDetalInfo.push(
+    destDetailInfo.push(
       `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
     );
   });
 
-  destDetalInfo.push('</div></div></section>');
+  destDetailInfo.push('</div></div></section>');
 
-  return destDetalInfo.join('');
+  return destDetailInfo.join('');
 };
 export default class EventEditView extends AbstractView {
   #event = null;
@@ -138,6 +138,18 @@ export default class EventEditView extends AbstractView {
     onReset,
   }) {
     super();
+    if (!onSubmit) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
+    if (!onCancel) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
+    if (!onReset) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
     this.#event = event;
     this.#city = city;
     this.#cities = cities;
@@ -153,25 +165,6 @@ export default class EventEditView extends AbstractView {
     );
     cancelEditElement.addEventListener('click', this.#onCancel);
   }
-
-  #onSubmit = (evt) => {
-    evt.preventDefault();
-    if (isFunction(this.#handleSubmit)) {
-      this.#handleSubmit();
-    }
-  };
-
-  #onCancel = () => {
-    if (isFunction(this.#handleCancel)) {
-      this.#handleCancel();
-    }
-  };
-
-  #onReset = () => {
-    if (isFunction(this.#handleReset)) {
-      this.#handleReset();
-    }
-  };
 
   get template() {
     const eventTypeTemplate = createEventTypeTemplate(this.#event);
@@ -210,4 +203,18 @@ export default class EventEditView extends AbstractView {
     </section>
   </form>`;
   }
+
+  #onSubmit = (evt) => {
+    evt.preventDefault();
+
+    this.#handleSubmit();
+  };
+
+  #onCancel = () => {
+    this.#handleCancel();
+  };
+
+  #onReset = () => {
+    this.#handleReset();
+  };
 }
