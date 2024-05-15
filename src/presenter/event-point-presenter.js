@@ -8,7 +8,7 @@ export default class EventPointPresenter {
   #eventsModel = null;
   #city = null;
   #cities = null;
-  #offers = null;
+  #offersList = null;
   #selectedOffers = null;
   #eventComponent = null;
   #eventEditComponent = null;
@@ -42,7 +42,7 @@ export default class EventPointPresenter {
     this.#handleStateChange = onStateChange;
     this.#handleDataChange = onDataChange;
     this.#city = this.#eventsModel.getCityById(event.destination);
-    this.#offers = [...this.#eventsModel.getOffersByType(event.type)];
+    this.#offersList = [...this.#eventsModel.offers];
     this.#selectedOffers = [
       ...this.#eventsModel.getSelectedOffers(event.type, event.offers),
     ];
@@ -100,7 +100,7 @@ export default class EventPointPresenter {
       event: this.#event,
       city: this.#city,
       cities: this.#cities,
-      offers: this.#offers,
+      offersList: this.#offersList,
       formMode: this.#formMode,
       onSubmit: () => {
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
