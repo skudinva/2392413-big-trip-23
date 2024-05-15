@@ -157,14 +157,10 @@ const createEventEditTemplate = (event) => {
   </form>`;
 };
 export default class EventEditView extends AbstractStatefulView {
-  #event = null;
-  #city = null;
   #cities = null;
-  #offersList = null;
   #handleSubmit = null;
   #handleCancel = null;
   #handleReset = null;
-  #formMode = null;
 
   constructor({
     event,
@@ -190,12 +186,10 @@ export default class EventEditView extends AbstractStatefulView {
     }
 
     this._setState(
-      EventEditView.parseEventToState(event, city, cities, offersList)
+      EventEditView.parseEventToState(event, city, cities, offersList, formMode)
     );
-    this.#city = city;
+
     this.#cities = cities;
-    this.#offersList = offersList;
-    this.#formMode = formMode;
     this.#handleSubmit = onSubmit;
     this.#handleCancel = onCancel;
     this.#handleReset = onReset;
@@ -206,9 +200,10 @@ export default class EventEditView extends AbstractStatefulView {
     return createEventEditTemplate(this._state);
   }
 
-  static parseEventToState = (event, city, cities, offersList) => {
+  static parseEventToState = (event, city, cities, offersList, formMode) => {
     const state = {
       ...event,
+      formMode,
       city: { ...city },
       cities: [...cities],
       offersList: [...offersList],
