@@ -98,7 +98,6 @@ export default class EventPointPresenter {
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
-      city: this.#city,
       cities: this.#cities,
       offersList: this.#offersList,
       formMode: this.#formMode,

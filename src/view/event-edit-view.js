@@ -2,6 +2,8 @@ import { EVENT_TYPES, EditFormMode } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { getInputDateTime } from '../utils/event';
 
+const getCityById = (cities, id) => cities.find((city) => city.id === id);
+
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
   eventTypeListTemplate.push(`<fieldset class="event__type-group">
@@ -36,7 +38,7 @@ const createEventTypeTemplate = ({ type } = {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = (type, cities, selectedCity) => {
+const createDestinationTemplate = (type, selectedCity, cities) => {
   const elements = [];
   const selectedCityName = selectedCity?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
@@ -119,12 +121,12 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
 };
 
 const createEventEditTemplate = (event) => {
-  const { cities, city, offersList, formMode } = event;
+  const { cities, offersList, formMode } = event;
   const eventTypeTemplate = createEventTypeTemplate(event);
   const destinationTemplate = createDestinationTemplate(
     event.type,
-    cities,
-    city
+    event.selectedCity,
+    cities
   );
 
   const offersByType = offersList.find(
@@ -134,7 +136,9 @@ const createEventEditTemplate = (event) => {
   const eventDateTemplate = createEventDateTemplate(event);
   const priceTemplate = createPriceTemplate(event);
   const offersTemplate = createOffersTemplate(offersByType, event?.offers);
-  const destinationDetailTemplate = createDestinationDetailTemplate(city);
+  const destinationDetailTemplate = createDestinationDetailTemplate(
+    event.selectedCity
+  );
 
   const resetButtonCaption =
     formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
@@ -164,7 +168,6 @@ export default class EventEditView extends AbstractStatefulView {
 
   constructor({
     event,
-    city,
     cities,
     offersList,
     formMode,
@@ -186,7 +189,7 @@ export default class EventEditView extends AbstractStatefulView {
     }
 
     this._setState(
-      EventEditView.parseEventToState(event, city, cities, offersList, formMode)
+      EventEditView.parseEventToState(event, cities, offersList, formMode)
     );
 
     this.#cities = cities;
@@ -200,11 +203,12 @@ export default class EventEditView extends AbstractStatefulView {
     return createEventEditTemplate(this._state);
   }
 
-  static parseEventToState = (event, city, cities, offersList, formMode) => {
+  static parseEventToState = (event, cities, offersList, formMode) => {
+    const selectedCity = getCityById(cities, event.destination);
     const state = {
       ...event,
       formMode,
-      city: { ...city },
+      selectedCity: { ...selectedCity },
       cities: [...cities],
       offersList: [...offersList],
     };
@@ -213,7 +217,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   static parseStateToEvent = (state) => {
     const event = { ...state };
-    delete state.city;
+    delete state.selectedCity;
     delete state.cities;
     delete state.offersList;
     return event;
@@ -228,7 +232,6 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#onEventTypeChange);
-
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#onEventDestinationChange);
@@ -259,7 +262,7 @@ export default class EventEditView extends AbstractStatefulView {
 
     this.updateElement({
       destination: selectedCity?.id,
-      city: { ...selectedCity },
+      selectedCity: { ...selectedCity },
     });
   };
 }
