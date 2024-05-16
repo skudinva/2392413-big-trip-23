@@ -167,7 +167,8 @@ export default class EventEditView extends AbstractStatefulView {
   #handleSubmit = null;
   #handleCancel = null;
   #handleReset = null;
-  #datepicker = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({
     event,
@@ -208,9 +209,14 @@ export default class EventEditView extends AbstractStatefulView {
 
   removeElement = () => {
     super.removeElement();
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
     }
   };
 
@@ -259,7 +265,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDateFromChange = ([userDate]) => {
-    //console.log(dayjs(userDate));
     this.updateElement({ dateFrom: userDate });
   };
 
@@ -268,7 +273,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #setDatepicker = () => {
-    this.#datepicker = flatpickr(
+    this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time-1'),
       {
         enableTime: true,
@@ -278,7 +283,7 @@ export default class EventEditView extends AbstractStatefulView {
       }
     );
 
-    this.#datepicker = flatpickr(
+    this.#datepickerTo = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
         enableTime: true,
