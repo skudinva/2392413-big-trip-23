@@ -40,7 +40,7 @@ const createEventTypeTemplate = ({ type } = {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = (type, selectedCity, cities) => {
+const createDestinationTemplate = ({ type, selectedCity, cities }) => {
   const elements = [];
   const selectedCityName = selectedCity?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
@@ -78,15 +78,20 @@ const createPriceTemplate = ({
 <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
 </div>`;
 
-const createOffersTemplate = (offersList, selectedOffers) => {
-  if (!offersList || !offersList.length) {
+const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
+  const offersByType = offersList.find(
+    (offerItem) => offerItem.type === type
+  ).offers;
+
+  if (!offersByType || !offersByType.length) {
     return '';
   }
+
   const offersTemplate = [];
   offersTemplate.push(`<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">`);
-  offersList.forEach((offer) => {
+  offersByType.forEach((offer) => {
     const checkedState = selectedOffers.includes(offer.id) ? 'checked' : '';
     offersTemplate.push(`<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-luggage" ${checkedState}>
@@ -101,7 +106,9 @@ const createOffersTemplate = (offersList, selectedOffers) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
+const createDestinationDetailTemplate = ({
+  selectedCity: { description, pictures },
+} = {}) => {
   if (!description && !pictures) {
     return '';
   }
@@ -123,27 +130,15 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
 };
 
 const createEventEditTemplate = (event) => {
-  const { cities, offersList, formMode } = event;
   const eventTypeTemplate = createEventTypeTemplate(event);
-  const destinationTemplate = createDestinationTemplate(
-    event.type,
-    event.selectedCity,
-    cities
-  );
-
-  const offersByType = offersList.find(
-    (offerItem) => offerItem.type === event.type
-  ).offers;
-
+  const destinationTemplate = createDestinationTemplate(event);
   const eventDateTemplate = createEventDateTemplate(event);
   const priceTemplate = createPriceTemplate(event);
-  const offersTemplate = createOffersTemplate(offersByType, event?.offers);
-  const destinationDetailTemplate = createDestinationDetailTemplate(
-    event.selectedCity
-  );
-
+  const offersTemplate = createOffersTemplate(event);
+  const destinationDetailTemplate = createDestinationDetailTemplate(event);
   const resetButtonCaption =
-    formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
+    event.formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
+
   return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       ${eventTypeTemplate}
