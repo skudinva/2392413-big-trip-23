@@ -167,8 +167,7 @@ export default class EventEditView extends AbstractStatefulView {
   #handleSubmit = null;
   #handleCancel = null;
   #handleReset = null;
-  #datepickerFrom = null;
-  #datepickerTo = null;
+  #datepickers = new Set();
 
   constructor({
     event,
@@ -209,15 +208,10 @@ export default class EventEditView extends AbstractStatefulView {
 
   removeElement = () => {
     super.removeElement();
-    if (this.#datepickerFrom) {
-      this.#datepickerFrom.destroy();
-      this.#datepickerFrom = null;
-    }
-
-    if (this.#datepickerTo) {
-      this.#datepickerTo.destroy();
-      this.#datepickerTo = null;
-    }
+    this.#datepickers.forEach((picker) => {
+      picker.destroy();
+    });
+    this.#datepickers.clear();
   };
 
   _restoreHandlers = () => {
@@ -237,7 +231,6 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onSubmit = (evt) => {
     evt.preventDefault();
-
     this.#handleSubmit();
   };
 
@@ -273,25 +266,29 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #setDatepicker = () => {
-    this.#datepickerFrom = flatpickr(
-      this.element.querySelector('#event-start-time-1'),
+    const dateFields = [
       {
-        enableTime: true,
-        dateFormat: DateFormat.DATEPICKER,
+        fieldId: '#event-start-time-1',
         defaultDate: this._state.dateFrom,
-        onChange: this.#onDateFromChange,
-      }
-    );
-
-    this.#datepickerTo = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
+        callback: this.#onDateFromChange,
+      },
       {
-        enableTime: true,
-        dateFormat: DateFormat.DATEPICKER,
+        fieldId: '#event-end-time-1',
         defaultDate: this._state.dateTo,
-        onChange: this.#onDateToChange,
-      }
-    );
+        callback: this.#onDateToChange,
+      },
+    ];
+
+    dateFields.forEach((dateField) => {
+      this.#datepickers.add(
+        flatpickr(this.element.querySelector(dateField.fieldId), {
+          enableTime: true,
+          dateFormat: DateFormat.DATEPICKER,
+          defaultDate: dateField.defaultDate,
+          onChange: dateField.callback,
+        })
+      );
+    });
   };
 
   static parseEventToState = (event, cities, offersList, formMode) => {
