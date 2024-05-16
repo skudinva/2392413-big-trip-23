@@ -300,10 +300,10 @@ export default class EventEditView extends AbstractStatefulView {
 
   static parseStateToEvent = (state) => {
     const event = { ...state };
-    delete state.formMode;
-    delete state.selectedCity;
-    delete state.cities;
-    delete state.offersList;
+    delete event.formMode;
+    delete event.selectedCity;
+    delete event.cities;
+    delete event.offersList;
     return event;
   };
 }
