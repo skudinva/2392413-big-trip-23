@@ -1,4 +1,6 @@
-import { EVENT_TYPES, EditFormMode } from '../const';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.css';
+import { DateFormat, EVENT_TYPES, EditFormMode } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { getInputDateTime } from '../utils/event';
 
@@ -165,6 +167,7 @@ export default class EventEditView extends AbstractStatefulView {
   #handleSubmit = null;
   #handleCancel = null;
   #handleReset = null;
+  #datepicker = null;
 
   constructor({
     event,
@@ -203,25 +206,12 @@ export default class EventEditView extends AbstractStatefulView {
     return createEventEditTemplate(this._state);
   }
 
-  static parseEventToState = (event, cities, offersList, formMode) => {
-    const selectedCity = getCityById(cities, event.destination);
-    const state = {
-      ...event,
-      formMode,
-      selectedCity: { ...selectedCity },
-      cities: [...cities],
-      offersList: [...offersList],
-    };
-    return state;
-  };
-
-  static parseStateToEvent = (state) => {
-    const event = { ...state };
-    delete state.formMode;
-    delete state.selectedCity;
-    delete state.cities;
-    delete state.offersList;
-    return event;
+  removeElement = () => {
+    super.removeElement();
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
   };
 
   _restoreHandlers = () => {
@@ -236,6 +226,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#onEventDestinationChange);
+    this.#setDatepicker();
   };
 
   #onSubmit = (evt) => {
@@ -265,5 +256,57 @@ export default class EventEditView extends AbstractStatefulView {
       destination: selectedCity?.id,
       selectedCity: { ...selectedCity },
     });
+  };
+
+  #onDateFromChange = ([userDate]) => {
+    //console.log(dayjs(userDate));
+    this.updateElement({ dateFrom: userDate });
+  };
+
+  #onDateToChange = ([userDate]) => {
+    this.updateElement({ dateTo: userDate });
+  };
+
+  #setDatepicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: DateFormat.DATEPICKER,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#onDateFromChange,
+      }
+    );
+
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: DateFormat.DATEPICKER,
+        defaultDate: this._state.dateTo,
+        onChange: this.#onDateToChange,
+      }
+    );
+  };
+
+  static parseEventToState = (event, cities, offersList, formMode) => {
+    const selectedCity = getCityById(cities, event.destination);
+    const state = {
+      ...event,
+      formMode,
+      selectedCity: { ...selectedCity },
+      cities: [...cities],
+      offersList: [...offersList],
+    };
+    return state;
+  };
+
+  static parseStateToEvent = (state) => {
+    const event = { ...state };
+    delete state.formMode;
+    delete state.selectedCity;
+    delete state.cities;
+    delete state.offersList;
+    return event;
   };
 }
