@@ -36,6 +36,7 @@ const createOfferTemplate = (selectedOffers) => {
 export default class EventView extends AbstractView {
   #event = null;
   #city = null;
+  /**@type {Array} */
   #selectedOffers = null;
   #handleEditClick = null;
   #handleFavoriteButtonClick = null;

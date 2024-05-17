@@ -158,6 +158,7 @@ const createEventEditTemplate = (event) => {
   </form>`;
 };
 export default class EventEditView extends AbstractStatefulView {
+  /**@type {Array} */
   #cities = null;
   #handleSubmit = null;
   #handleCancel = null;

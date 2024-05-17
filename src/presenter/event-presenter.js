@@ -17,12 +17,16 @@ import EventPointPresenter from './event-point-presenter';
 export default class EventPresenter {
   #sortComponent = null;
   #eventListComponent = new EventsListView();
+  /**@type {HTMLElement} */
   #container = null;
   #eventsModel = null;
   #events = null;
   #cities = null;
+  /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
+  /**@type {HTMLElement} */
   #newEventButtonElement = null;
+  /**@type {Map<string, EventPointPresenter>} */
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
 

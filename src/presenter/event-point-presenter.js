@@ -7,14 +7,21 @@ export default class EventPointPresenter {
   #event = null;
   #eventsModel = null;
   #city = null;
+  /**@type {Array} */
   #cities = null;
+  /**@type {Array} */
   #offersList = null;
+  /**@type {Array} */
   #selectedOffers = null;
+  /**@type {EventView} */
   #eventComponent = null;
+  /**@type {EventEditView} */
   #eventEditComponent = null;
   #handleStateChange = null;
   #formMode = null;
+  /**@type {EventView|EventEditView} */
   #activeComponent = null;
+  /**@type {HTMLElement} */
   #container = null;
   #handleDataChange = null;
 
