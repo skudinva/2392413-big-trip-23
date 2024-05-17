@@ -69,21 +69,21 @@ export default class EventPresenter {
 
   /**
    *
-   * @param {EventPointPresenter} event
+   * @param {EventPointPresenter} eventPointPresenter
    * @param {String} stateAction
    */
-  #onEventEditStateChange = (event, stateAction) => {
+  #onEventEditStateChange = (eventPointPresenter, stateAction) => {
     if (
-      (event.formMode === EditFormMode.NEW &&
+      (eventPointPresenter.formMode === EditFormMode.NEW &&
         stateAction === EventStateAction.CREATE_NEW_FORM) ||
       stateAction === EventStateAction.OPEN_EDIT_FORM
     ) {
-      this.#openEditForm(event);
+      this.#openEditForm(eventPointPresenter);
     } else {
-      if (event.formMode === EditFormMode.NEW) {
-        event.destroy();
+      if (eventPointPresenter.formMode === EditFormMode.NEW) {
+        eventPointPresenter.destroy();
       } else {
-        event.switchToView();
+        eventPointPresenter.switchToView();
       }
       this.#setActiveEventEditForm(null);
     }
@@ -97,15 +97,15 @@ export default class EventPresenter {
 
   /**
    *
-   * @param {EventPointPresenter} event
+   * @param {EventPointPresenter} eventPointPresenter
    */
-  #openEditForm = (event) => {
+  #openEditForm = (eventPointPresenter) => {
     if (this.#activeEventEditForm) {
       this.#activeEventEditForm.resetEditForm();
     }
 
-    event.switchToEdit();
-    this.#setActiveEventEditForm(event);
+    eventPointPresenter.switchToEdit();
+    this.#setActiveEventEditForm(eventPointPresenter);
   };
 
   #renderEventItem = (formMode, callback) => {

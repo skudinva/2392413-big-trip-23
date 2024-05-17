@@ -129,15 +129,15 @@ const createDestinationDetailTemplate = ({
   return destDetailInfo.join('');
 };
 
-const createEventEditTemplate = (event) => {
-  const eventTypeTemplate = createEventTypeTemplate(event);
-  const destinationTemplate = createDestinationTemplate(event);
-  const eventDateTemplate = createEventDateTemplate(event);
-  const priceTemplate = createPriceTemplate(event);
-  const offersTemplate = createOffersTemplate(event);
-  const destinationDetailTemplate = createDestinationDetailTemplate(event);
+const createEventEditTemplate = (eventState) => {
+  const eventTypeTemplate = createEventTypeTemplate(eventState);
+  const destinationTemplate = createDestinationTemplate(eventState);
+  const eventDateTemplate = createEventDateTemplate(eventState);
+  const priceTemplate = createPriceTemplate(eventState);
+  const offersTemplate = createOffersTemplate(eventState);
+  const destinationDetailTemplate = createDestinationDetailTemplate(eventState);
   const resetButtonCaption =
-    event.formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
+    eventState.formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
 
   return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -333,12 +333,12 @@ export default class EventEditView extends AbstractStatefulView {
     return state;
   };
 
-  static parseStateToEvent = (state) => {
-    const event = { ...state };
-    delete event.formMode;
-    delete event.selectedCity;
-    delete event.cities;
-    delete event.offersList;
-    return event;
+  static parseStateToEvent = (eventState) => {
+    const newEventState = { ...eventState };
+    delete newEventState.formMode;
+    delete newEventState.selectedCity;
+    delete newEventState.cities;
+    delete newEventState.offersList;
+    return newEventState;
   };
 }
