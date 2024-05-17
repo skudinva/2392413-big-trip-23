@@ -45,6 +45,10 @@ export default class EventPresenter {
     );
   };
 
+  /**
+   *
+   * @param {EventPointPresenter} value
+   */
   #setActiveEventEditForm = (value) => {
     this.#activeEventEditForm = value;
     this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
@@ -63,6 +67,11 @@ export default class EventPresenter {
     return this.#activeEventEditForm.formMode === EditFormMode.NEW;
   };
 
+  /**
+   *
+   * @param {EventPointPresenter} event
+   * @param {String} stateAction
+   */
   #onEventEditStateChange = (event, stateAction) => {
     if (
       (event.formMode === EditFormMode.NEW &&
@@ -86,6 +95,10 @@ export default class EventPresenter {
     eventPointPresenter.setEvent(event);
   };
 
+  /**
+   *
+   * @param {EventPointPresenter} event
+   */
   #openEditForm = (event) => {
     if (this.#activeEventEditForm) {
       this.#activeEventEditForm.resetEditForm();
