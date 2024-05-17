@@ -94,7 +94,7 @@ const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
   offersByType.forEach((offer) => {
     const checkedState = selectedOffers.includes(offer.id) ? 'checked' : '';
     offersTemplate.push(`<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-luggage" ${checkedState}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" data-offer-id="${offer.id}" ${checkedState}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -221,6 +221,19 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#onEventDestinationChange);
+    this.element
+      .querySelector('.event__input--price')
+      .addEventListener('change', this.#onEventBasePriceChange);
+    const offersContainerElement = this.element.querySelector(
+      '.event__available-offers'
+    );
+    if (offersContainerElement) {
+      offersContainerElement.addEventListener(
+        'change',
+        this.#onEventOffersChange
+      );
+    }
+
     this.#setDatepicker();
   };
 
@@ -253,11 +266,31 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDateFromChange = ([userDate]) => {
-    this.updateElement({ dateFrom: userDate });
+    this._setState({ dateFrom: userDate });
   };
 
   #onDateToChange = ([userDate]) => {
-    this.updateElement({ dateTo: userDate });
+    this._setState({ dateTo: userDate });
+  };
+
+  #onEventBasePriceChange = (evt) => {
+    this._setState({ basePrice: evt.target.value });
+  };
+
+  #onEventOffersChange = (evt) => {
+    const currentOffersState = new Set(this._state.offers);
+    const {
+      dataset: { offerId },
+      checked,
+    } = evt.target;
+
+    if (checked) {
+      currentOffersState.add(offerId);
+    } else {
+      currentOffersState.delete(offerId);
+    }
+
+    this._setState({ offers: Array.from(currentOffersState) });
   };
 
   #setDatepicker = () => {
