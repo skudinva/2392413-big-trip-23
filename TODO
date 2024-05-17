@@ -7,3 +7,4 @@ Archive:
   ✔ Из моков надо перетащить все функции в модель данных @done(24-04-26 16:12) @project(Todo)
   ✔ renderEventEdit/renderEventNew рефакторить или удалить в следующих ДЗ @done(24-05-03 21:20) @project(Todo)
   ✔ Разобраться с eventEditStateChange @done(24-05-07 15:12) @project(Todo)
+  ☐ Нужно/можно _state.cities использовать структуру Map чтобы по id искать было проще? Это относится и к _state.offers
