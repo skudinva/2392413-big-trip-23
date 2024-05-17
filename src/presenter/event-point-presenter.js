@@ -41,11 +41,8 @@ export default class EventPointPresenter {
     this.#cities = cities;
     this.#handleStateChange = onStateChange;
     this.#handleDataChange = onDataChange;
-    this.#city = this.#eventsModel.getCityById(event.destination);
     this.#offersList = [...this.#eventsModel.offers];
-    this.#selectedOffers = [
-      ...this.#eventsModel.getSelectedOffers(event.type, event.offers),
-    ];
+
     this.#formMode = formMode;
     this.#render();
   }
@@ -81,6 +78,13 @@ export default class EventPointPresenter {
   };
 
   #render = () => {
+    this.#city = this.#eventsModel.getCityById(this.#event.destination);
+    this.#selectedOffers = [
+      ...this.#eventsModel.getSelectedOffers(
+        this.#event.type,
+        this.#event.offers
+      ),
+    ];
     this.#eventComponent = new EventView({
       event: this.#event,
       city: this.#city,
@@ -101,7 +105,8 @@ export default class EventPointPresenter {
       cities: this.#cities,
       offersList: this.#offersList,
       formMode: this.#formMode,
-      onSubmit: () => {
+      onSubmit: (updateEvent) => {
+        this.#handleDataChange(updateEvent);
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancel: () => {

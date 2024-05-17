@@ -23,7 +23,7 @@ export default class EventPresenter {
   #cities = null;
   #activeEventEditForm = null;
   #newEventButtonElement = null;
-  #eventPresenters = new Map();
+  #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
 
   constructor({ container, eventsModel, newEventButtonElement }) {
@@ -59,7 +59,7 @@ export default class EventPresenter {
     return this.#activeEventEditForm.formMode === EditFormMode.NEW;
   };
 
-  #eventEditStateChange = (event, stateAction) => {
+  #onEventEditStateChange = (event, stateAction) => {
     if (
       (event.formMode === EditFormMode.NEW &&
         stateAction === EventStateAction.CREATE_NEW_FORM) ||
@@ -78,7 +78,8 @@ export default class EventPresenter {
 
   #onEventDataChange = (event) => {
     this.#events = updateEvent(this.#events, event);
-    this.#eventPresenters.get(event.id).setEvent(event);
+    const eventPointPresenter = this.#eventPointPresenters.get(event.id);
+    eventPointPresenter.setEvent(event);
   };
 
   #openEditForm = (event) => {
@@ -109,11 +110,11 @@ export default class EventPresenter {
         eventsModel: this.#eventsModel,
         cities: this.#cities,
         container,
-        onStateChange: this.#eventEditStateChange,
+        onStateChange: this.#onEventEditStateChange,
         onDataChange: this.#onEventDataChange,
         formMode,
       });
-      this.#eventPresenters.set(event.id, eventPointPresenter);
+      this.#eventPointPresenters.set(event.id, eventPointPresenter);
     });
   };
 
@@ -149,8 +150,8 @@ export default class EventPresenter {
   };
 
   #clearEventsList = () => {
-    this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
+    this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPointPresenters.clear();
   };
 
   #applySorting = (sortType) => {
