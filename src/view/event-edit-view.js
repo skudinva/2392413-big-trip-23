@@ -326,13 +326,10 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  static parseEventToState = (event, formMode) => {
-    const state = {
-      ...event,
-      formMode,
-    };
-    return state;
-  };
+  static parseEventToState = (event, formMode) => ({
+    ...event,
+    formMode,
+  });
 
   static parseStateToEvent = (eventState) => {
     const newEventState = { ...eventState };
