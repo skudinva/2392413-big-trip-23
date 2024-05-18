@@ -38,9 +38,10 @@ const createEventTypeTemplate = ({ type } = {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = ({ type, selectedCity, cities }) => {
+const createDestinationTemplate = ({ type, destination, cities }) => {
   const elements = [];
-  const selectedCityName = selectedCity?.name || '';
+  const selectedCityName =
+    getValueFromArrayById(cities, destination)?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
     ${type}
@@ -104,9 +105,12 @@ const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate = ({
-  selectedCity: { description, pictures },
-} = {}) => {
+const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
+  if (!destination) {
+    return '';
+  }
+  const { description, pictures } = getValueFromArrayById(cities, destination);
+
   if (!description && !pictures) {
     return '';
   }
@@ -187,7 +191,7 @@ export default class EventEditView extends AbstractStatefulView {
       throw new Error('Parameter "onReset" doesn\'t exist');
     }
 
-    this._setState(EventEditView.parseEventToState(event, cities, formMode));
+    this._setState(EventEditView.parseEventToState(event, formMode));
 
     this.#cities = cities;
     this.#offersList = offersList;
@@ -278,7 +282,6 @@ export default class EventEditView extends AbstractStatefulView {
 
     this.updateElement({
       destination: selectedCity?.id,
-      selectedCity: { ...selectedCity },
     });
   };
 
@@ -323,12 +326,10 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  static parseEventToState = (event, cities, formMode) => {
-    const selectedCity = getValueFromArrayById(cities, event.destination);
+  static parseEventToState = (event, formMode) => {
     const state = {
       ...event,
       formMode,
-      selectedCity: { ...selectedCity },
     };
     return state;
   };
@@ -336,7 +337,6 @@ export default class EventEditView extends AbstractStatefulView {
   static parseStateToEvent = (eventState) => {
     const newEventState = { ...eventState };
     delete newEventState.formMode;
-    delete newEventState.selectedCity;
     return newEventState;
   };
 }
