@@ -160,9 +160,9 @@ const createEventEditTemplate = (eventState) => {
 export default class EventEditView extends AbstractStatefulView {
   /**@type {Array} */
   #cities = null;
-  #handleSubmit = null;
-  #handleCancel = null;
-  #handleReset = null;
+  #handleFormSubmit = null;
+  #handleFormCancel = null;
+  #handleFormReset = null;
   #datepickers = new Set();
 
   constructor({
@@ -192,9 +192,9 @@ export default class EventEditView extends AbstractStatefulView {
     );
 
     this.#cities = cities;
-    this.#handleSubmit = onSubmit;
-    this.#handleCancel = onCancel;
-    this.#handleReset = onReset;
+    this.#handleFormSubmit = onSubmit;
+    this.#handleFormCancel = onCancel;
+    this.#handleFormReset = onReset;
     this._restoreHandlers();
   }
 
@@ -241,15 +241,15 @@ export default class EventEditView extends AbstractStatefulView {
   #onSubmit = (evt) => {
     evt.preventDefault();
     const event = EventEditView.parseStateToEvent(this._state);
-    this.#handleSubmit(event);
+    this.#handleFormSubmit(event);
   };
 
   #onCancel = () => {
-    this.#handleCancel();
+    this.#handleFormCancel();
   };
 
   #onReset = () => {
-    this.#handleReset();
+    this.#handleFormReset();
   };
 
   #onEventTypeChange = (evt) => {
