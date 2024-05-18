@@ -158,6 +158,7 @@ const createEventEditTemplate = (eventState) => {
 export default class EventEditView extends AbstractStatefulView {
   /**@type {Array} */
   #cities = null;
+  #offersList = null;
   #handleFormSubmit = null;
   #handleFormCancel = null;
   #handleFormReset = null;
@@ -191,6 +192,7 @@ export default class EventEditView extends AbstractStatefulView {
     );
 
     this.#cities = cities;
+    this.#offersList = offersList;
     this.#handleFormSubmit = onSubmit;
     this.#handleFormCancel = onCancel;
     this.#handleFormReset = onReset;
@@ -210,7 +212,11 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createEventEditTemplate(this._state);
+    return createEventEditTemplate({
+      ...this._state,
+      cities: this.#cities,
+      offersList: this.#offersList,
+    });
   }
 
   removeElement = () => {
@@ -325,8 +331,6 @@ export default class EventEditView extends AbstractStatefulView {
       ...event,
       formMode,
       selectedCity: { ...selectedCity },
-      cities: [...cities],
-      offersList: [...offersList],
     };
     return state;
   };
@@ -335,8 +339,6 @@ export default class EventEditView extends AbstractStatefulView {
     const newEventState = { ...eventState };
     delete newEventState.formMode;
     delete newEventState.selectedCity;
-    delete newEventState.cities;
-    delete newEventState.offersList;
     return newEventState;
   };
 }
