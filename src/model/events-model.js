@@ -2,6 +2,7 @@ import { EVENT_COUNT } from '../const';
 import { getMockCities } from '../mock/city';
 import { getRandomEvents } from '../mock/event';
 import { getMockOffers } from '../mock/offer';
+import { getValueFromArrayById } from '../utils/event';
 
 export default class EventsModel {
   #events = getRandomEvents(EVENT_COUNT);
@@ -31,6 +32,6 @@ export default class EventsModel {
   }
 
   getCityById(id) {
-    return this.cities.find((city) => city.id === id);
+    return getValueFromArrayById(this.cities, id);
   }
 }

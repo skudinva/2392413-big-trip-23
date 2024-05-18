@@ -2,9 +2,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.css';
 import { DateFormat, EVENT_TYPES, EditFormMode } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { getInputDateTime } from '../utils/event';
-
-const getCityById = (cities, id) => cities.find((city) => city.id === id);
+import { getInputDateTime, getValueFromArrayById } from '../utils/event';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -322,7 +320,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   static parseEventToState = (event, cities, offersList, formMode) => {
-    const selectedCity = getCityById(cities, event.destination);
+    const selectedCity = getValueFromArrayById(cities, event.destination);
     const state = {
       ...event,
       formMode,

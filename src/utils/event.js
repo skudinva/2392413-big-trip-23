@@ -86,6 +86,9 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
 const isFunction = (checkFunction) =>
   checkFunction && checkFunction instanceof Function;
 
+const getValueFromArrayById = (array, id) =>
+  array.find((item) => item.id === id);
+
 export {
   getDurationMinutes,
   getDurationString,
@@ -97,6 +100,7 @@ export {
   getRandomArrayElement,
   getShortTime,
   getUniqueRandomArrayElements,
+  getValueFromArrayById,
   guid,
   isFunction,
 };
