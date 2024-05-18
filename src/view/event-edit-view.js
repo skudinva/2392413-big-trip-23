@@ -187,9 +187,7 @@ export default class EventEditView extends AbstractStatefulView {
       throw new Error('Parameter "onReset" doesn\'t exist');
     }
 
-    this._setState(
-      EventEditView.parseEventToState(event, cities, offersList, formMode)
-    );
+    this._setState(EventEditView.parseEventToState(event, cities, formMode));
 
     this.#cities = cities;
     this.#offersList = offersList;
@@ -325,7 +323,7 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  static parseEventToState = (event, cities, offersList, formMode) => {
+  static parseEventToState = (event, cities, formMode) => {
     const selectedCity = getValueFromArrayById(cities, event.destination);
     const state = {
       ...event,
