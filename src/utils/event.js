@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { DateFormat } from '../const';
+import { DateFormat, EditFormMode } from '../const';
 
 const getRandomArrayElement = (items) =>
   items[Math.floor(Math.random() * items.length)];
@@ -86,9 +86,17 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
 const isFunction = (checkFunction) =>
   checkFunction && checkFunction instanceof Function;
 
+const getValueFromArrayById = (array, id) =>
+  array.find((item) => item.id === id);
+
+const isNewEvent = (event) => event.id === null;
+const getFormMode = (event) =>
+  isNewEvent(event) ? EditFormMode.NEW : EditFormMode.EDIT;
+
 export {
   getDurationMinutes,
   getDurationString,
+  getFormMode,
   getHumanizeDate,
   getInputDateTime,
   getMachinizeDate,
@@ -97,6 +105,8 @@ export {
   getRandomArrayElement,
   getShortTime,
   getUniqueRandomArrayElements,
+  getValueFromArrayById,
   guid,
   isFunction,
+  isNewEvent,
 };

@@ -32,6 +32,7 @@ const DateFormat = {
   SHORT_TIME: 'HH:mm',
   INPUT_DATETIME: 'DD/MM/YY HH:mm',
   YEARMONTH: 'YYYY-MM',
+  DATEPICKER: 'd/m/y H:i',
 };
 
 const EditFormMode = { NEW: 'New', EDIT: 'Edit' };

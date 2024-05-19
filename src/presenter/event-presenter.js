@@ -17,13 +17,17 @@ import EventPointPresenter from './event-point-presenter';
 export default class EventPresenter {
   #sortComponent = null;
   #eventListComponent = new EventsListView();
+  /**@type {HTMLElement} */
   #container = null;
   #eventsModel = null;
   #events = null;
   #cities = null;
+  /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
+  /**@type {HTMLElement} */
   #newEventButtonElement = null;
-  #eventPresenters = new Map();
+  /**@type {Map<string, EventPointPresenter>} */
+  #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
 
   constructor({ container, eventsModel, newEventButtonElement }) {
@@ -41,6 +45,10 @@ export default class EventPresenter {
     );
   };
 
+  /**
+   *
+   * @param {EventPointPresenter} value
+   */
   #setActiveEventEditForm = (value) => {
     this.#activeEventEditForm = value;
     this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
@@ -59,18 +67,23 @@ export default class EventPresenter {
     return this.#activeEventEditForm.formMode === EditFormMode.NEW;
   };
 
-  #eventEditStateChange = (event, stateAction) => {
+  /**
+   *
+   * @param {EventPointPresenter} eventPointPresenter
+   * @param {String} stateAction
+   */
+  #onEventEditStateChange = (eventPointPresenter, stateAction) => {
     if (
-      (event.formMode === EditFormMode.NEW &&
+      (eventPointPresenter.formMode === EditFormMode.NEW &&
         stateAction === EventStateAction.CREATE_NEW_FORM) ||
       stateAction === EventStateAction.OPEN_EDIT_FORM
     ) {
-      this.#openEditForm(event);
+      this.#openEditForm(eventPointPresenter);
     } else {
-      if (event.formMode === EditFormMode.NEW) {
-        event.destroy();
+      if (eventPointPresenter.formMode === EditFormMode.NEW) {
+        eventPointPresenter.destroy();
       } else {
-        event.switchToView();
+        eventPointPresenter.switchToView();
       }
       this.#setActiveEventEditForm(null);
     }
@@ -78,16 +91,21 @@ export default class EventPresenter {
 
   #onEventDataChange = (event) => {
     this.#events = updateEvent(this.#events, event);
-    this.#eventPresenters.get(event.id).setEvent(event);
+    const eventPointPresenter = this.#eventPointPresenters.get(event.id);
+    eventPointPresenter.setEvent(event);
   };
 
-  #openEditForm = (event) => {
+  /**
+   *
+   * @param {EventPointPresenter} eventPointPresenter
+   */
+  #openEditForm = (eventPointPresenter) => {
     if (this.#activeEventEditForm) {
       this.#activeEventEditForm.resetEditForm();
     }
 
-    event.switchToEdit();
-    this.#setActiveEventEditForm(event);
+    eventPointPresenter.switchToEdit();
+    this.#setActiveEventEditForm(eventPointPresenter);
   };
 
   #renderEventItem = (formMode, callback) => {
@@ -109,11 +127,10 @@ export default class EventPresenter {
         eventsModel: this.#eventsModel,
         cities: this.#cities,
         container,
-        onStateChange: this.#eventEditStateChange,
+        onStateChange: this.#onEventEditStateChange,
         onDataChange: this.#onEventDataChange,
-        formMode,
       });
-      this.#eventPresenters.set(event.id, eventPointPresenter);
+      this.#eventPointPresenters.set(event.id, eventPointPresenter);
     });
   };
 
@@ -149,8 +166,8 @@ export default class EventPresenter {
   };
 
   #clearEventsList = () => {
-    this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
+    this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPointPresenters.clear();
   };
 
   #applySorting = (sortType) => {

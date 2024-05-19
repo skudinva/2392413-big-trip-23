@@ -1,4 +1,5 @@
 import { RenderPosition, render } from '../framework/render';
+import { getDurationMinutes } from '../utils/event';
 import TripInfoView from '../view/trip-info-view';
 
 export default class TripPresenter {
@@ -31,9 +32,8 @@ export default class TripPresenter {
       cityName: '...',
     };
 
-    const sortEvents = this.#events.sort(
-      (nextEvent, currentEvent) =>
-        new Date(nextEvent.dateFrom) - new Date(currentEvent.dateFrom)
+    const sortEvents = this.#events.sort((nextEvent, currentEvent) =>
+      getDurationMinutes(currentEvent.dateFrom, nextEvent.dateFrom)
     );
 
     const getInfo = (date, destination) => ({

@@ -1,6 +1,12 @@
-import { EVENT_TYPES, EditFormMode } from '../const';
-import AbstractView from '../framework/view/abstract-view';
-import { getInputDateTime } from '../utils/event';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.css';
+import { DateFormat, EVENT_TYPES } from '../const';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import {
+  getInputDateTime,
+  getValueFromArrayById,
+  isNewEvent,
+} from '../utils/event';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -36,9 +42,10 @@ const createEventTypeTemplate = ({ type } = {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = (type, cities, selectedCity) => {
+const createDestinationTemplate = ({ type, destination, cities }) => {
   const elements = [];
-  const selectedCityName = selectedCity?.name || '';
+  const selectedCityName =
+    getValueFromArrayById(cities, destination)?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
     ${type}
@@ -74,18 +81,23 @@ const createPriceTemplate = ({
 <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
 </div>`;
 
-const createOffersTemplate = (offers, selectedOffers) => {
-  if (!offers || !offers.length) {
+const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
+  const offersByType = offersList.find(
+    (offerItem) => offerItem.type === type
+  ).offers;
+
+  if (!offersByType || !offersByType.length) {
     return '';
   }
+
   const offersTemplate = [];
   offersTemplate.push(`<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">`);
-  offers.forEach((offer) => {
+  offersByType.forEach((offer) => {
     const checkedState = selectedOffers.includes(offer.id) ? 'checked' : '';
     offersTemplate.push(`<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-luggage" ${checkedState}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" data-offer-id="${offer.id}" ${checkedState}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -97,7 +109,12 @@ const createOffersTemplate = (offers, selectedOffers) => {
   return offersTemplate.join('');
 };
 
-const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
+const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
+  if (!destination) {
+    return '';
+  }
+  const { description, pictures } = getValueFromArrayById(cities, destination);
+
   if (!description && !pictures) {
     return '';
   }
@@ -117,75 +134,17 @@ const createDestinationDetailTemplate = ({ description, pictures } = {}) => {
 
   return destDetailInfo.join('');
 };
-export default class EventEditView extends AbstractView {
-  #event = null;
-  #city = null;
-  #cities = null;
-  #offers = null;
-  #handleSubmit = null;
-  #handleCancel = null;
-  #handleReset = null;
-  #formMode = null;
 
-  constructor({
-    event,
-    city,
-    cities,
-    offers,
-    formMode,
-    onSubmit,
-    onCancel,
-    onReset,
-  }) {
-    super();
-    if (!onSubmit) {
-      throw new Error('Parameter "onSubmit" doesn\'t exist');
-    }
+const createEventEditTemplate = (eventState) => {
+  const eventTypeTemplate = createEventTypeTemplate(eventState);
+  const destinationTemplate = createDestinationTemplate(eventState);
+  const eventDateTemplate = createEventDateTemplate(eventState);
+  const priceTemplate = createPriceTemplate(eventState);
+  const offersTemplate = createOffersTemplate(eventState);
+  const destinationDetailTemplate = createDestinationDetailTemplate(eventState);
+  const resetButtonCaption = isNewEvent(eventState) ? 'Cancel' : 'Delete';
 
-    if (!onCancel) {
-      throw new Error('Parameter "onSubmit" doesn\'t exist');
-    }
-
-    if (!onReset) {
-      throw new Error('Parameter "onSubmit" doesn\'t exist');
-    }
-
-    this.#event = event;
-    this.#city = city;
-    this.#cities = cities;
-    this.#offers = offers;
-    this.#formMode = formMode;
-    this.#handleSubmit = onSubmit;
-    this.#handleCancel = onCancel;
-    this.#handleReset = onReset;
-    this.element.addEventListener('submit', this.#onSubmit);
-    this.element.addEventListener('reset', this.#onReset);
-    const cancelEditElement = this.element.querySelector(
-      'button.event__rollup-btn'
-    );
-    cancelEditElement.addEventListener('click', this.#onCancel);
-  }
-
-  get template() {
-    const eventTypeTemplate = createEventTypeTemplate(this.#event);
-    const destinationTemplate = createDestinationTemplate(
-      this.#event.type,
-      this.#cities,
-      this.#city
-    );
-    const eventDateTemplate = createEventDateTemplate(this.#event);
-    const priceTemplate = createPriceTemplate(this.#event);
-    const offersTemplate = createOffersTemplate(
-      this.#offers,
-      this.#event?.offers
-    );
-    const destinationDetailTemplate = createDestinationDetailTemplate(
-      this.#city
-    );
-
-    const resetButtonCaption =
-      this.#formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
-    return `<form class="event event--edit" action="#" method="post">
+  return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       ${eventTypeTemplate}
       ${destinationTemplate}
@@ -202,19 +161,172 @@ export default class EventEditView extends AbstractView {
       ${destinationDetailTemplate}
     </section>
   </form>`;
+};
+export default class EventEditView extends AbstractStatefulView {
+  /**@type {Array} */
+  #cities = null;
+  #offersList = null;
+  #handleFormSubmit = null;
+  #handleFormCancel = null;
+  #handleFormReset = null;
+  #datepickers = new Set();
+  #dateFields = [];
+
+  constructor({ event, cities, offersList, onSubmit, onCancel, onReset }) {
+    super();
+    if (!onSubmit) {
+      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    }
+
+    if (!onCancel) {
+      throw new Error('Parameter "onCancel" doesn\'t exist');
+    }
+
+    if (!onReset) {
+      throw new Error('Parameter "onReset" doesn\'t exist');
+    }
+
+    this._setState(EventEditView.parseEventToState(event));
+
+    this.#cities = cities;
+    this.#offersList = offersList;
+    this.#handleFormSubmit = onSubmit;
+    this.#handleFormCancel = onCancel;
+    this.#handleFormReset = onReset;
+    this.#dateFields = [
+      {
+        fieldId: '#event-start-time-1',
+        defaultDate: this._state.dateFrom,
+        callback: this.#onDateFromChange,
+      },
+      {
+        fieldId: '#event-end-time-1',
+        defaultDate: this._state.dateTo,
+        callback: this.#onDateToChange,
+      },
+    ];
+    this._restoreHandlers();
   }
+
+  get template() {
+    return createEventEditTemplate({
+      ...this._state,
+      cities: this.#cities,
+      offersList: this.#offersList,
+    });
+  }
+
+  removeElement = () => {
+    super.removeElement();
+    this.#datepickers.forEach((picker) => {
+      picker.destroy();
+    });
+    this.#datepickers.clear();
+  };
+
+  _restoreHandlers = () => {
+    this.element.addEventListener('submit', this.#onSubmit);
+    this.element.addEventListener('reset', this.#onReset);
+    this.element
+      .querySelector('button.event__rollup-btn')
+      .addEventListener('click', this.#onCancel);
+    this.element
+      .querySelector('.event__type-group')
+      .addEventListener('change', this.#onEventTypeChange);
+    this.element
+      .querySelector('.event__input--destination')
+      .addEventListener('change', this.#onEventDestinationChange);
+    this.element
+      .querySelector('.event__input--price')
+      .addEventListener('change', this.#onEventBasePriceChange);
+    const offersContainerElement = this.element.querySelector(
+      '.event__available-offers'
+    );
+    if (offersContainerElement) {
+      offersContainerElement.addEventListener(
+        'change',
+        this.#onEventOffersChange
+      );
+    }
+
+    this.#setDatepicker();
+  };
 
   #onSubmit = (evt) => {
     evt.preventDefault();
-
-    this.#handleSubmit();
+    const event = EventEditView.parseStateToEvent(this._state);
+    this.#handleFormSubmit(event);
   };
 
   #onCancel = () => {
-    this.#handleCancel();
+    this.#handleFormCancel();
   };
 
   #onReset = () => {
-    this.#handleReset();
+    this.#handleFormReset();
+  };
+
+  #onEventTypeChange = (evt) => {
+    this.updateElement({ type: evt.target.value, offers: [] });
+  };
+
+  #onEventDestinationChange = (evt) => {
+    const selectedCity = this.#cities.find(
+      (city) => city.name === evt.target.value
+    );
+
+    this.updateElement({
+      destination: selectedCity?.id,
+    });
+  };
+
+  #onDateFromChange = ([userDate]) => {
+    this._setState({ dateFrom: userDate });
+  };
+
+  #onDateToChange = ([userDate]) => {
+    this._setState({ dateTo: userDate });
+  };
+
+  #onEventBasePriceChange = (evt) => {
+    this._setState({ basePrice: evt.target.value });
+  };
+
+  #onEventOffersChange = (evt) => {
+    const currentOffersState = new Set(this._state.offers);
+    const {
+      dataset: { offerId },
+      checked,
+    } = evt.target;
+
+    if (checked) {
+      currentOffersState.add(offerId);
+    } else {
+      currentOffersState.delete(offerId);
+    }
+
+    this._setState({ offers: Array.from(currentOffersState) });
+  };
+
+  #setDatepicker = () => {
+    this.#dateFields.forEach((dateField) => {
+      this.#datepickers.add(
+        flatpickr(this.element.querySelector(dateField.fieldId), {
+          enableTime: true,
+          dateFormat: DateFormat.DATEPICKER,
+          defaultDate: dateField.defaultDate,
+          onChange: dateField.callback,
+        })
+      );
+    });
+  };
+
+  static parseEventToState = (event) => ({
+    ...event,
+  });
+
+  static parseStateToEvent = (eventState) => {
+    const newEventState = { ...eventState };
+    return newEventState;
   };
 }

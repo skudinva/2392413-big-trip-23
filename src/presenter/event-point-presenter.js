@@ -1,5 +1,6 @@
 import { EventStateAction } from '../const';
 import { remove, render, replace } from '../framework/render';
+import { getFormMode } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -7,14 +8,20 @@ export default class EventPointPresenter {
   #event = null;
   #eventsModel = null;
   #city = null;
+  /**@type {Array} */
   #cities = null;
-  #offers = null;
+  /**@type {Array} */
+  #offersList = null;
+  /**@type {Array} */
   #selectedOffers = null;
+  /**@type {EventView} */
   #eventComponent = null;
+  /**@type {EventEditView} */
   #eventEditComponent = null;
   #handleStateChange = null;
-  #formMode = null;
+  /**@type {EventView|EventEditView} */
   #activeComponent = null;
+  /**@type {HTMLElement} */
   #container = null;
   #handleDataChange = null;
 
@@ -23,7 +30,6 @@ export default class EventPointPresenter {
     eventsModel,
     container,
     cities,
-    formMode,
     onStateChange,
     onDataChange,
   }) {
@@ -41,17 +47,12 @@ export default class EventPointPresenter {
     this.#cities = cities;
     this.#handleStateChange = onStateChange;
     this.#handleDataChange = onDataChange;
-    this.#city = this.#eventsModel.getCityById(event.destination);
-    this.#offers = [...this.#eventsModel.getOffersByType(event.type)];
-    this.#selectedOffers = [
-      ...this.#eventsModel.getSelectedOffers(event.type, event.offers),
-    ];
-    this.#formMode = formMode;
+    this.#offersList = [...this.#eventsModel.offers];
     this.#render();
   }
 
   get formMode() {
-    return this.#formMode;
+    return getFormMode(this.#event);
   }
 
   setEvent = (event) => {
@@ -81,6 +82,13 @@ export default class EventPointPresenter {
   };
 
   #render = () => {
+    this.#city = this.#eventsModel.getCityById(this.#event.destination);
+    this.#selectedOffers = [
+      ...this.#eventsModel.getSelectedOffers(
+        this.#event.type,
+        this.#event.offers
+      ),
+    ];
     this.#eventComponent = new EventView({
       event: this.#event,
       city: this.#city,
@@ -98,11 +106,10 @@ export default class EventPointPresenter {
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
-      city: this.#city,
       cities: this.#cities,
-      offers: this.#offers,
-      formMode: this.#formMode,
-      onSubmit: () => {
+      offersList: this.#offersList,
+      onSubmit: (updateEvent) => {
+        this.#handleDataChange(updateEvent);
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancel: () => {
