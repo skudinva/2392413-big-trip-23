@@ -1,8 +1,12 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.css';
-import { DateFormat, EVENT_TYPES, EditFormMode } from '../const';
+import { DateFormat, EVENT_TYPES } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { getInputDateTime, getValueFromArrayById } from '../utils/event';
+import {
+  getInputDateTime,
+  getValueFromArrayById,
+  isNewEvent,
+} from '../utils/event';
 
 const createEventTypeListTemplate = (type) => {
   const eventTypeListTemplate = [];
@@ -138,8 +142,7 @@ const createEventEditTemplate = (eventState) => {
   const priceTemplate = createPriceTemplate(eventState);
   const offersTemplate = createOffersTemplate(eventState);
   const destinationDetailTemplate = createDestinationDetailTemplate(eventState);
-  const resetButtonCaption =
-    eventState.formMode === EditFormMode.NEW ? 'Cancel' : 'Delete';
+  const resetButtonCaption = isNewEvent(eventState) ? 'Cancel' : 'Delete';
 
   return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -169,15 +172,7 @@ export default class EventEditView extends AbstractStatefulView {
   #datepickers = new Set();
   #dateFields = [];
 
-  constructor({
-    event,
-    cities,
-    offersList,
-    formMode,
-    onSubmit,
-    onCancel,
-    onReset,
-  }) {
+  constructor({ event, cities, offersList, onSubmit, onCancel, onReset }) {
     super();
     if (!onSubmit) {
       throw new Error('Parameter "onSubmit" doesn\'t exist');
@@ -191,7 +186,7 @@ export default class EventEditView extends AbstractStatefulView {
       throw new Error('Parameter "onReset" doesn\'t exist');
     }
 
-    this._setState(EventEditView.parseEventToState(event, formMode));
+    this._setState(EventEditView.parseEventToState(event));
 
     this.#cities = cities;
     this.#offersList = offersList;
@@ -326,14 +321,12 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  static parseEventToState = (event, formMode) => ({
+  static parseEventToState = (event) => ({
     ...event,
-    formMode,
   });
 
   static parseStateToEvent = (eventState) => {
     const newEventState = { ...eventState };
-    delete newEventState.formMode;
     return newEventState;
   };
 }

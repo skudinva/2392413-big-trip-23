@@ -1,5 +1,6 @@
 import { EventStateAction } from '../const';
 import { remove, render, replace } from '../framework/render';
+import { getFormMode } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -18,7 +19,6 @@ export default class EventPointPresenter {
   /**@type {EventEditView} */
   #eventEditComponent = null;
   #handleStateChange = null;
-  #formMode = null;
   /**@type {EventView|EventEditView} */
   #activeComponent = null;
   /**@type {HTMLElement} */
@@ -30,7 +30,6 @@ export default class EventPointPresenter {
     eventsModel,
     container,
     cities,
-    formMode,
     onStateChange,
     onDataChange,
   }) {
@@ -49,13 +48,11 @@ export default class EventPointPresenter {
     this.#handleStateChange = onStateChange;
     this.#handleDataChange = onDataChange;
     this.#offersList = [...this.#eventsModel.offers];
-
-    this.#formMode = formMode;
     this.#render();
   }
 
   get formMode() {
-    return this.#formMode;
+    return getFormMode(this.#event);
   }
 
   setEvent = (event) => {
@@ -111,7 +108,6 @@ export default class EventPointPresenter {
       event: this.#event,
       cities: this.#cities,
       offersList: this.#offersList,
-      formMode: this.#formMode,
       onSubmit: (updateEvent) => {
         this.#handleDataChange(updateEvent);
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);

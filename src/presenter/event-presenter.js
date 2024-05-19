@@ -129,7 +129,6 @@ export default class EventPresenter {
         container,
         onStateChange: this.#onEventEditStateChange,
         onDataChange: this.#onEventDataChange,
-        formMode,
       });
       this.#eventPointPresenters.set(event.id, eventPointPresenter);
     });
