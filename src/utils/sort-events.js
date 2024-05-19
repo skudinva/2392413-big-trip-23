@@ -4,7 +4,7 @@ import { getDurationMinutes } from './event';
 const sortEvents = {
   [SortType.DAY]: (events) =>
     events.sort((nextEvent, currentEvent) =>
-      getDurationMinutes(nextEvent.dateFrom, currentEvent.dateFrom)
+      getDurationMinutes(currentEvent.dateFrom, nextEvent.dateFrom)
     ),
   [SortType.PRICE]: (events) =>
     events.sort(
