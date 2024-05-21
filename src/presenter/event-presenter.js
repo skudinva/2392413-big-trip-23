@@ -107,7 +107,7 @@ export default class EventPresenter {
       this.#clearTripBoard();
       this.#renderTripBoard();
     } else if (updateType === UpdateType.MAJOR) {
-      this.#clearTripBoard();
+      this.#clearTripBoard({ resetSort: true });
       this.#renderTripBoard();
     }
   };
@@ -192,7 +192,10 @@ export default class EventPresenter {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
-  #clearTripBoard = () => {
+  #clearTripBoard = ({ resetSort } = {}) => {
+    if (resetSort) {
+      this.#currentSortType = DEFAULT_SORT_TYPE;
+    }
     remove(this.#sortComponent);
     remove(this.#noEventsComponent);
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
