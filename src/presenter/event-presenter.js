@@ -166,9 +166,9 @@ export default class EventPresenter {
   };
 
   #renderTripPoints = () => {
-    for (let i = 0; i < this.events.length; i++) {
-      this.#renderTripPoint(this.events[i], EditFormMode.EDIT);
-    }
+    this.events.forEach((event) => {
+      this.#renderTripPoint(event, EditFormMode.EDIT);
+    });
   };
 
   #renderSort = () => {
