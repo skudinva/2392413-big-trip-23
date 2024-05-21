@@ -96,7 +96,6 @@ export default class EventPresenter {
   };
 
   #onModelEvent = (updateType, event) => {
-    console.log('onModelEvent: ', updateType, event);
     if (updateType === UpdateType.PATCH) {
       const eventPointPresenter = this.#eventPointPresenters.get(event.id);
       eventPointPresenter.setEvent(event);
@@ -110,7 +109,6 @@ export default class EventPresenter {
   };
 
   #onEventDataChange = (actionType, updateType, event) => {
-    console.log('onEventDataChange: ', actionType, updateType, event);
     if (actionType === UserAction.UPDATE_EVENT) {
       this.#eventsModel.updateEvent(updateType, event);
     } else if (actionType === UserAction.ADD_EVENT) {

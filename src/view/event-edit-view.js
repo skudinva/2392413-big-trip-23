@@ -273,13 +273,11 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onCancelClick = () => {
-    console.log('onCancelClick');
     this.#handleCancelClick();
   };
 
   #onDeleteClick = (evt) => {
     evt.preventDefault();
-    console.log('onDeleteClick');
     const event = EventEditView.parseStateToEvent(this._state);
     this.#handleDeleteClick(event);
   };
