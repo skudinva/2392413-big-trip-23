@@ -1,21 +1,25 @@
-import { DEFAULT_FILTER_TYPE, FilterType } from '../const';
+import { FilterType, UpdateType } from '../const';
 import { render } from '../framework/render';
-import { filterEvents, generateFilter } from '../utils/filter-events';
+import { generateFilter } from '../utils/filter-events';
 import FilterView from '../view/filter-view';
 
 export default class FilterPresenter {
   #container = null;
   #eventsModel = null;
-  #events = null;
-  #currentFilterType = DEFAULT_FILTER_TYPE;
-  constructor({ container, eventsModel }) {
+  #filtersModel = null;
+  constructor({ container, eventsModel, filtersModel }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+    this.#filtersModel = filtersModel;
+  }
+
+  get filters() {
+    const events = this.#eventsModel.events;
+    return generateFilter(events);
   }
 
   init = () => {
-    this.#events = [...this.#eventsModel.events];
-    const filters = generateFilter(this.#events);
+    const filters = this.filters;
     render(
       new FilterView({
         filters,
@@ -27,10 +31,12 @@ export default class FilterPresenter {
 
   #onFilterButtonClick = (filterValue) => {
     const selectedFilterType = FilterType[filterValue.toUpperCase()];
-    if (this.#currentFilterType === selectedFilterType) {
+    if (this.#filtersModel.currentFilterType === selectedFilterType) {
       return;
     }
-
-    filterEvents[selectedFilterType](this.#events); //пока смысла в этом нет
+    this.#filtersModel.setCurrentFilterType(
+      UpdateType.MAJOR,
+      selectedFilterType
+    );
   };
 }

@@ -8,6 +8,7 @@ import {
   UserAction,
 } from '../const';
 import { RenderPosition, remove, render } from '../framework/render';
+import { filterEvents } from '../utils/filter-events';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
@@ -22,6 +23,7 @@ export default class EventPresenter {
   /**@type {HTMLElement} */
   #container = null;
   #eventsModel = null;
+  #filtersModel = null;
   #cities = null;
   /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
@@ -31,16 +33,20 @@ export default class EventPresenter {
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
 
-  constructor({ container, eventsModel, newEventButtonElement }) {
+  constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+    this.#filtersModel = filtersModel;
     this.#newEventButtonElement = newEventButtonElement;
     this.#eventsModel.addObserver(this.#onModelEvent);
+    this.#filtersModel.addObserver(this.#onModelEvent);
   }
 
   get events() {
+    const currentFilterType = this.#filtersModel.currentFilterType;
+    const applyFiltering = filterEvents[currentFilterType];
     const applySorting = sortEvents[this.#currentSortType];
-    return applySorting([...this.#eventsModel.events]);
+    return applySorting(applyFiltering([...this.#eventsModel.events]));
   }
 
   init = () => {
