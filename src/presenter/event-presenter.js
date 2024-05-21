@@ -6,7 +6,6 @@ import {
   FilterType,
 } from '../const';
 import { RenderPosition, render } from '../framework/render';
-import { updateEvent } from '../utils/common';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
@@ -20,7 +19,6 @@ export default class EventPresenter {
   /**@type {HTMLElement} */
   #container = null;
   #eventsModel = null;
-  #events = null;
   #cities = null;
   /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
@@ -36,8 +34,12 @@ export default class EventPresenter {
     this.#newEventButtonElement = newEventButtonElement;
   }
 
+  get events() {
+    const applySorting = sortEvents[this.#currentSortType];
+    return applySorting([...this.#eventsModel.events]);
+  }
+
   init = () => {
-    this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
     this.#renderTripBoard();
     this.#newEventButtonElement.addEventListener('click', () =>
@@ -90,7 +92,6 @@ export default class EventPresenter {
   };
 
   #onEventDataChange = (event) => {
-    this.#events = updateEvent(this.#events, event);
     const eventPointPresenter = this.#eventPointPresenters.get(event.id);
     eventPointPresenter.setEvent(event);
   };
@@ -135,8 +136,8 @@ export default class EventPresenter {
   };
 
   #renderTripPoints = () => {
-    for (let i = 0; i < this.#events.length; i++) {
-      this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
+    for (let i = 0; i < this.events.length; i++) {
+      this.#renderTripPoint(this.events[i], EditFormMode.EDIT);
     }
   };
 
@@ -148,14 +149,13 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
-    if (!this.#events.length) {
+    if (!this.events.length) {
       render(
         new NoEventsView({ currentFilter: FilterType.EVERYTHING }),
         this.#container
       );
       return;
     }
-    this.#applySorting(this.#currentSortType);
     this.#renderSort();
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
@@ -170,10 +170,6 @@ export default class EventPresenter {
     this.#eventPointPresenters.clear();
   };
 
-  #applySorting = (sortType) => {
-    sortEvents[sortType](this.#events);
-  };
-
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
@@ -185,9 +181,8 @@ export default class EventPresenter {
     if (this.#currentSortType === sortType) {
       return;
     }
-    this.#applySorting(sortType);
+    this.#currentSortType = sortType;
     this.#clearEventsList();
     this.#renderTripPoints();
-    this.#currentSortType = sortType;
   };
 }
