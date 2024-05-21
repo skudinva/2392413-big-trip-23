@@ -1,6 +1,6 @@
 import { EventStateAction, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
-import { getFormMode } from '../utils/event';
+import { getFormMode, guid, isNewEvent } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -109,11 +109,20 @@ export default class EventPointPresenter {
       cities: this.#cities,
       offersList: this.#offersList,
       onFormSubmit: (updateEvent) => {
-        this.#handleDataChange(
-          UserAction.UPDATE_EVENT,
-          UpdateType.MINOR,
-          updateEvent
-        );
+        if (isNewEvent(updateEvent)) {
+          updateEvent.id = guid();
+          this.#handleDataChange(
+            UserAction.ADD_EVENT,
+            UpdateType.MAJOR,
+            updateEvent
+          );
+        } else {
+          this.#handleDataChange(
+            UserAction.UPDATE_EVENT,
+            UpdateType.MINOR,
+            updateEvent
+          );
+        }
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancelClick: () => {
