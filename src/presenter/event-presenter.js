@@ -32,19 +32,20 @@ export default class EventPresenter {
   /**@type {Map<string, EventPointPresenter>} */
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
+  #currentFilterType = this.#filtersModel.currentFilterType;
 
   constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#filtersModel = filtersModel;
     this.#newEventButtonElement = newEventButtonElement;
+    this.#currentFilterType = this.#filtersModel.currentFilterType;
     this.#eventsModel.addObserver(this.#onModelEvent);
     this.#filtersModel.addObserver(this.#onModelEvent);
   }
 
   get events() {
-    const currentFilterType = this.#filtersModel.currentFilterType;
-    const applyFiltering = filterEvents[currentFilterType];
+    const applyFiltering = filterEvents[this.#currentFilterType];
     const applySorting = sortEvents[this.#currentSortType];
     return applySorting(applyFiltering([...this.#eventsModel.events]));
   }
