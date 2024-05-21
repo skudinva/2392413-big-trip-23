@@ -1,21 +1,18 @@
 import { FilterType, UpdateType } from '../const';
 import { render } from '../framework/render';
-import { generateFilter } from '../utils/filter-events';
+import { filterEvents } from '../utils/filter-events';
 import FilterView from '../view/filter-view';
 
 export default class FilterPresenter {
   #container = null;
-  #eventsModel = null;
   #filtersModel = null;
-  constructor({ container, eventsModel, filtersModel }) {
+  constructor({ container, filtersModel }) {
     this.#container = container;
-    this.#eventsModel = eventsModel;
     this.#filtersModel = filtersModel;
   }
 
   get filters() {
-    const events = this.#eventsModel.events;
-    return generateFilter(events);
+    return Object.entries(filterEvents).map(([type]) => ({ type }));
   }
 
   init = () => {

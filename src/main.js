@@ -24,7 +24,6 @@ const tripPresenter = new TripPresenter({
 });
 const filterPresenter = new FilterPresenter({
   container: tripControlElement,
-  eventsModel,
   filtersModel,
 });
 const eventPresenter = new EventPresenter({

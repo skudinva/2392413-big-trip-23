@@ -15,11 +15,4 @@ const filterEvents = {
     ),
 };
 
-function generateFilter(events) {
-  return Object.entries(filterEvents).map(([filterType, applyFilter]) => ({
-    type: filterType,
-    count: applyFilter(events).length,
-  }));
-}
-
-export { filterEvents, generateFilter };
+export { filterEvents };
