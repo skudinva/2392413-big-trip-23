@@ -1,14 +1,16 @@
-import { RenderPosition, render } from '../framework/render';
+import { RenderPosition, remove, render } from '../framework/render';
 import { getDurationMinutes } from '../utils/event';
 import TripInfoView from '../view/trip-info-view';
 
 export default class TripPresenter {
   #container = null;
   #eventsModel = null;
+  #tripInfoComponent = null;
   #events = null;
   constructor({ container, eventsModel }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+    this.#eventsModel.addObserver(this.#onModelEvent);
   }
 
   get cost() {
@@ -72,7 +74,12 @@ export default class TripPresenter {
       return;
     }
     const tripInfo = this.getTripInfo;
-    const tripInfoComponent = new TripInfoView({ tripInfo });
-    render(tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
+    this.#tripInfoComponent = new TripInfoView({ tripInfo });
+    render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
+  };
+
+  #onModelEvent = () => {
+    remove(this.#tripInfoComponent);
+    this.init();
   };
 }

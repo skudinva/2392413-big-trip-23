@@ -305,7 +305,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onEventBasePriceChange = (evt) => {
-    this._setState({ basePrice: evt.target.value });
+    this._setState({ basePrice: parseInt(evt.target.value, 10) });
   };
 
   #onEventOffersChange = (evt) => {
