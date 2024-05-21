@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.css';
+import he from 'he';
 import { DateFormat, EVENT_TYPES } from '../const';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {
@@ -53,7 +54,7 @@ const createDestinationTemplate = ({ type, destination, cities }) => {
   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCityName}" list="destination-list-1">
   <datalist id="destination-list-1">`);
   cities.forEach((city) => {
-    elements.push(`<option value="${city.name}"></option>`);
+    elements.push(`<option value="${he.encode(city.name)}"></option>`);
   });
   elements.push('</datalist></div>');
   return elements.join('');
