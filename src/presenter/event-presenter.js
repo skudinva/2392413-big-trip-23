@@ -3,7 +3,6 @@ import {
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
-  FilterType,
   UpdateType,
   UserAction,
 } from '../const';
@@ -32,20 +31,18 @@ export default class EventPresenter {
   /**@type {Map<string, EventPointPresenter>} */
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
-  #currentFilterType = this.#filtersModel.currentFilterType;
 
   constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#filtersModel = filtersModel;
     this.#newEventButtonElement = newEventButtonElement;
-    this.#currentFilterType = this.#filtersModel.currentFilterType;
     this.#eventsModel.addObserver(this.#onModelEvent);
     this.#filtersModel.addObserver(this.#onModelEvent);
   }
 
   get events() {
-    const applyFiltering = filterEvents[this.#currentFilterType];
+    const applyFiltering = filterEvents[this.#filtersModel.currentFilterType];
     const applySorting = sortEvents[this.#currentSortType];
     return applySorting(applyFiltering([...this.#eventsModel.events]));
   }
@@ -181,7 +178,7 @@ export default class EventPresenter {
   #renderTripBoard = () => {
     if (!this.events.length) {
       this.#noEventsComponent = new NoEventsView({
-        currentFilter: FilterType.EVERYTHING,
+        currentFilter: this.#filtersModel.currentFilterType,
       });
       render(this.#noEventsComponent, this.#container);
       return;
