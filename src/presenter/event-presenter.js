@@ -113,12 +113,16 @@ export default class EventPresenter {
   };
 
   #onEventDataChange = (actionType, updateType, event) => {
-    if (actionType === UserAction.UPDATE_EVENT) {
-      this.#eventsModel.updateEvent(updateType, event);
-    } else if (actionType === UserAction.ADD_EVENT) {
-      this.#eventsModel.addEvent(updateType, event);
-    } else if (actionType === UserAction.DELETE_EVENT) {
-      this.#eventsModel.deleteEvent(updateType, event);
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#eventsModel.updateEvent(updateType, event);
+        break;
+      case UserAction.ADD_EVENT:
+        this.#eventsModel.addEvent(updateType, event);
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#eventsModel.deleteEvent(updateType, event);
+        break;
     }
   };
 
