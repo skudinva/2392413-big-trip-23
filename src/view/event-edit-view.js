@@ -167,32 +167,39 @@ export default class EventEditView extends AbstractStatefulView {
   #cities = null;
   #offersList = null;
   #handleFormSubmit = null;
-  #handleFormCancel = null;
-  #handleFormReset = null;
+  #handleCancelClick = null;
+  #handleDeleteClick = null;
   #datepickers = new Set();
   #dateFields = [];
 
-  constructor({ event, cities, offersList, onSubmit, onCancel, onReset }) {
+  constructor({
+    event,
+    cities,
+    offersList,
+    onFormSubmit,
+    onCancelClick,
+    onDeleteClick,
+  }) {
     super();
-    if (!onSubmit) {
-      throw new Error('Parameter "onSubmit" doesn\'t exist');
+    if (!onFormSubmit) {
+      throw new Error('Parameter "onFormSubmit" doesn\'t exist');
     }
 
-    if (!onCancel) {
-      throw new Error('Parameter "onCancel" doesn\'t exist');
+    if (!onCancelClick) {
+      throw new Error('Parameter "onCancelClick" doesn\'t exist');
     }
 
-    if (!onReset) {
-      throw new Error('Parameter "onReset" doesn\'t exist');
+    if (!onDeleteClick) {
+      throw new Error('Parameter "onDeleteClick" doesn\'t exist');
     }
 
     this._setState(EventEditView.parseEventToState(event));
 
     this.#cities = cities;
     this.#offersList = offersList;
-    this.#handleFormSubmit = onSubmit;
-    this.#handleFormCancel = onCancel;
-    this.#handleFormReset = onReset;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleCancelClick = onCancelClick;
+    this.#handleDeleteClick = onDeleteClick;
     this.#dateFields = [
       {
         fieldId: '#event-start-time-1',
@@ -225,11 +232,18 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   _restoreHandlers = () => {
-    this.element.addEventListener('submit', this.#onSubmit);
-    this.element.addEventListener('reset', this.#onReset);
+    this.element.addEventListener('submit', this.#onFormSubmit);
+    this.element.addEventListener('reset', this.#onCancelClick);
+
+    if (!isNewEvent(this._state)) {
+      this.element
+        .querySelector('.event__reset-btn')
+        .addEventListener('click', this.#onDeleteClick);
+    }
+
     this.element
-      .querySelector('button.event__rollup-btn')
-      .addEventListener('click', this.#onCancel);
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#onCancelClick);
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#onEventTypeChange);
@@ -252,18 +266,22 @@ export default class EventEditView extends AbstractStatefulView {
     this.#setDatepicker();
   };
 
-  #onSubmit = (evt) => {
+  #onFormSubmit = (evt) => {
     evt.preventDefault();
     const event = EventEditView.parseStateToEvent(this._state);
     this.#handleFormSubmit(event);
   };
 
-  #onCancel = () => {
-    this.#handleFormCancel();
+  #onCancelClick = () => {
+    console.log('onCancelClick');
+    this.#handleCancelClick();
   };
 
-  #onReset = () => {
-    this.#handleFormReset();
+  #onDeleteClick = (evt) => {
+    evt.preventDefault();
+    console.log('onDeleteClick');
+    const event = EventEditView.parseStateToEvent(this._state);
+    this.#handleDeleteClick(event);
   };
 
   #onEventTypeChange = (evt) => {

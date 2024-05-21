@@ -97,7 +97,7 @@ export default class EventPointPresenter {
         this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
       },
       onFavoriteButtonClick: () => {
-        this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR, {
+        this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, {
           ...this.#event,
           isFavorite: !this.#event.isFavorite,
         });
@@ -108,7 +108,7 @@ export default class EventPointPresenter {
       event: this.#event,
       cities: this.#cities,
       offersList: this.#offersList,
-      onSubmit: (updateEvent) => {
+      onFormSubmit: (updateEvent) => {
         this.#handleDataChange(
           UserAction.UPDATE_EVENT,
           UpdateType.MINOR,
@@ -116,10 +116,15 @@ export default class EventPointPresenter {
         );
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
-      onCancel: () => {
+      onCancelClick: () => {
         this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
       },
-      onReset: () => {
+      onDeleteClick: (deleteEvent) => {
+        this.#handleDataChange(
+          UserAction.DELETE_EVENT,
+          UpdateType.MINOR,
+          deleteEvent
+        );
         this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });
