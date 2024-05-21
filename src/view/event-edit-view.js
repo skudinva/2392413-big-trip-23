@@ -332,8 +332,7 @@ export default class EventEditView extends AbstractStatefulView {
           dateFormat: DateFormat.DATEPICKER,
           defaultDate: dateField.defaultDate,
           onChange: dateField.callback,
-          // eslint-disable-next-line camelcase
-          time_24hr: true,
+          ['time_24hr']: true,
         })
       );
     });
