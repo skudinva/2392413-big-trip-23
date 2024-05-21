@@ -1,9 +1,10 @@
-import { SortType } from '../const';
+import { sortTemplateProps } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-const createSortItemTemplate = (type, label, checkedType, disabled) => {
+const createSortItemTemplate = (currentSortType, { type, label, disabled }) => {
   const additionProps =
-    (type === checkedType ? 'checked' : ' ') + (disabled ? 'disabled' : ' ');
+    (type === currentSortType ? 'checked' : ' ') +
+    (disabled ? 'disabled' : ' ');
   return `<div class="trip-sort__item  trip-sort__item--${type}">
 <input id="sort-${type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${type}" ${additionProps}>
 <label class="trip-sort__btn" for="sort-${type}">${label}</label>
@@ -16,25 +17,9 @@ const createSortTemplate = (currentSortType) => {
     '<form class="trip-events__trip-sort  trip-sort" action="#" method="get">'
   );
 
-  sortItems.push(
-    createSortItemTemplate(SortType.DAY, 'Day', currentSortType, false)
-  );
-
-  sortItems.push(
-    createSortItemTemplate('event', 'Event', currentSortType, true)
-  );
-
-  sortItems.push(
-    createSortItemTemplate(SortType.TIME, 'Time', currentSortType, false)
-  );
-
-  sortItems.push(
-    createSortItemTemplate(SortType.PRICE, 'Price', currentSortType, false)
-  );
-
-  sortItems.push(
-    createSortItemTemplate('offer', 'Offers', currentSortType, true)
-  );
+  sortTemplateProps.forEach((props) => {
+    sortItems.push(createSortItemTemplate(currentSortType, props));
+  });
 
   sortItems.push('</form>');
   return sortItems.join('');

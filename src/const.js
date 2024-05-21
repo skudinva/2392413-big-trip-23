@@ -77,6 +77,14 @@ const SortType = {
   PRICE: 'price',
 };
 
+const sortTemplateProps = [
+  { type: SortType.DAY, label: 'Day', disabled: false },
+  { type: 'event', label: 'Event', disabled: true },
+  { type: SortType.TIME, label: 'Time', disabled: false },
+  { type: SortType.PRICE, label: 'Price', disabled: false },
+  { type: 'offer', label: 'Offers', disabled: true },
+];
+
 const DEFAULT_SORT_TYPE = SortType.DAY;
 const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
@@ -94,4 +102,5 @@ export {
   SortType,
   UpdateType,
   UserAction,
+  sortTemplateProps,
 };
