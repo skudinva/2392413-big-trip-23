@@ -46,6 +46,17 @@ const EventStateAction = {
   DELETE_EDIT_FORM: 'Delete edit form',
 };
 
+const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+  ADD_EVENT: 'ADD_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
+};
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 const FilterType = {
   EVERYTHING: 'Everything',
   FUTURE: 'Future',
@@ -81,4 +92,6 @@ export {
   FilterType,
   NoEventMessage,
   SortType,
+  UpdateType,
+  UserAction,
 };

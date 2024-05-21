@@ -4,8 +4,10 @@ import {
   EditFormMode,
   EventStateAction,
   FilterType,
+  UpdateType,
+  UserAction,
 } from '../const';
-import { RenderPosition, render } from '../framework/render';
+import { RenderPosition, remove, render } from '../framework/render';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
@@ -15,6 +17,7 @@ import EventPointPresenter from './event-point-presenter';
 
 export default class EventPresenter {
   #sortComponent = null;
+  #noEventsComponent = null;
   #eventListComponent = new EventsListView();
   /**@type {HTMLElement} */
   #container = null;
@@ -32,6 +35,7 @@ export default class EventPresenter {
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#newEventButtonElement = newEventButtonElement;
+    this.#eventsModel.addObserver(this.#onModelEvent);
   }
 
   get events() {
@@ -91,9 +95,29 @@ export default class EventPresenter {
     }
   };
 
-  #onEventDataChange = (event) => {
-    const eventPointPresenter = this.#eventPointPresenters.get(event.id);
-    eventPointPresenter.setEvent(event);
+  #onModelEvent = (updateType, event) => {
+    console.log('onModelEvent: ', updateType, event);
+    if (updateType === UpdateType.PATCH) {
+      const eventPointPresenter = this.#eventPointPresenters.get(event.id);
+      eventPointPresenter.setEvent(event);
+    } else if (updateType === UpdateType.MINOR) {
+      this.#clearTripBoard();
+      this.#renderTripBoard();
+    } else if (updateType === UpdateType.MAJOR) {
+      this.#clearTripBoard();
+      this.#renderTripBoard();
+    }
+  };
+
+  #onEventDataChange = (actionType, updateType, event) => {
+    console.log('onEventDataChange: ', actionType, updateType, event);
+    if (actionType === UserAction.UPDATE_EVENT) {
+      this.#eventsModel.updateEvent(updateType, event);
+    } else if (actionType === UserAction.ADD_EVENT) {
+      this.#eventsModel.addEvent(updateType, event);
+    } else if (actionType === UserAction.DELETE_EVENT) {
+      this.#eventsModel.deleteEvent(updateType, event);
+    }
   };
 
   /**
@@ -144,16 +168,17 @@ export default class EventPresenter {
   #renderSort = () => {
     this.#sortComponent = new SortView({
       onSortButtonClick: this.#onSortButtonClick,
+      currentSortType: this.#currentSortType,
     });
     render(this.#sortComponent, this.#container);
   };
 
   #renderTripBoard = () => {
     if (!this.events.length) {
-      render(
-        new NoEventsView({ currentFilter: FilterType.EVERYTHING }),
-        this.#container
-      );
+      this.#noEventsComponent = new NoEventsView({
+        currentFilter: FilterType.EVERYTHING,
+      });
+      render(this.#noEventsComponent, this.#container);
       return;
     }
     this.#renderSort();
@@ -165,7 +190,9 @@ export default class EventPresenter {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
-  #clearEventsList = () => {
+  #clearTripBoard = () => {
+    remove(this.#sortComponent);
+    remove(this.#noEventsComponent);
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
   };
@@ -182,7 +209,7 @@ export default class EventPresenter {
       return;
     }
     this.#currentSortType = sortType;
-    this.#clearEventsList();
-    this.#renderTripPoints();
+    this.#clearTripBoard();
+    this.#renderTripBoard();
   };
 }
