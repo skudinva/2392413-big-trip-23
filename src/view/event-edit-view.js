@@ -170,7 +170,7 @@ export default class EventEditView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCancelClick = null;
   #handleDeleteClick = null;
-  #datepickers = new Set();
+  #datepickers = new Map();
   #dateFields = [];
 
   constructor({
@@ -203,14 +203,18 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleDeleteClick = onDeleteClick;
     this.#dateFields = [
       {
+        name: 'dateFrom',
         fieldId: '#event-start-time-1',
         defaultDate: this._state.dateFrom,
         callback: this.#onDateFromChange,
       },
       {
+        name: 'dateTo',
         fieldId: '#event-end-time-1',
         defaultDate: this._state.dateTo,
         callback: this.#onDateToChange,
+        minDateFieldId: '#event-start-time-1',
+        minDate: this._state.dateFrom,
       },
     ];
     this._restoreHandlers();
@@ -299,6 +303,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onDateFromChange = ([userDate]) => {
     this._setState({ dateFrom: userDate });
+    this.#datepickers.get('dateTo').config.minDate = this._state.dateFrom;
   };
 
   #onDateToChange = ([userDate]) => {
@@ -327,15 +332,17 @@ export default class EventEditView extends AbstractStatefulView {
 
   #setDatepicker = () => {
     this.#dateFields.forEach((dateField) => {
-      this.#datepickers.add(
-        flatpickr(this.element.querySelector(dateField.fieldId), {
-          enableTime: true,
-          dateFormat: DateFormat.DATEPICKER,
-          defaultDate: dateField.defaultDate,
-          onChange: dateField.callback,
-          ['time_24hr']: true,
-        })
-      );
+      const dateElement = this.element.querySelector(dateField.fieldId);
+      const newFlatpickr = flatpickr(dateElement, {
+        enableTime: true,
+        dateFormat: DateFormat.DATEPICKER,
+        defaultDate: dateField.defaultDate,
+        onChange: dateField.callback,
+        ['time_24hr']: true,
+        minDate: dateField.minDate,
+      });
+
+      this.#datepickers.set(dateField.name, newFlatpickr);
     });
   };
 
