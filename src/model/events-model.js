@@ -1,3 +1,4 @@
+import { UpdateType } from '../const';
 import Observable from '../framework/observable';
 import { getMockCities } from '../mock/city';
 import { getMockOffers } from '../mock/offer';
@@ -33,6 +34,7 @@ export default class EventsModel extends Observable {
     } catch (error) {
       this.#events = [];
     }
+    this._notify(UpdateType.INIT);
   };
 
   updateEvent = (updateType, update) => {
