@@ -51,7 +51,9 @@ const createDestinationTemplate = ({ type, destination, cities }) => {
   <label class="event__label  event__type-output" for="event-destination-1">
     ${type}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCityName}" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(
+    selectedCityName
+  )}" list="destination-list-1">
   <datalist id="destination-list-1">`);
   cities.forEach((city) => {
     elements.push(`<option value="${he.encode(city.name)}"></option>`);
@@ -61,8 +63,8 @@ const createDestinationTemplate = ({ type, destination, cities }) => {
 };
 
 const createEventDateTemplate = ({ dateFrom, dateTo } = {}) => {
-  const dateFromInput = getInputDateTime(dateFrom);
-  const dateToInput = getInputDateTime(dateTo);
+  const dateFromInput = he.encode(getInputDateTime(dateFrom));
+  const dateToInput = he.encode(getInputDateTime(dateTo));
   return `<div class="event__field-group  event__field-group--time">
 <label class="visually-hidden" for="event-start-time-1">From</label>
 <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromInput}">
@@ -72,16 +74,15 @@ const createEventDateTemplate = ({ dateFrom, dateTo } = {}) => {
 </div>`;
 };
 
-const createPriceTemplate = ({
-  basePrice,
-} = {}) => `<div class="event__field-group  event__field-group--price">
-<label class="event__label" for="event-price-1">
-  <span class="visually-hidden">Price</span>
-  &euro;
-</label>
-<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
-</div>`;
-
+const createPriceTemplate = ({ basePrice } = {}) =>
+  `<div class="event__field-group  event__field-group--price">
+  <label class="event__label" for="event-price-1">
+    <span class="visually-hidden">Price</span>
+    &euro;
+  </label>
+  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(
+    String(basePrice)
+  )}"></div>`;
 const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
   const offersByType = offersList.find(
     (offerItem) => offerItem.type === type
@@ -213,7 +214,6 @@ export default class EventEditView extends AbstractStatefulView {
         fieldId: '#event-end-time-1',
         defaultDate: this._state.dateTo,
         callback: this.#onDateToChange,
-        minDateFieldId: '#event-start-time-1',
         minDate: this._state.dateFrom,
       },
     ];
