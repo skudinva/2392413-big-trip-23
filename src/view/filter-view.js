@@ -1,29 +1,30 @@
 import AbstractView from '../framework/view/abstract-view';
 
-const getFilterItemTemplate = ({ type }, isChecked) => {
-  const typeCode = type.toLowerCase();
-  const checked = isChecked ? 'checked' : '';
+const getFilterItemTemplate = ({ type }, currentFilterType) => {
+  const checked = type === currentFilterType ? 'checked' : '';
   return `<div class="trip-filters__filter">
-  <input id="filter-${typeCode}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${typeCode}" ${checked}>
-  <label class="trip-filters__filter-label" for="filter-${typeCode}">${type}</label>
+  <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${checked}>
+  <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
 </div>`;
 };
 export default class FilterView extends AbstractView {
   #filters = null;
   #handleFilterButtonClick = null;
-  constructor({ filters, onFilterButtonClick }) {
+  #currentFilterType = null;
+  constructor({ filters, currentFilterType, onFilterButtonClick }) {
     super();
     if (!onFilterButtonClick) {
       throw new Error('Parameter "onFilterButtonClick" doesn\'t exist');
     }
     this.#filters = filters;
+    this.#currentFilterType = currentFilterType;
     this.#handleFilterButtonClick = onFilterButtonClick;
     this.element.addEventListener('change', this.#onFilterButtonClick);
   }
 
   get template() {
     const filterTemplate = this.#filters
-      .map((filter, index) => getFilterItemTemplate(filter, !index))
+      .map((filter) => getFilterItemTemplate(filter, this.#currentFilterType))
       .join('');
     return `<form class="trip-filters" action="#" method="get">
       ${filterTemplate}
@@ -31,6 +32,7 @@ export default class FilterView extends AbstractView {
   }
 
   #onFilterButtonClick = (evt) => {
+    evt.preventDefault();
     this.#handleFilterButtonClick(evt.target.value);
   };
 }

@@ -1,36 +1,40 @@
-import { DEFAULT_FILTER_TYPE, FilterType } from '../const';
-import { render } from '../framework/render';
-import { filterEvents, generateFilter } from '../utils/filter-events';
+import { UpdateType } from '../const';
+import { remove, render } from '../framework/render';
+import { filterEvents } from '../utils/filter-events';
 import FilterView from '../view/filter-view';
 
 export default class FilterPresenter {
   #container = null;
-  #eventsModel = null;
-  #events = null;
-  #currentFilterType = DEFAULT_FILTER_TYPE;
-  constructor({ container, eventsModel }) {
+  #filtersModel = null;
+  #filterComponent = null;
+  constructor({ container, filtersModel }) {
     this.#container = container;
-    this.#eventsModel = eventsModel;
+    this.#filtersModel = filtersModel;
+    this.#filtersModel.addObserver(this.#onModelEvent);
+  }
+
+  get filters() {
+    return Object.entries(filterEvents).map(([type]) => ({ type }));
   }
 
   init = () => {
-    this.#events = [...this.#eventsModel.events];
-    const filters = generateFilter(this.#events);
-    render(
-      new FilterView({
-        filters,
-        onFilterButtonClick: this.#onFilterButtonClick,
-      }),
-      this.#container
-    );
+    const filters = this.filters;
+    if (this.#filterComponent) {
+      remove(this.#filterComponent);
+    }
+    this.#filterComponent = new FilterView({
+      filters,
+      currentFilterType: this.#filtersModel.currentFilterType,
+      onFilterButtonClick: this.#onFilterButtonClick,
+    });
+    render(this.#filterComponent, this.#container);
+  };
+
+  #onModelEvent = () => {
+    this.init();
   };
 
   #onFilterButtonClick = (filterValue) => {
-    const selectedFilterType = FilterType[filterValue.toUpperCase()];
-    if (this.#currentFilterType === selectedFilterType) {
-      return;
-    }
-
-    filterEvents[selectedFilterType](this.#events); //пока смысла в этом нет
+    this.#filtersModel.setCurrentFilterType(UpdateType.MAJOR, filterValue);
   };
 }

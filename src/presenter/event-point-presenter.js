@@ -1,6 +1,6 @@
-import { EventStateAction } from '../const';
+import { EventStateAction, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
-import { getFormMode } from '../utils/event';
+import { getFormMode, guid, isNewEvent } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -97,7 +97,7 @@ export default class EventPointPresenter {
         this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
       },
       onFavoriteButtonClick: () => {
-        this.#handleDataChange({
+        this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, {
           ...this.#event,
           isFavorite: !this.#event.isFavorite,
         });
@@ -108,14 +108,32 @@ export default class EventPointPresenter {
       event: this.#event,
       cities: this.#cities,
       offersList: this.#offersList,
-      onSubmit: (updateEvent) => {
-        this.#handleDataChange(updateEvent);
+      onFormSubmit: (updateEvent) => {
+        if (isNewEvent(updateEvent)) {
+          updateEvent.id = guid();
+          this.#handleDataChange(
+            UserAction.ADD_EVENT,
+            UpdateType.MAJOR,
+            updateEvent
+          );
+        } else {
+          this.#handleDataChange(
+            UserAction.UPDATE_EVENT,
+            UpdateType.MINOR,
+            updateEvent
+          );
+        }
         this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
-      onCancel: () => {
+      onCancelClick: () => {
         this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
       },
-      onReset: () => {
+      onDeleteClick: (deleteEvent) => {
+        this.#handleDataChange(
+          UserAction.DELETE_EVENT,
+          UpdateType.MINOR,
+          deleteEvent
+        );
         this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });

@@ -46,6 +46,17 @@ const EventStateAction = {
   DELETE_EDIT_FORM: 'Delete edit form',
 };
 
+const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+  ADD_EVENT: 'ADD_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
+};
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 const FilterType = {
   EVERYTHING: 'Everything',
   FUTURE: 'Future',
@@ -66,6 +77,14 @@ const SortType = {
   PRICE: 'price',
 };
 
+const sortTemplateProps = [
+  { type: SortType.DAY, label: 'Day', disabled: false },
+  { type: 'event', label: 'Event', disabled: true },
+  { type: SortType.TIME, label: 'Time', disabled: false },
+  { type: SortType.PRICE, label: 'Price', disabled: false },
+  { type: 'offer', label: 'Offers', disabled: true },
+];
+
 const DEFAULT_SORT_TYPE = SortType.DAY;
 const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
@@ -81,4 +100,7 @@ export {
   FilterType,
   NoEventMessage,
   SortType,
+  UpdateType,
+  UserAction,
+  sortTemplateProps,
 };

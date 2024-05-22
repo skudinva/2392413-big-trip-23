@@ -93,6 +93,8 @@ const isNewEvent = (event) => event.id === null;
 const getFormMode = (event) =>
   isNewEvent(event) ? EditFormMode.NEW : EditFormMode.EDIT;
 
+const isDigit = (testString) => /^\d+$/i.test(testString);
+
 export {
   getDurationMinutes,
   getDurationString,
@@ -107,6 +109,7 @@ export {
   getUniqueRandomArrayElements,
   getValueFromArrayById,
   guid,
+  isDigit,
   isFunction,
   isNewEvent,
 };

@@ -1,12 +1,14 @@
 import {
   DEFAULT_EVENT_PROPS,
+  DEFAULT_FILTER_TYPE,
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
-  FilterType,
+  UpdateType,
+  UserAction,
 } from '../const';
-import { RenderPosition, render } from '../framework/render';
-import { updateEvent } from '../utils/common';
+import { RenderPosition, remove, render } from '../framework/render';
+import { filterEvents } from '../utils/filter-events';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
@@ -16,11 +18,12 @@ import EventPointPresenter from './event-point-presenter';
 
 export default class EventPresenter {
   #sortComponent = null;
+  #noEventsComponent = null;
   #eventListComponent = new EventsListView();
   /**@type {HTMLElement} */
   #container = null;
   #eventsModel = null;
-  #events = null;
+  #filtersModel = null;
   #cities = null;
   /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
@@ -30,14 +33,22 @@ export default class EventPresenter {
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
 
-  constructor({ container, eventsModel, newEventButtonElement }) {
+  constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+    this.#filtersModel = filtersModel;
     this.#newEventButtonElement = newEventButtonElement;
+    this.#eventsModel.addObserver(this.#onModelEvent);
+    this.#filtersModel.addObserver(this.#onModelEvent);
+  }
+
+  get events() {
+    const applyFiltering = filterEvents[this.#filtersModel.currentFilterType];
+    const applySorting = sortEvents[this.#currentSortType];
+    return applySorting(applyFiltering([...this.#eventsModel.events]));
   }
 
   init = () => {
-    this.#events = [...this.#eventsModel.events];
     this.#cities = [...this.#eventsModel.cities];
     this.#renderTripBoard();
     this.#newEventButtonElement.addEventListener('click', () =>
@@ -89,10 +100,31 @@ export default class EventPresenter {
     }
   };
 
-  #onEventDataChange = (event) => {
-    this.#events = updateEvent(this.#events, event);
-    const eventPointPresenter = this.#eventPointPresenters.get(event.id);
-    eventPointPresenter.setEvent(event);
+  #onModelEvent = (updateType, event) => {
+    if (updateType === UpdateType.PATCH) {
+      const eventPointPresenter = this.#eventPointPresenters.get(event.id);
+      eventPointPresenter.setEvent(event);
+    } else if (updateType === UpdateType.MINOR) {
+      this.#clearTripBoard();
+      this.#renderTripBoard();
+    } else if (updateType === UpdateType.MAJOR) {
+      this.#clearTripBoard({ resetSort: true });
+      this.#renderTripBoard();
+    }
+  };
+
+  #onEventDataChange = (actionType, updateType, event) => {
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#eventsModel.updateEvent(updateType, event);
+        break;
+      case UserAction.ADD_EVENT:
+        this.#eventsModel.addEvent(updateType, event);
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#eventsModel.deleteEvent(updateType, event);
+        break;
+    }
   };
 
   /**
@@ -135,43 +167,49 @@ export default class EventPresenter {
   };
 
   #renderTripPoints = () => {
-    for (let i = 0; i < this.#events.length; i++) {
-      this.#renderTripPoint(this.#events[i], EditFormMode.EDIT);
-    }
+    this.events.forEach((event) => {
+      this.#renderTripPoint(event, EditFormMode.EDIT);
+    });
   };
 
   #renderSort = () => {
     this.#sortComponent = new SortView({
       onSortButtonClick: this.#onSortButtonClick,
+      currentSortType: this.#currentSortType,
     });
     render(this.#sortComponent, this.#container);
   };
 
   #renderTripBoard = () => {
-    if (!this.#events.length) {
-      render(
-        new NoEventsView({ currentFilter: FilterType.EVERYTHING }),
-        this.#container
-      );
+    if (!this.events.length) {
+      this.#noEventsComponent = new NoEventsView({
+        currentFilter: this.#filtersModel.currentFilterType,
+      });
+      render(this.#noEventsComponent, this.#container);
       return;
     }
-    this.#applySorting(this.#currentSortType);
     this.#renderSort();
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
   };
 
   #renderNewEvent = () => {
+    this.#currentSortType = DEFAULT_SORT_TYPE;
+    this.#filtersModel.setCurrentFilterType(
+      UpdateType.MAJOR,
+      DEFAULT_FILTER_TYPE
+    );
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
-  #clearEventsList = () => {
+  #clearTripBoard = ({ resetSort } = {}) => {
+    if (resetSort) {
+      this.#currentSortType = DEFAULT_SORT_TYPE;
+    }
+    remove(this.#sortComponent);
+    remove(this.#noEventsComponent);
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
-  };
-
-  #applySorting = (sortType) => {
-    sortEvents[sortType](this.#events);
   };
 
   #onEscKeyDown = (evt) => {
@@ -185,9 +223,8 @@ export default class EventPresenter {
     if (this.#currentSortType === sortType) {
       return;
     }
-    this.#applySorting(sortType);
-    this.#clearEventsList();
-    this.#renderTripPoints();
     this.#currentSortType = sortType;
+    this.#clearTripBoard();
+    this.#renderTripBoard();
   };
 }
