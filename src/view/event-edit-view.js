@@ -6,6 +6,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {
   getInputDateTime,
   getValueFromArrayById,
+  isDigit,
   isNewEvent,
 } from '../utils/event';
 
@@ -255,9 +256,12 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#onEventDestinationChange);
-    this.element
-      .querySelector('.event__input--price')
-      .addEventListener('change', this.#onEventBasePriceChange);
+    const basePriceElement = this.element.querySelector('.event__input--price');
+    basePriceElement.addEventListener('change', this.#onEventBasePriceChange);
+    basePriceElement.addEventListener(
+      'keypress',
+      this.#onEventBasePriceKeypress
+    );
     const offersContainerElement = this.element.querySelector(
       '.event__available-offers'
     );
@@ -312,6 +316,12 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onEventBasePriceChange = (evt) => {
     this._setState({ basePrice: parseInt(evt.target.value, 10) });
+  };
+
+  #onEventBasePriceKeypress = (evt) => {
+    if (!isDigit(evt.key)) {
+      evt.preventDefault();
+    }
   };
 
   #onEventOffersChange = (evt) => {
