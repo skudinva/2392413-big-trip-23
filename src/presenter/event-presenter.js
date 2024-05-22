@@ -65,9 +65,6 @@ export default class EventPresenter {
    */
   #setActiveEventEditForm = (value) => {
     this.#activeEventEditForm = value;
-    this.#newEventButtonElement.disabled =
-      this.#isNewEventFormActive() || this.#isLoading;
-
     if (this.#activeEventEditForm) {
       document.addEventListener('keydown', this.#onEscKeyDown);
     } else {
@@ -105,6 +102,9 @@ export default class EventPresenter {
   };
 
   #onModelEvent = (updateType, event) => {
+    this.#newEventButtonElement.disabled =
+      this.#isNewEventFormActive() || this.#isLoading;
+
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPointPresenters.get(event.id).setEvent(event);
