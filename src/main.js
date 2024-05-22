@@ -20,7 +20,8 @@ const newEventButtonElement = document.querySelector(
 const eventsModel = new EventsModel({
   eventsApiService: new EventsApiService(
     ApiConfig.END_POINT,
-    ApiConfig.AUTHORIZATION
+    ApiConfig.AUTHORIZATION,
+    ApiConfig.URL
   ),
 });
 const filtersModel = new FiltersModel();

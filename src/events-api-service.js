@@ -6,13 +6,19 @@ const Method = {
 };
 
 export default class EventsApiService extends ApiService {
+  #url = null;
+  constructor(endPoint, authorization, url) {
+    super(endPoint, authorization);
+    this.#url = url;
+  }
+
   get events() {
-    return this._load({ url: 'events' }).then(ApiService.parseResponse);
+    return this._load({ url: this.#url }).then(ApiService.parseResponse);
   }
 
   updateEvent = async (event) => {
     const request = {
-      url: `events/${event.id}`,
+      url: `${this.#url}/${event.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(event)),
       headers: new Headers({ 'Content-type:': 'application/json' }),

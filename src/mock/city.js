@@ -2,198 +2,167 @@ import { getRandomArrayElement } from '../utils/event';
 
 const mockCities = [
   {
-    id: 'e5c26d80-c07c-4012-8d46-d510fdb2c79c',
-    description: 'Tokio - a true asian pearl',
-    name: 'Tokio',
+    id: '18321ee3-3056-4e6b-83d8-8eaeb38ee08d',
+    description: 'Berlin - for those who value comfort and coziness',
+    name: 'Berlin',
     pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/7.jpg',
-        description:
-          'Tokio famous for its crowded street markets with the best street food in Asia',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/7.jpg',
-        description: 'Tokio in a middle of Europe',
-      },
-    ],
-  },
-  {
-    id: '3d098017-7ce8-420a-a792-c3baafaa3bf4',
-    description: 'Frankfurt - is a beautiful city',
-    name: 'Frankfurt',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/1.jpg',
-        description:
-          'Frankfurt full of of cozy canteens where you can try the best coffee in the Middle East',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/18.jpg',
-        description:
-          'Frankfurt famous for its crowded street markets with the best street food in Asia',
-      },
-    ],
-  },
-  {
-    id: '4715f1ce-023d-4832-bb76-e6ca381ec287',
-    description: 'Kioto - is a beautiful city',
-    name: 'Kioto',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
-        description:
-          'Kioto famous for its crowded street markets with the best street food in Asia',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
-        description:
-          'Kioto full of of cozy canteens where you can try the best coffee in the Middle East',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/3.jpg',
-        description: 'Kioto is a beautiful city',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/3.jpg',
-        description:
-          'Kioto full of of cozy canteens where you can try the best coffee in the Middle East',
-      },
-    ],
-  },
-  {
-    id: '9ef8acfc-a0d9-4901-ac3b-59c116c44492',
-    description: 'Geneva - with a beautiful old town',
-    name: 'Geneva',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/3.jpg',
-        description: 'Geneva for those who value comfort and coziness',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/7.jpg',
-        description:
-          'Geneva with an embankment of a mighty river as a centre of attraction',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/1.jpg',
-        description: 'Geneva for those who value comfort and coziness',
-      },
-    ],
-  },
-  {
-    id: '49b94996-d9c4-444c-90e1-da11c7c3c7fc',
-    description: 'Amsterdam - a perfect place to stay with a family',
-    name: 'Amsterdam',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
-        description: 'Amsterdam a perfect place to stay with a family',
-      },
-    ],
-  },
-  {
-    id: 'a1b26641-a191-4b42-b852-79e763a3ec46',
-    description: 'Naples - middle-eastern paradise',
-    name: 'Naples',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
-        description:
-          'Naples full of of cozy canteens where you can try the best coffee in the Middle East',
-      },
       {
         src: 'https://23.objects.htmlacademy.pro/static/destinations/10.jpg',
-        description:
-          'Naples full of of cozy canteens where you can try the best coffee in the Middle East',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/6.jpg',
-        description:
-          'Naples famous for its crowded street markets with the best street food in Asia',
-      },
-    ],
-  },
-  {
-    id: 'd4f42ec2-e0b7-484a-85c5-0ec4dd7e236e',
-    description: 'Rotterdam - middle-eastern paradise',
-    name: 'Rotterdam',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/13.jpg',
-        description: 'Rotterdam with a beautiful old town',
-      },
-    ],
-  },
-  {
-    id: '16c73b9f-169f-45a2-94f3-d6689937e332',
-    description:
-      'Oslo - full of of cozy canteens where you can try the best coffee in the Middle East',
-    name: 'Oslo',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/4.jpg',
-        description: 'Oslo for those who value comfort and coziness',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/10.jpg',
-        description:
-          'Oslo full of of cozy canteens where you can try the best coffee in the Middle East',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
-        description: 'Oslo a perfect place to stay with a family',
-      },
-    ],
-  },
-  {
-    id: '3881ec5b-b2b6-4f20-9a7a-82c18e2a5d53',
-    description: 'Chamonix - a true asian pearl',
-    name: 'Chamonix',
-    pictures: [
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/6.jpg',
-        description: 'Chamonix with a beautiful old town',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/4.jpg',
-        description: 'Chamonix with a beautiful old town',
+        description: 'Berlin for those who value comfort and coziness',
       },
       {
         src: 'https://23.objects.htmlacademy.pro/static/destinations/12.jpg',
-        description: 'Chamonix is a beautiful city',
+        description: 'Berlin middle-eastern paradise',
       },
       {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/11.jpg',
-        description:
-          'Chamonix full of of cozy canteens where you can try the best coffee in the Middle East',
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/4.jpg',
+        description: 'Berlin middle-eastern paradise',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/15.jpg',
+        description: 'Berlin with crowded streets',
       },
     ],
   },
   {
-    id: 'ac52f50c-3bce-47b0-94a1-421ef1f7a099',
-    description: 'Monaco - is a beautiful city',
-    name: 'Monaco',
+    id: 'f4638d20-ab2a-49aa-a335-592c6867b634',
+    description: 'Helsinki - with a beautiful old town',
+    name: 'Helsinki',
+    pictures: [],
+  },
+  {
+    id: '42c5925b-5b01-4a57-aa52-81f6b49c4c2a',
+    description: 'Frankfurt - is a beautiful city',
+    name: 'Frankfurt',
+    pictures: [],
+  },
+  {
+    id: '81d7477b-7132-4ac1-849c-71cde580d398',
+    description: 'Rome - in a middle of Europe',
+    name: 'Rome',
+    pictures: [
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/10.jpg',
+        description: 'Rome in a middle of Europe',
+      },
+    ],
+  },
+  {
+    id: '542cc7d6-c1cd-4a43-92ba-c5cc59a5bb16',
+    description: 'Kopenhagen - is a beautiful city',
+    name: 'Kopenhagen',
     pictures: [
       {
         src: 'https://23.objects.htmlacademy.pro/static/destinations/5.jpg',
-        description: 'Monaco a true asian pearl',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/19.jpg',
-        description: 'Monaco with a beautiful old town',
-      },
-      {
-        src: 'https://23.objects.htmlacademy.pro/static/destinations/5.jpg',
         description:
-          'Monaco with an embankment of a mighty river as a centre of attraction',
+          'Kopenhagen with an embankment of a mighty river as a centre of attraction',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
+        description:
+          'Kopenhagen famous for its crowded street markets with the best street food in Asia',
+      },
+    ],
+  },
+  {
+    id: '66df9c08-ad89-40a3-a7fa-3d57fbe9c8fc',
+    description: 'Barcelona - for those who value comfort and coziness',
+    name: 'Barcelona',
+    pictures: [
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/8.jpg',
+        description:
+          'Barcelona with an embankment of a mighty river as a centre of attraction',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/7.jpg',
+        description: 'Barcelona middle-eastern paradise',
       },
       {
         src: 'https://23.objects.htmlacademy.pro/static/destinations/19.jpg',
-        description: 'Monaco a perfect place to stay with a family',
+        description:
+          'Barcelona with an embankment of a mighty river as a centre of attraction',
       },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/14.jpg',
+        description:
+          'Barcelona with an embankment of a mighty river as a centre of attraction',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/4.jpg',
+        description: 'Barcelona in a middle of Europe',
+      },
+    ],
+  },
+  {
+    id: 'd7e6a3dd-2d22-455a-a32b-a67e75247705',
+    description:
+      'Valencia - with an embankment of a mighty river as a centre of attraction',
+    name: 'Valencia',
+    pictures: [],
+  },
+  {
+    id: '0b64d960-c630-4b64-98be-761d34b52165',
+    description: 'Tokio - in a middle of Europe',
+    name: 'Tokio',
+    pictures: [
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/2.jpg',
+        description: 'Tokio with crowded streets',
+      },
+    ],
+  },
+  {
+    id: 'a08eefb2-176a-4436-bb2f-312b5e331707',
+    description:
+      'Sochi - famous for its crowded street markets with the best street food in Asia',
+    name: 'Sochi',
+    pictures: [
       {
         src: 'https://23.objects.htmlacademy.pro/static/destinations/16.jpg',
-        description: 'Monaco in a middle of Europe',
+        description: 'Sochi in a middle of Europe',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/15.jpg',
+        description: 'Sochi middle-eastern paradise',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/6.jpg',
+        description: 'Sochi for those who value comfort and coziness',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/1.jpg',
+        description:
+          'Sochi famous for its crowded street markets with the best street food in Asia',
+      },
+    ],
+  },
+  {
+    id: 'c69dfe99-d14b-4cfb-bada-cbe45f29e422',
+    description:
+      'Chamonix - famous for its crowded street markets with the best street food in Asia',
+    name: 'Chamonix',
+    pictures: [
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/18.jpg',
+        description: 'Chamonix in a middle of Europe',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/12.jpg',
+        description:
+          'Chamonix with an embankment of a mighty river as a centre of attraction',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/11.jpg',
+        description: 'Chamonix a true asian pearl',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/11.jpg',
+        description: 'Chamonix in a middle of Europe',
+      },
+      {
+        src: 'https://23.objects.htmlacademy.pro/static/destinations/4.jpg',
+        description: 'Chamonix in a middle of Europe',
       },
     ],
   },
