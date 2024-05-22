@@ -43,3 +43,4 @@ const eventPresenter = new EventPresenter({
 tripPresenter.init();
 filterPresenter.init();
 eventPresenter.init();
+eventsModel.init();

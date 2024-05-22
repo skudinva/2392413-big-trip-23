@@ -14,9 +14,6 @@ export default class EventsModel extends Observable {
   constructor({ eventsApiService }) {
     super();
     this.#eventsApiService = eventsApiService;
-    this.#eventsApiService.events.then((events) => {
-      console.log(events.map(this.#adaptToClient));
-    });
   }
 
   get events() {
@@ -30,6 +27,15 @@ export default class EventsModel extends Observable {
   get cities() {
     return this.#cities;
   }
+
+  init = async () => {
+    try {
+      const events = await this.#eventsApiService.events;
+      this.#events = events.map(this.#adaptToClient);
+    } catch (error) {
+      this.#events = [];
+    }
+  };
 
   updateEvent = (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
