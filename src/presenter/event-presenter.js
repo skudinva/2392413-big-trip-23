@@ -12,6 +12,7 @@ import { filterEvents } from '../utils/filter-events';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
+import LoadingView from '../view/loading-view';
 import NoEventsView from '../view/no-events-view';
 import SortView from '../view/sort-view';
 import EventPointPresenter from './event-point-presenter';
@@ -20,6 +21,7 @@ export default class EventPresenter {
   #sortComponent = null;
   #noEventsComponent = null;
   #eventListComponent = new EventsListView();
+  #loadingComponent = new LoadingView();
   /**@type {HTMLElement} */
   #container = null;
   #eventsModel = null;
@@ -32,6 +34,7 @@ export default class EventPresenter {
   /**@type {Map<string, EventPointPresenter>} */
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
+  #isLoading = true;
 
   constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
     this.#container = container;
@@ -101,15 +104,23 @@ export default class EventPresenter {
   };
 
   #onModelEvent = (updateType, event) => {
-    if (updateType === UpdateType.PATCH) {
-      const eventPointPresenter = this.#eventPointPresenters.get(event.id);
-      eventPointPresenter.setEvent(event);
-    } else if (updateType === UpdateType.MINOR) {
-      this.#clearTripBoard();
-      this.#renderTripBoard();
-    } else if (updateType === UpdateType.MAJOR) {
-      this.#clearTripBoard({ resetSort: true });
-      this.#renderTripBoard();
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#eventPointPresenters.get(event.id).setEvent(event);
+        break;
+      case UpdateType.MINOR:
+        this.#clearTripBoard();
+        this.#renderTripBoard();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearTripBoard({ resetSort: true });
+        this.#renderTripBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTripBoard();
+        break;
     }
   };
 
@@ -181,6 +192,11 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (!this.events.length) {
       this.#noEventsComponent = new NoEventsView({
         currentFilter: this.#filtersModel.currentFilterType,
@@ -202,11 +218,16 @@ export default class EventPresenter {
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#container);
+  };
+
   #clearTripBoard = ({ resetSort } = {}) => {
     if (resetSort) {
       this.#currentSortType = DEFAULT_SORT_TYPE;
     }
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
