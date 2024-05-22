@@ -6,9 +6,19 @@ import { getMockOffers } from '../mock/offer';
 import { getValueFromArrayById } from '../utils/event';
 
 export default class EventsModel extends Observable {
+  #eventsApiService = null;
   #events = getRandomEvents(EVENT_COUNT);
   #cities = getMockCities();
   #offers = getMockOffers();
+
+  constructor({ eventsApiService }) {
+    super();
+    this.#eventsApiService = eventsApiService;
+    this.#eventsApiService.events.then((events) => {
+      console.log(events);
+    });
+  }
+
   get events() {
     return this.#events;
   }

@@ -88,7 +88,13 @@ const sortTemplateProps = [
 const DEFAULT_SORT_TYPE = SortType.DAY;
 const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
+const ApiConfig = {
+  AUTHORIZATION: `Basic ${btoa('user:pass12')}`,
+  END_POINT: 'https://21.objects.pages.academy/big-trip',
+};
+
 export {
+  ApiConfig,
   DEFAULT_EVENT_PROPS,
   DEFAULT_FILTER_TYPE,
   DEFAULT_SORT_TYPE,
