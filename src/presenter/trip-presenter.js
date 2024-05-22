@@ -40,7 +40,7 @@ export default class TripPresenter {
 
     const getInfo = (date, destination) => ({
       date: date,
-      cityName: this.#eventsModel.getCityById(destination).name,
+      cityName: this.#eventsModel.getCityById(destination)?.name,
     });
 
     const pushInfo = (index, dateField) => {
