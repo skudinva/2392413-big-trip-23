@@ -21,7 +21,7 @@ export default class EventsModel extends Observable {
     return this.#cities;
   }
 
-  updateEvent(updateType, update) {
+  updateEvent = (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -35,15 +35,15 @@ export default class EventsModel extends Observable {
     ];
 
     this._notify(updateType, update);
-  }
+  };
 
-  addEvent(updateType, update) {
+  addEvent = (updateType, update) => {
     this.#events = [update, ...this.#events];
 
     this._notify(updateType, update);
-  }
+  };
 
-  deleteEvent(updateType, update) {
+  deleteEvent = (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -56,20 +56,17 @@ export default class EventsModel extends Observable {
     ];
 
     this._notify(updateType);
-  }
+  };
 
-  getOffersByType(type) {
+  getOffersByType = (type) => {
     const offer = this.offers.find((offerItem) => offerItem.type === type);
     return offer.offers;
-  }
+  };
 
-  getSelectedOffers(type, eventOffers) {
-    return this.getOffersByType(type).filter((offer) =>
+  getSelectedOffers = (type, eventOffers) =>
+    this.getOffersByType(type).filter((offer) =>
       eventOffers.includes(offer.id)
     );
-  }
 
-  getCityById(id) {
-    return getValueFromArrayById(this.cities, id);
-  }
+  getCityById = (id) => getValueFromArrayById(this.cities, id);
 }
