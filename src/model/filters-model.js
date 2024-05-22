@@ -9,6 +9,9 @@ export default class FiltersModel extends Observable {
   }
 
   setCurrentFilterType = (updateType, filterType) => {
+    if (this.#currentFilterType === filterType) {
+      return;
+    }
     this.#currentFilterType = filterType;
     this._notify(updateType, filterType);
   };

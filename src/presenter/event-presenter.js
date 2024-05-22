@@ -1,5 +1,6 @@
 import {
   DEFAULT_EVENT_PROPS,
+  DEFAULT_FILTER_TYPE,
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
@@ -193,6 +194,11 @@ export default class EventPresenter {
   };
 
   #renderNewEvent = () => {
+    this.#currentSortType = DEFAULT_SORT_TYPE;
+    this.#filtersModel.setCurrentFilterType(
+      UpdateType.MAJOR,
+      DEFAULT_FILTER_TYPE
+    );
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
