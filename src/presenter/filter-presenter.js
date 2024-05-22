@@ -35,6 +35,9 @@ export default class FilterPresenter {
   };
 
   #onFilterButtonClick = (filterValue) => {
+    if (this.#filtersModel.currentFilterType === filterValue) {
+      return;
+    }
     this.#filtersModel.setCurrentFilterType(UpdateType.MAJOR, filterValue);
   };
 }

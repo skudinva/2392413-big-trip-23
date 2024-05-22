@@ -214,6 +214,7 @@ export default class EventPresenter {
       UpdateType.MAJOR,
       DEFAULT_FILTER_TYPE
     );
+
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
