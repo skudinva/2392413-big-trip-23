@@ -155,7 +155,6 @@ export default class EventPointPresenter {
             updateEvent
           );
         }
-        //this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancelClick: () => {
         this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
@@ -166,7 +165,6 @@ export default class EventPointPresenter {
           UpdateType.MINOR,
           deleteEvent
         );
-        //this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });
 
