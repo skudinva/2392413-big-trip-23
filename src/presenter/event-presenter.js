@@ -101,7 +101,8 @@ export default class EventPresenter {
     } else {
       if (eventPointPresenter.editFormMode === EditFormMode.NEW) {
         eventPointPresenter.destroy();
-      } else {
+      } else if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {
+        eventPointPresenter.resetEditForm();
         eventPointPresenter.switchToView();
       }
 
@@ -245,12 +246,16 @@ export default class EventPresenter {
   };
 
   #renderNewEvent = () => {
-    this.#currentSortType = DEFAULT_SORT_TYPE;
-    this.#filtersModel.setCurrentFilterType(
-      UpdateType.MAJOR,
-      DEFAULT_FILTER_TYPE
-    );
-
+    if (
+      this.#filtersModel.currentFilterType !== DEFAULT_FILTER_TYPE ||
+      this.#currentSortType !== DEFAULT_SORT_TYPE
+    ) {
+      this.#currentSortType = DEFAULT_SORT_TYPE;
+      this.#filtersModel.setCurrentFilterType(
+        UpdateType.MAJOR,
+        DEFAULT_FILTER_TYPE
+      );
+    }
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
 
