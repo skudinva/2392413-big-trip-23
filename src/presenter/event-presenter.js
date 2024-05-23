@@ -132,37 +132,40 @@ export default class EventPresenter {
     }
   };
 
-  #trySendRequest = async (callback) => {
+  /**
+   *
+   * @param {EventPointPresenter} activeForm
+   * @param {*} callback
+   */
+  #trySendRequest = async (activeForm, callback) => {
     this.#uiBlocker.block();
     try {
       await callback();
     } catch (error) {
-      if (this.#activeEventEditForm) {
-        this.#activeEventEditForm.setAborting();
-      }
+      activeForm.setAborting();
     }
     this.#uiBlocker.unblock();
   };
 
   #onEventDataChange = (actionType, updateType, event) => {
+    /**@type {EventPointPresenter} */
+    const activeForm = this.#eventPointPresenters.get(event.id);
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this.#trySendRequest(async () => {
-          if (this.#activeEventEditForm) {
-            this.#activeEventEditForm.setSaving();
-          }
+        this.#trySendRequest(activeForm, async () => {
+          activeForm.setSaving();
           await this.#eventsModel.updateEvent(updateType, event);
         });
         break;
       case UserAction.ADD_EVENT:
         this.#trySendRequest(async () => {
-          this.#activeEventEditForm.setSaving();
+          activeForm.setSaving();
           await this.#eventsModel.addEvent(updateType, event);
         });
         break;
       case UserAction.DELETE_EVENT:
         this.#trySendRequest(async () => {
-          this.#activeEventEditForm.setDeleting();
+          activeForm.setDeleting();
           await this.#eventsModel.deleteEvent(updateType, event);
         });
         break;
