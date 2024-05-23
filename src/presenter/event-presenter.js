@@ -132,42 +132,41 @@ export default class EventPresenter {
     }
   };
 
-  #onEventDataChange = async (actionType, updateType, event) => {
+  #trySendRequest = async (callback) => {
     this.#uiBlocker.block();
-    switch (actionType) {
-      case UserAction.UPDATE_EVENT:
-        if (this.#activeEventEditForm) {
-          this.#activeEventEditForm.setSaving();
-        }
-
-        try {
-          await this.#eventsModel.updateEvent(updateType, event);
-        } catch (error) {
-          if (this.#activeEventEditForm) {
-            this.#activeEventEditForm.setAborting();
-          }
-        }
-        break;
-      case UserAction.ADD_EVENT:
-        this.#activeEventEditForm.setSaving();
-
-        try {
-          await this.#eventsModel.addEvent(updateType, event);
-        } catch (error) {
-          this.#activeEventEditForm.setAborting();
-        }
-        break;
-      case UserAction.DELETE_EVENT:
-        this.#activeEventEditForm.setDeleting();
-
-        try {
-          await this.#eventsModel.deleteEvent(updateType, event);
-        } catch (error) {
-          this.#activeEventEditForm.setAborting();
-        }
-        break;
+    try {
+      await callback();
+    } catch (error) {
+      if (this.#activeEventEditForm) {
+        this.#activeEventEditForm.setAborting();
+      }
     }
     this.#uiBlocker.unblock();
+  };
+
+  #onEventDataChange = (actionType, updateType, event) => {
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#trySendRequest(async () => {
+          if (this.#activeEventEditForm) {
+            this.#activeEventEditForm.setSaving();
+          }
+          await this.#eventsModel.updateEvent(updateType, event);
+        });
+        break;
+      case UserAction.ADD_EVENT:
+        this.#trySendRequest(async () => {
+          this.#activeEventEditForm.setSaving();
+          await this.#eventsModel.addEvent(updateType, event);
+        });
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#trySendRequest(async () => {
+          this.#activeEventEditForm.setDeleting();
+          await this.#eventsModel.deleteEvent(updateType, event);
+        });
+        break;
+    }
   };
 
   /**
