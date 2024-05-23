@@ -27,6 +27,7 @@ export default class EventPresenter {
   #eventsModel = null;
   #filtersModel = null;
   #cities = null;
+  #offersList = null;
   /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
   /**@type {HTMLElement} */
@@ -52,7 +53,6 @@ export default class EventPresenter {
   }
 
   init = () => {
-    this.#cities = [...this.#eventsModel.cities];
     this.#renderTripBoard();
     this.#newEventButtonElement.addEventListener('click', () =>
       this.#renderNewEvent()
@@ -117,6 +117,8 @@ export default class EventPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
+        this.#cities = [...this.#eventsModel.cities];
+        this.#offersList = [...this.#eventsModel.offers];
         remove(this.#loadingComponent);
         this.#renderTripBoard();
         break;
@@ -173,6 +175,7 @@ export default class EventPresenter {
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
+        offersList: this.#offersList,
         container,
         onStateChange: this.#onEventEditStateChange,
         onDataChange: this.#onEventDataChange,

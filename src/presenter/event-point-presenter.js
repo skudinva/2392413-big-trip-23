@@ -35,6 +35,7 @@ export default class EventPointPresenter {
     eventsModel,
     container,
     cities,
+    offersList,
     onStateChange,
     onDataChange,
   }) {
@@ -45,14 +46,14 @@ export default class EventPointPresenter {
     if (!onDataChange) {
       throw new Error('Parameter "onDataChange" doesn\'t exist');
     }
-
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#event = event;
     this.#cities = cities;
+    this.#offersList = offersList;
     this.#handleStateChange = onStateChange;
     this.#handleDataChange = onDataChange;
-    this.#offersList = [...this.#eventsModel.offers];
+
     this.#render();
   }
 

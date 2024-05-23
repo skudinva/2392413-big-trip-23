@@ -27,13 +27,6 @@ export default class EventsModel extends Observable {
 
   init = async () => {
     try {
-      const events = await this.#eventsApiService.events;
-      this.#events = events.map(this.#adaptEventToClient);
-    } catch (error) {
-      this.#events = [];
-    }
-
-    try {
       this.#cities = await this.#eventsApiService.cities;
     } catch (error) {
       this.#cities = [];
@@ -43,6 +36,13 @@ export default class EventsModel extends Observable {
       this.#offers = await this.#eventsApiService.offers;
     } catch (error) {
       this.#offers = [];
+    }
+
+    try {
+      const events = await this.#eventsApiService.events;
+      this.#events = events.map(this.#adaptEventToClient);
+    } catch (error) {
+      this.#events = [];
     }
 
     this._notify(UpdateType.INIT);
@@ -110,7 +110,7 @@ export default class EventsModel extends Observable {
       eventOffers.includes(offer.id)
     );
 
-  getCityById = (id) => getValueFromArrayById(this.cities, id);
+  getCityById = (id) => getValueFromArrayById(this.cities || [], id);
 
   #adaptEventToClient = (event) => {
     const adaptedEvent = {
