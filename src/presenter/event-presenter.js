@@ -4,10 +4,12 @@ import {
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
+  TimeLimit,
   UpdateType,
   UserAction,
 } from '../const';
 import { RenderPosition, remove, render } from '../framework/render';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import { filterEvents } from '../utils/filter-events';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
@@ -36,6 +38,10 @@ export default class EventPresenter {
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT,
+  });
 
   constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
     this.#container = container;
@@ -98,6 +104,7 @@ export default class EventPresenter {
       } else {
         eventPointPresenter.switchToView();
       }
+
       this.#setActiveEventEditForm(null);
     }
   };
@@ -126,6 +133,7 @@ export default class EventPresenter {
   };
 
   #onEventDataChange = async (actionType, updateType, event) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         if (this.#activeEventEditForm) {
@@ -159,6 +167,7 @@ export default class EventPresenter {
         }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   /**

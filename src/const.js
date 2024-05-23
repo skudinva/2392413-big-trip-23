@@ -97,6 +97,11 @@ const ApiConfig = {
   OFFERS_URL: 'offers',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export {
   ApiConfig,
   DEFAULT_EVENT_PROPS,
@@ -110,6 +115,7 @@ export {
   FilterType,
   NoEventMessage,
   SortType,
+  TimeLimit,
   UpdateType,
   UserAction,
   sortTemplateProps,
