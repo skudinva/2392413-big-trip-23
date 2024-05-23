@@ -183,9 +183,8 @@ const createEventEditTemplate = (eventState) => {
     if (isNewEvent(eventState)) {
       return 'Cancel';
     }
-    return isDeleting ? 'Deleting' : 'Delete';
+    return isDeleting ? 'Deleting...' : 'Delete';
   };
-
   const isSubmitDisabled = isDisabled;
 
   return `<form class="event event--edit" action="#" method="post">
@@ -200,7 +199,7 @@ const createEventEditTemplate = (eventState) => {
       </button>
       <button class="event__reset-btn" type="reset"
       ${getDisabledInputParam(isDisabled)}>
-      ${resetButtonCaption}</button>
+      ${resetButtonCaption()}</button>
       <button class="event__rollup-btn" type="button"
       ${getDisabledInputParam(isDisabled)}>
         <span class="visually-hidden">Open event</span>
