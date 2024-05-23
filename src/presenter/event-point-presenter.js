@@ -1,6 +1,6 @@
 import { EventStateAction, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
-import { getFormMode, guid, isNewEvent } from '../utils/event';
+import { getFormMode, isNewEvent } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -110,7 +110,6 @@ export default class EventPointPresenter {
       offersList: this.#offersList,
       onFormSubmit: (updateEvent) => {
         if (isNewEvent(updateEvent)) {
-          updateEvent.id = guid();
           this.#handleDataChange(
             UserAction.ADD_EVENT,
             UpdateType.MAJOR,

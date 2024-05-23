@@ -3,6 +3,8 @@ import ApiService from './framework/api-service';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 export default class EventsApiService extends ApiService {
@@ -18,6 +20,18 @@ export default class EventsApiService extends ApiService {
     );
   }
 
+  get cities() {
+    return this._load({ url: this.#apiConfig.DESTINATIONS_URL }).then(
+      ApiService.parseResponse
+    );
+  }
+
+  get offers() {
+    return this._load({ url: this.#apiConfig.OFFERS_URL }).then(
+      ApiService.parseResponse
+    );
+  }
+
   updateEvent = async (event) => {
     const request = {
       url: `${this.#apiConfig.EVENTS_URL}/${event.id}`,
@@ -26,9 +40,25 @@ export default class EventsApiService extends ApiService {
       headers: new Headers({ 'Content-type:': 'application/json' }),
     };
     const response = await this._load(request);
+    return await ApiService.parseResponse(response);
+  };
 
-    const parsedResponse = await ApiService.parseResponse(response);
-    return parsedResponse;
+  addEvent = async (event) => {
+    const request = {
+      url: this.#apiConfig.EVENTS_URL,
+      method: Method.POST,
+      body: JSON.stringify(this.#adaptToServer(event)),
+      headers: new Headers({ 'Content-type:': 'application/json' }),
+    };
+    return await this._load(request);
+  };
+
+  deleteEvent = async (event) => {
+    const request = {
+      url: `${this.#apiConfig.EVENTS_URL}/${event.id}`,
+      method: Method.DELETE,
+    };
+    return await this._load(request);
   };
 
   #adaptToServer = (event) => {

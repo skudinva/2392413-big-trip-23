@@ -117,9 +117,10 @@ const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
 };
 
 const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
-  if (!destination) {
+  if (!destination || !cities.length) {
     return '';
   }
+
   const { description, pictures } = getValueFromArrayById(cities, destination);
 
   if (!description && !pictures) {

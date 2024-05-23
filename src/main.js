@@ -37,7 +37,8 @@ const eventPresenter = new EventPresenter({
   newEventButtonElement: newEventButtonElement,
 });
 
-tripPresenter.init();
-filterPresenter.init();
-eventPresenter.init();
-eventsModel.init();
+eventsModel.init().finally(() => {
+  tripPresenter.init();
+  filterPresenter.init();
+  eventPresenter.init();
+});

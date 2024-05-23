@@ -1,14 +1,12 @@
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
-import { getMockCities } from '../mock/city';
-import { getMockOffers } from '../mock/offer';
 import { getValueFromArrayById } from '../utils/event';
 
 export default class EventsModel extends Observable {
   #eventsApiService = null;
   #events = [];
-  #cities = getMockCities();
-  #offers = getMockOffers();
+  #cities = [];
+  #offers = [];
 
   constructor({ eventsApiService }) {
     super();
@@ -30,10 +28,23 @@ export default class EventsModel extends Observable {
   init = async () => {
     try {
       const events = await this.#eventsApiService.events;
-      this.#events = events.map(this.#adaptToClient);
+      this.#events = events.map(this.#adaptEventToClient);
     } catch (error) {
       this.#events = [];
     }
+
+    try {
+      this.#cities = await this.#eventsApiService.cities;
+    } catch (error) {
+      this.#cities = [];
+    }
+
+    try {
+      this.#offers = await this.#eventsApiService.offers;
+    } catch (error) {
+      this.#offers = [];
+    }
+
     this._notify(UpdateType.INIT);
   };
 
@@ -46,7 +57,7 @@ export default class EventsModel extends Observable {
 
     try {
       const response = await this.#eventsApiService.updateEvent(update);
-      const updatedEvent = this.#adaptToClient(response);
+      const updatedEvent = this.#adaptEventToClient(response);
 
       this.#events = [
         ...this.#events.slice(0, index),
@@ -59,25 +70,34 @@ export default class EventsModel extends Observable {
     }
   };
 
-  addEvent = (updateType, update) => {
-    this.#events = [update, ...this.#events];
-
-    this._notify(updateType, update);
+  addEvent = async (updateType, update) => {
+    try {
+      const response = await this.#eventsApiService.addEvent(update);
+      const newEvent = this.#adaptEventToClient(response);
+      this.#events = [newEvent, ...this.#events];
+      this._notify(updateType, update);
+    } catch (error) {
+      throw new Error('Can not add event');
+    }
   };
 
-  deleteEvent = (updateType, update) => {
+  deleteEvent = async (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
       throw new Error('Can not delete unexisting event');
     }
 
-    this.#events = [
-      ...this.#events.slice(0, index),
-      ...this.#events.slice(index + 1),
-    ];
-
-    this._notify(updateType);
+    try {
+      await this.#eventsApiService.deleteEvent(update);
+      this.#events = [
+        ...this.#events.slice(0, index),
+        ...this.#events.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch (error) {
+      throw new Error('Can not delete event');
+    }
   };
 
   getOffersByType = (type) => {
@@ -92,7 +112,7 @@ export default class EventsModel extends Observable {
 
   getCityById = (id) => getValueFromArrayById(this.cities, id);
 
-  #adaptToClient = (event) => {
+  #adaptEventToClient = (event) => {
     const adaptedEvent = {
       ...event,
       basePrice: event['base_price'],
