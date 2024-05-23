@@ -272,6 +272,7 @@ export default class EventPresenter {
     remove(this.#noEventsComponent);
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
+    this.#setActiveEventEditForm(null);
   };
 
   #onEscKeyDown = (evt) => {
