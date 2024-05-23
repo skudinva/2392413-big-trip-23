@@ -131,15 +131,32 @@ export default class EventPresenter {
         if (this.#activeEventEditForm) {
           this.#activeEventEditForm.setSaving();
         }
-        this.#eventsModel.updateEvent(updateType, event);
+
+        try {
+          this.#eventsModel.updateEvent(updateType, event);
+        } catch (error) {
+          if (this.#activeEventEditForm) {
+            this.#activeEventEditForm.setAborting();
+          }
+        }
         break;
       case UserAction.ADD_EVENT:
         this.#activeEventEditForm.setSaving();
-        this.#eventsModel.addEvent(updateType, event);
+
+        try {
+          this.#eventsModel.addEvent(updateType, event);
+        } catch (error) {
+          this.#activeEventEditForm.setAborting();
+        }
         break;
       case UserAction.DELETE_EVENT:
         this.#activeEventEditForm.setDeleting();
-        this.#eventsModel.deleteEvent(updateType, event);
+
+        try {
+          this.#eventsModel.deleteEvent(updateType, event);
+        } catch (error) {
+          this.#activeEventEditForm.setAborting();
+        }
         break;
     }
   };
