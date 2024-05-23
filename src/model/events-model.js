@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
 import { getValueFromArrayById } from '../utils/event';
@@ -66,6 +67,7 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType, update);
     } catch (error) {
+      console.log(error);
       throw new Error('Can not update event');
     }
   };
@@ -116,8 +118,8 @@ export default class EventsModel extends Observable {
     const adaptedEvent = {
       ...event,
       basePrice: event['base_price'],
-      dateFrom: new Date(event['date_from']),
-      dateTo: new Date(event['date_to']),
+      dateFrom: dayjs(event['date_from']).toDate(),
+      dateTo: dayjs(event['date_to']).toDate(),
       isFavorite: event['is_favorite'],
     };
 

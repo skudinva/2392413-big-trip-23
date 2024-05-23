@@ -37,7 +37,7 @@ export default class EventsApiService extends ApiService {
       url: `${this.#apiConfig.EVENTS_URL}/${event.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(event)),
-      headers: new Headers({ 'Content-type:': 'application/json' }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     };
     const response = await this._load(request);
     return await ApiService.parseResponse(response);
@@ -48,7 +48,7 @@ export default class EventsApiService extends ApiService {
       url: this.#apiConfig.EVENTS_URL,
       method: Method.POST,
       body: JSON.stringify(this.#adaptToServer(event)),
-      headers: new Headers({ 'Content-type:': 'application/json' }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     };
     return await this._load(request);
   };
@@ -69,11 +69,10 @@ export default class EventsApiService extends ApiService {
       ['date_to']: event.dateTo.toISOString(),
       ['is_favorite']: event.isFavorite,
     };
-
-    delete event.basePrice;
-    delete event.dateFrom;
-    delete event.dateTo;
-    delete event.isFavorite;
+    delete adaptedEvent.basePrice;
+    delete adaptedEvent.dateFrom;
+    delete adaptedEvent.dateTo;
+    delete adaptedEvent.isFavorite;
     return adaptedEvent;
   };
 }

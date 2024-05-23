@@ -125,7 +125,7 @@ export default class EventPresenter {
     }
   };
 
-  #onEventDataChange = (actionType, updateType, event) => {
+  #onEventDataChange = async (actionType, updateType, event) => {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         if (this.#activeEventEditForm) {
