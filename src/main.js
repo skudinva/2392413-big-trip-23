@@ -18,11 +18,7 @@ const newEventButtonElement = document.querySelector(
 );
 
 const eventsModel = new EventsModel({
-  eventsApiService: new EventsApiService(
-    ApiConfig.END_POINT,
-    ApiConfig.AUTHORIZATION,
-    ApiConfig.URL
-  ),
+  eventsApiService: new EventsApiService(ApiConfig),
 });
 const filtersModel = new FiltersModel();
 

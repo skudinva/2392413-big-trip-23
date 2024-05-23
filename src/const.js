@@ -92,7 +92,9 @@ const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 const ApiConfig = {
   AUTHORIZATION: `Basic ${btoa('user:pass12')}`,
   END_POINT: 'https://23.objects.htmlacademy.pro/big-trip',
-  URL: 'points',
+  EVENTS_URL: 'points',
+  DESTINATIONS_URL: 'destinations',
+  OFFERS_URL: 'offers',
 };
 
 export {
