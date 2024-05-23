@@ -141,7 +141,7 @@ export default class EventPresenter {
         }
 
         try {
-          this.#eventsModel.updateEvent(updateType, event);
+          await this.#eventsModel.updateEvent(updateType, event);
         } catch (error) {
           if (this.#activeEventEditForm) {
             this.#activeEventEditForm.setAborting();
@@ -152,7 +152,7 @@ export default class EventPresenter {
         this.#activeEventEditForm.setSaving();
 
         try {
-          this.#eventsModel.addEvent(updateType, event);
+          await this.#eventsModel.addEvent(updateType, event);
         } catch (error) {
           this.#activeEventEditForm.setAborting();
         }
@@ -161,7 +161,7 @@ export default class EventPresenter {
         this.#activeEventEditForm.setDeleting();
 
         try {
-          this.#eventsModel.deleteEvent(updateType, event);
+          await this.#eventsModel.deleteEvent(updateType, event);
         } catch (error) {
           this.#activeEventEditForm.setAborting();
         }
