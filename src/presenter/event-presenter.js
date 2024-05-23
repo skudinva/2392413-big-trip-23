@@ -158,13 +158,13 @@ export default class EventPresenter {
         });
         break;
       case UserAction.ADD_EVENT:
-        this.#trySendRequest(async () => {
+        this.#trySendRequest(activeForm, async () => {
           activeForm.setSaving();
           await this.#eventsModel.addEvent(updateType, event);
         });
         break;
       case UserAction.DELETE_EVENT:
-        this.#trySendRequest(async () => {
+        this.#trySendRequest(activeForm, async () => {
           activeForm.setDeleting();
           await this.#eventsModel.deleteEvent(updateType, event);
         });
