@@ -50,7 +50,8 @@ export default class EventsApiService extends ApiService {
       body: JSON.stringify(this.#adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     };
-    return await this._load(request);
+    const response = await this._load(request);
+    return await ApiService.parseResponse(response);
   };
 
   deleteEvent = async (event) => {

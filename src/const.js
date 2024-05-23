@@ -13,12 +13,11 @@ const EVENT_TYPES = [
 ];
 
 const DEFAULT_EVENT_PROPS = {
-  id: null,
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
   destination: null,
-  isFavorite: null,
+  isFavorite: false,
   offers: [],
   type: 'flight',
 };
@@ -41,9 +40,9 @@ const EventStateAction = {
   CREATE_NEW_FORM: 'Create new from',
   OPEN_EDIT_FORM: 'Open edit form',
   CLOSE_EDIT_FORM: 'Close edit from',
-  SUBMIT_EDIT_FORM: 'Submit edit form',
-  CANCEL_EDIT_FORM: 'Cancel edit form',
-  DELETE_EDIT_FORM: 'Delete edit form',
+  //SUBMIT_EDIT_FORM: 'Submit edit form',
+  //CANCEL_EDIT_FORM: 'Cancel edit form',
+  //DELETE_EDIT_FORM: 'Delete edit form',
 };
 
 const UserAction = {

@@ -89,7 +89,8 @@ const isFunction = (checkFunction) =>
 const getValueFromArrayById = (array, id) =>
   array.find((item) => item.id === id);
 
-const isNewEvent = (event) => event.id === null;
+const isNewEvent = (event) => !Object.hasOwn(event, 'id');
+
 const getFormMode = (event) =>
   isNewEvent(event) ? EditFormMode.NEW : EditFormMode.EDIT;
 

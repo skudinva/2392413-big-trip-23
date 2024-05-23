@@ -122,10 +122,10 @@ export default class EventsModel extends Observable {
       isFavorite: event['is_favorite'],
     };
 
-    delete event['base_price'];
-    delete event['date_from'];
-    delete event['date_to'];
-    delete event['is_favorite'];
+    delete adaptedEvent['base_price'];
+    delete adaptedEvent['date_from'];
+    delete adaptedEvent['date_to'];
+    delete adaptedEvent['is_favorite'];
     return adaptedEvent;
   };
 }
