@@ -35,7 +35,7 @@ const DateFormat = {
   DATEPICKER: 'd/m/y H:i',
 };
 
-const EditFormMode = { NEW: 'New', EDIT: 'Edit' };
+const EditFormMode = { NEW: 'New', EDIT: 'Edit', VIEW: 'View' };
 
 const EventStateAction = {
   CREATE_NEW_FORM: 'Create new from',

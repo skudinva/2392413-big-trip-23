@@ -1,6 +1,11 @@
-import { EventStateAction, UpdateType, UserAction } from '../const';
+import {
+  EditFormMode,
+  EventStateAction,
+  UpdateType,
+  UserAction,
+} from '../const';
 import { remove, render, replace } from '../framework/render';
-import { getFormMode, isNewEvent } from '../utils/event';
+import { getFormMode } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -51,8 +56,15 @@ export default class EventPointPresenter {
     this.#render();
   }
 
-  get formMode() {
+  get editFormMode() {
     return getFormMode(this.#event);
+  }
+
+  get eventPointState() {
+    if (this.#activeComponent === this.#eventEditComponent) {
+      return this.editFormMode;
+    }
+    return EditFormMode.VIEW;
   }
 
   setEvent = (event) => {
@@ -73,6 +85,26 @@ export default class EventPointPresenter {
 
   switchToView = () => {
     this.#switchToComponent(this.#eventComponent);
+  };
+
+  setSaving = () => {
+    if (this.eventPointState === EditFormMode.VIEW) {
+      return;
+    }
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setDeleting = () => {
+    if (this.eventPointState === EditFormMode.VIEW) {
+      return;
+    }
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isDeleting: true,
+    });
   };
 
   destroy = () => {
@@ -109,7 +141,7 @@ export default class EventPointPresenter {
       cities: this.#cities,
       offersList: this.#offersList,
       onFormSubmit: (updateEvent) => {
-        if (isNewEvent(updateEvent)) {
+        if (this.editFormMode === EditFormMode.NEW) {
           this.#handleDataChange(
             UserAction.ADD_EVENT,
             UpdateType.MAJOR,
@@ -122,7 +154,7 @@ export default class EventPointPresenter {
             updateEvent
           );
         }
-        this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
+        //this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancelClick: () => {
         this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
@@ -133,7 +165,7 @@ export default class EventPointPresenter {
           UpdateType.MINOR,
           deleteEvent
         );
-        this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
+        //this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });
 

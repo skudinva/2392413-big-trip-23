@@ -77,7 +77,7 @@ export default class EventPresenter {
     if (!this.#activeEventEditForm) {
       return false;
     }
-    return this.#activeEventEditForm.formMode === EditFormMode.NEW;
+    return this.#activeEventEditForm.editFormMode === EditFormMode.NEW;
   };
 
   /**
@@ -87,13 +87,13 @@ export default class EventPresenter {
    */
   #onEventEditStateChange = (eventPointPresenter, stateAction) => {
     if (
-      (eventPointPresenter.formMode === EditFormMode.NEW &&
+      (eventPointPresenter.editFormMode === EditFormMode.NEW &&
         stateAction === EventStateAction.CREATE_NEW_FORM) ||
       stateAction === EventStateAction.OPEN_EDIT_FORM
     ) {
       this.#openEditForm(eventPointPresenter);
     } else {
-      if (eventPointPresenter.formMode === EditFormMode.NEW) {
+      if (eventPointPresenter.editFormMode === EditFormMode.NEW) {
         eventPointPresenter.destroy();
       } else {
         eventPointPresenter.switchToView();
@@ -150,20 +150,20 @@ export default class EventPresenter {
     this.#setActiveEventEditForm(eventPointPresenter);
   };
 
-  #renderEventItem = (formMode, callback) => {
+  #renderEventItem = (editFormMode, callback) => {
     const itemComponent = new EventItemView();
     render(
       itemComponent,
       this.#eventListComponent.element,
-      formMode === EditFormMode.NEW
+      editFormMode === EditFormMode.NEW
         ? RenderPosition.AFTERBEGIN
         : RenderPosition.BEFOREEND
     );
     callback(itemComponent);
   };
 
-  #renderTripPoint = (event, formMode) => {
-    this.#renderEventItem(formMode, (container) => {
+  #renderTripPoint = (event, editFormMode) => {
+    this.#renderEventItem(editFormMode, (container) => {
       const eventPointPresenter = new EventPointPresenter({
         event,
         eventsModel: this.#eventsModel,
