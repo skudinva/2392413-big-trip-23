@@ -126,12 +126,15 @@ export default class EventPresenter {
   #onEventDataChange = (actionType, updateType, event) => {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
+        this.#activeEventEditForm.setSaving();
         this.#eventsModel.updateEvent(updateType, event);
         break;
       case UserAction.ADD_EVENT:
+        this.#activeEventEditForm.setSaving();
         this.#eventsModel.addEvent(updateType, event);
         break;
       case UserAction.DELETE_EVENT:
+        this.#activeEventEditForm.setDeleting();
         this.#eventsModel.deleteEvent(updateType, event);
         break;
     }
