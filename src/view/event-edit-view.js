@@ -6,7 +6,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {
   getInputDateTime,
   getValueFromArrayById,
-  isDigit,
+  isDigitString,
   isNewEvent,
 } from '../utils/event';
 
@@ -365,7 +365,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onEventBasePriceKeypress = (evt) => {
-    if (!isDigit(evt.key)) {
+    if (!isDigitString(evt.key)) {
       evt.preventDefault();
     }
   };
