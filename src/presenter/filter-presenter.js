@@ -6,24 +6,33 @@ import FilterView from '../view/filter-view';
 export default class FilterPresenter {
   #container = null;
   #filtersModel = null;
+  #eventsModel = null;
   #filterComponent = null;
-  constructor({ container, filtersModel }) {
+  #events = null;
+  constructor({ container, filtersModel, eventsModel }) {
     this.#container = container;
     this.#filtersModel = filtersModel;
+    this.#eventsModel = eventsModel;
     this.#filtersModel.addObserver(this.#onModelEvent);
+    this.#eventsModel.addObserver(this.#onModelEvent);
   }
 
   get filters() {
-    return Object.entries(filterEvents).map(([type]) => ({ type }));
+    return Object.entries(filterEvents).map(([filterType, applyFilter]) => ({
+      type: filterType,
+      count: applyFilter(this.#events).length,
+    }));
   }
 
   init = () => {
-    const filters = this.filters;
+    this.#events = [...this.#eventsModel.events];
+
     if (this.#filterComponent) {
       remove(this.#filterComponent);
     }
+
     this.#filterComponent = new FilterView({
-      filters,
+      filters: this.filters,
       currentFilterType: this.#filtersModel.currentFilterType,
       onFilterButtonClick: this.#onFilterButtonClick,
     });

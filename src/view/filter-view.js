@@ -1,9 +1,10 @@
 import AbstractView from '../framework/view/abstract-view';
 
-const getFilterItemTemplate = ({ type }, currentFilterType) => {
+const getFilterItemTemplate = ({ type, count }, currentFilterType) => {
   const checked = type === currentFilterType ? 'checked' : '';
+  const disabled = !count ? 'disabled' : '';
   return `<div class="trip-filters__filter">
-  <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${checked}>
+  <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${checked} ${disabled}>
   <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
 </div>`;
 };
