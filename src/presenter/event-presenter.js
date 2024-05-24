@@ -214,7 +214,9 @@ export default class EventPresenter {
         onStateChange: this.#onEventEditStateChange,
         onDataChange: this.#onEventDataChange,
       });
-      this.#eventPointPresenters.set(event.id, eventPointPresenter);
+      if (event.id) {
+        this.#eventPointPresenters.set(event.id, eventPointPresenter);
+      }
     });
   };
 
@@ -260,6 +262,10 @@ export default class EventPresenter {
         UpdateType.MAJOR,
         DEFAULT_FILTER_TYPE
       );
+    }
+    if (this.#noEventsComponent) {
+      remove(this.#noEventsComponent);
+      render(this.#eventListComponent, this.#container);
     }
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
   };
