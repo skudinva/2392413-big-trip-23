@@ -111,7 +111,7 @@ export default class EventPointPresenter {
 
   setAborting = () => {
     if (this.eventPointState === EditFormMode.VIEW) {
-      this.#eventComponent.shake();
+      this.#container.shake();
       return;
     }
 
