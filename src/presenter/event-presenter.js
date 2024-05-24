@@ -317,6 +317,7 @@ export default class EventPresenter {
       evt.preventDefault();
       this.#activeEventEditForm.resetEditForm();
       this.#activeEventEditForm.switchToView();
+      this.#setActiveEventEditForm(null);
     }
   };
 
