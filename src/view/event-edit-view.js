@@ -203,11 +203,9 @@ const createEventEditTemplate = (eventState) => {
       ${isSubmitDisabled ? 'disabled' : ''}>
       ${isSaving ? 'Saving...' : 'Save'}
       </button>
-      <button class="event__reset-btn" type="reset"
-      ${getDisabledInputParam(isDisabled)}>
+      <button class="event__reset-btn" type="reset">
       ${resetButtonCaption()}</button>
-      <button class="event__rollup-btn" type="button"
-      ${getDisabledInputParam(isDisabled)}>
+      <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
     </header>
