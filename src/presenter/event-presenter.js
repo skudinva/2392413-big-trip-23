@@ -279,6 +279,7 @@ export default class EventPresenter {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#activeEventEditForm.resetEditForm();
+      this.#activeEventEditForm.switchToView();
     }
   };
 

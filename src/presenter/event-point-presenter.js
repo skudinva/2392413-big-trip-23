@@ -76,8 +76,9 @@ export default class EventPointPresenter {
   };
 
   resetEditForm = () => {
-    const formElement = this.#eventEditComponent.element;
-    formElement.reset();
+    this.#eventEditComponent.updateElement(
+      EventEditView.parseEventToState(this.#event)
+    );
   };
 
   switchToEdit = () => {
