@@ -179,8 +179,12 @@ export default class EventPresenter {
    */
   #openEditForm = (eventPointPresenter) => {
     if (this.#activeEventEditForm) {
-      this.#activeEventEditForm.resetEditForm();
-      this.#activeEventEditForm.switchToView();
+      if (this.#activeEventEditForm.editFormMode === EditFormMode.NEW) {
+        this.#activeEventEditForm.destroy();
+      } else {
+        this.#activeEventEditForm.resetEditForm();
+        this.#activeEventEditForm.switchToView();
+      }
     }
 
     eventPointPresenter.switchToEdit();
