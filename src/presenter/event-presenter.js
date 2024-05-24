@@ -286,7 +286,9 @@ export default class EventPresenter {
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
-    this.#activeEventEditForm.destroy();
+    if (this.#activeEventEditForm) {
+      this.#activeEventEditForm.destroy();
+    }
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
     this.#setActiveEventEditForm(null);
