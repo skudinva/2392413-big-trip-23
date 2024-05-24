@@ -55,6 +55,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
 const FilterType = {
@@ -69,6 +70,7 @@ const NoEventMessage = {
   [FilterType.FUTURE]: 'There are no future events now',
   [FilterType.PRESENT]: 'There are no present events now',
   [FilterType.PAST]: 'There are no past events now',
+  [UpdateType.ERROR]: 'Failed to load latest route information',
 };
 
 const SortType = {

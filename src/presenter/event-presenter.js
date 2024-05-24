@@ -4,6 +4,7 @@ import {
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
+  NoEventMessage,
   TimeLimit,
   UpdateType,
   UserAction,
@@ -38,6 +39,7 @@ export default class EventPresenter {
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -111,6 +113,7 @@ export default class EventPresenter {
   };
 
   #onModelEvent = (updateType, event) => {
+    this.#isError = updateType === UpdateType.ERROR;
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPointPresenters.get(event.id).setEvent(event);
@@ -128,6 +131,10 @@ export default class EventPresenter {
         this.#cities = [...this.#eventsModel.cities];
         this.#offersList = [...this.#eventsModel.offers];
         remove(this.#loadingComponent);
+        this.#renderTripBoard();
+        break;
+      case UpdateType.ERROR:
+        this.#clearTripBoard();
         this.#renderTripBoard();
         break;
     }
@@ -239,21 +246,32 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
+    if (this.#isError) {
+      this.#renderNoEventComponent(NoEventMessage[UpdateType.ERROR]);
+      return;
+    }
+
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
 
     if (!this.events.length) {
-      this.#noEventsComponent = new NoEventsView({
-        currentFilter: this.#filtersModel.currentFilterType,
-      });
-      render(this.#noEventsComponent, this.#container);
+      this.#renderNoEventComponent(
+        NoEventMessage[this.#filtersModel.currentFilterType]
+      );
       return;
     }
     this.#renderSort();
     render(this.#eventListComponent, this.#container);
     this.#renderTripPoints();
+  };
+
+  #renderNoEventComponent = (message) => {
+    this.#noEventsComponent = new NoEventsView({
+      message,
+    });
+    render(this.#noEventsComponent, this.#container);
   };
 
   #renderNewEvent = () => {

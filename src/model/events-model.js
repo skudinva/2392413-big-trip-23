@@ -8,6 +8,7 @@ export default class EventsModel extends Observable {
   #events = [];
   #cities = [];
   #offers = [];
+  #error = null;
 
   constructor({ eventsApiService }) {
     super();
@@ -27,15 +28,18 @@ export default class EventsModel extends Observable {
   }
 
   init = async () => {
+    this.#error = null;
     try {
       this.#cities = await this.#eventsApiService.cities;
     } catch (error) {
+      this.#error = error;
       this.#cities = [];
     }
 
     try {
       this.#offers = await this.#eventsApiService.offers;
     } catch (error) {
+      this.#error = error;
       this.#offers = [];
     }
 
@@ -43,10 +47,11 @@ export default class EventsModel extends Observable {
       const events = await this.#eventsApiService.events;
       this.#events = events.map(this.#adaptEventToClient);
     } catch (error) {
+      this.#error = error;
       this.#events = [];
     }
 
-    this._notify(UpdateType.INIT);
+    this._notify(this.#error ? UpdateType.ERROR : UpdateType.INIT);
   };
 
   updateEvent = async (updateType, update) => {
