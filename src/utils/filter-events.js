@@ -13,7 +13,7 @@ const filterEvents = {
         dayjs().isBefore(dayjs(event.dateTo))
     ),
   [FilterType.PAST]: (events) =>
-    events.filter((event) => dayjs().isAfter(dayjs(event.dateFrom))),
+    events.filter((event) => dayjs().isAfter(dayjs(event.dateTo))),
 };
 
 export { filterEvents };
