@@ -180,6 +180,7 @@ export default class EventPresenter {
   #openEditForm = (eventPointPresenter) => {
     if (this.#activeEventEditForm) {
       this.#activeEventEditForm.resetEditForm();
+      this.#activeEventEditForm.switchToView();
     }
 
     eventPointPresenter.switchToEdit();
