@@ -150,7 +150,11 @@ export default class EventPresenter {
 
   #onEventDataChange = (actionType, updateType, event) => {
     /**@type {EventPointPresenter} */
-    const activeForm = this.#eventPointPresenters.get(event.id);
+    const activeForm =
+      actionType === UserAction.ADD_EVENT
+        ? this.#activeEventEditForm
+        : this.#eventPointPresenters.get(event.id);
+
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#trySendRequest(activeForm, async () => {
@@ -278,9 +282,11 @@ export default class EventPresenter {
     if (resetSort) {
       this.#currentSortType = DEFAULT_SORT_TYPE;
     }
+
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
+    this.#activeEventEditForm.destroy();
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
     this.#setActiveEventEditForm(null);
