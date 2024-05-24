@@ -21,10 +21,10 @@ const createEventTypeListTemplate = ({ type, isDisabled }) => {
     const typeEventCode = typeEvent.toLowerCase();
     const checkedProperty = typeEventCode === type ? 'checked' : '';
     eventTypeListTemplate.push(`<div class="event__type-item">
-    <input id="event-type-${typeEventCode}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEventCode}"
+    <input id="event-type-${typeEventCode}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEventCode}"
     ${checkedProperty}
     ${getDisabledInputParam(isDisabled)}>
-   <label class="event__type-label  event__type-label--${typeEventCode}" for="event-type-${typeEventCode}-1">${typeEvent}</label>
+   <label class="event__type-label  event__type-label--${typeEventCode}" for="event-type-${typeEventCode}">${typeEvent}</label>
   </div>`);
   });
 
@@ -39,11 +39,11 @@ const createEventTypeTemplate = ({ type, isDisabled } = {}) => {
     isDisabled,
   });
   eventTypeTemplate.push(`<div class="event__type-wrapper">
-        <label class="event__type  event__type-btn" for="event-type-toggle-1">
+        <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
         </label>
-        <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox"
+        <input class="event__type-toggle visually-hidden" id="event-type-toggle" type="checkbox"
         ${getDisabledInputParam(isDisabled)}>
         <div class="event__type-list">
           ${eventTypeListTemplate}
@@ -62,14 +62,14 @@ const createDestinationTemplate = ({
   const selectedCityName =
     getValueFromArrayById(cities, destination)?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
-  <label class="event__label  event__type-output" for="event-destination-1">
+  <label class="event__label  event__type-output" for="event-destination">
     ${type}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(
+  <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${he.encode(
     selectedCityName
-  )}" list="destination-list-1"
+  )}" list="destination-list"
   ${getDisabledInputParam(isDisabled)}>
-  <datalist id="destination-list-1">`);
+  <datalist id="destination-list">`);
   cities.forEach((city) => {
     elements.push(`<option value="${he.encode(city.name)}"></option>`);
   });
@@ -81,14 +81,14 @@ const createEventDateTemplate = ({ dateFrom, dateTo, isDisabled } = {}) => {
   const dateFromInput = getInputDateTime(dateFrom);
   const dateToInput = getInputDateTime(dateTo);
   return `<div class="event__field-group  event__field-group--time">
-  <label class="visually-hidden" for="event-start-time-1">From</label>
-  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${he.encode(
+  <label class="visually-hidden" for="event-start-time">From</label>
+  <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${he.encode(
     dateFromInput
   )}"
   ${getDisabledInputParam(isDisabled)}>
   &mdash;
-  <label class="visually-hidden" for="event-end-time-1">To</label>
-  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${he.encode(
+  <label class="visually-hidden" for="event-end-time">To</label>
+  <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${he.encode(
     dateToInput
   )}"
   ${getDisabledInputParam(isDisabled)}>
@@ -99,11 +99,11 @@ const createPriceTemplate = (
   { basePrice, isDisabled } = { basePrice: 0, isDisabled: false }
 ) =>
   `<div class="event__field-group  event__field-group--price">
-  <label class="event__label" for="event-price-1">
+  <label class="event__label" for="event-price">
     <span class="visually-hidden">Price</span>
     &euro;
   </label>
-  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(
+  <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${he.encode(
     String(basePrice)
   )}"
   ${getDisabledInputParam(isDisabled)}
@@ -258,13 +258,13 @@ export default class EventEditView extends AbstractStatefulView {
     this.#dateFields = [
       {
         name: 'dateFrom',
-        fieldId: '#event-start-time-1',
+        fieldId: '#event-start-time',
         defaultDate: this._state.dateFrom,
         callback: this.#onDateFromChange,
       },
       {
         name: 'dateTo',
-        fieldId: '#event-end-time-1',
+        fieldId: '#event-end-time',
         defaultDate: this._state.dateTo,
         callback: this.#onDateToChange,
         minDate: this._state.dateFrom,
