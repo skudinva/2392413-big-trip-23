@@ -315,9 +315,10 @@ export default class EventPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#activeEventEditForm.resetEditForm();
-      this.#activeEventEditForm.switchToView();
-      this.#setActiveEventEditForm(null);
+      this.#onEventEditStateChange(
+        this.#activeEventEditForm,
+        EventStateAction.CLOSE_EDIT_FORM
+      );
     }
   };
 
