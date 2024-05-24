@@ -151,22 +151,28 @@ const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
 
   const { description, pictures } = getValueFromArrayById(cities, destination);
 
-  if (!description && !pictures) {
+  if (!description && !pictures.length) {
     return '';
   }
   const destDetailInfo = [];
   destDetailInfo.push(`<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
-    <div class="event__photos-container"><div class="event__photos-tape">`);
+    <p class="event__destination-description">${description}</p>`);
 
-  pictures.forEach((picture) => {
+  if (pictures.length) {
     destDetailInfo.push(
-      `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
+      '<div class="event__photos-container"><div class="event__photos-tape">'
     );
-  });
 
-  destDetailInfo.push('</div></div></section>');
+    pictures.forEach((picture) => {
+      destDetailInfo.push(
+        `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
+      );
+    });
+
+    destDetailInfo.push('</div></div></section>');
+  }
+  destDetailInfo.push('</section>');
 
   return destDetailInfo.join('');
 };
