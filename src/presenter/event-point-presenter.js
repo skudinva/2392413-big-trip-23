@@ -5,7 +5,7 @@ import {
   UserAction,
 } from '../const';
 import { remove, render, replace } from '../framework/render';
-import { getFormMode } from '../utils/event';
+import { getFormMode, isNewEventPresenter } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -132,7 +132,9 @@ export default class EventPointPresenter {
   };
 
   #render = () => {
-    if (this.editFormMode === EditFormMode.EDIT) {
+    const isNewPresenter = isNewEventPresenter(this);
+
+    if (!isNewPresenter) {
       this.#city = this.#eventsModel.getCityById(this.#event.destination);
       this.#selectedOffers = [
         ...this.#eventsModel.getSelectedOffers(
@@ -161,7 +163,7 @@ export default class EventPointPresenter {
       cities: this.#cities,
       offersList: this.#offersList,
       onFormSubmit: (updateEvent) => {
-        if (this.editFormMode === EditFormMode.NEW) {
+        if (isNewEventPresenter(this)) {
           this.#handleDataChange(
             UserAction.ADD_EVENT,
             UpdateType.MAJOR,
@@ -187,10 +189,12 @@ export default class EventPointPresenter {
       },
     });
 
-    this.#activeComponent = this.#eventComponent || this.#eventEditComponent;
-    render(this.#activeComponent, this.#container.element);
+    this.#activeComponent = isNewPresenter
+      ? this.#eventEditComponent
+      : this.#eventComponent;
 
-    if (this.editFormMode === EditFormMode.NEW) {
+    render(this.#activeComponent, this.#container.element);
+    if (isNewPresenter) {
       this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
     }
   };

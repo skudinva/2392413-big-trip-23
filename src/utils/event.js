@@ -96,6 +96,9 @@ const getFormMode = (event) =>
 
 const isDigitString = (testString) => /^\d+$/i.test(testString);
 
+const isNewEventPresenter = (presenter) =>
+  presenter.editFormMode === EditFormMode.NEW;
+
 export {
   getDurationMinutes,
   getDurationString,
@@ -113,4 +116,5 @@ export {
   isDigitString,
   isFunction,
   isNewEvent,
+  isNewEventPresenter,
 };

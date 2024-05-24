@@ -11,6 +11,7 @@ import {
 } from '../const';
 import { RenderPosition, remove, render } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import { isNewEventPresenter } from '../utils/event';
 import { filterEvents } from '../utils/filter-events';
 import { sortEvents } from '../utils/sort-events';
 import EventItemView from '../view/event-item-view';
@@ -85,7 +86,7 @@ export default class EventPresenter {
     if (!this.#activeEventEditForm) {
       return false;
     }
-    return this.#activeEventEditForm.editFormMode === EditFormMode.NEW;
+    return isNewEventPresenter(this.#activeEventEditForm);
   };
 
   /**
@@ -100,9 +101,9 @@ export default class EventPresenter {
     }
 
     if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {
-      if (eventPointPresenter.editFormMode === EditFormMode.NEW) {
+      if (isNewEventPresenter(eventPointPresenter)) {
         eventPointPresenter.destroy();
-      } else if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {
+      } else {
         eventPointPresenter.resetEditForm();
         eventPointPresenter.switchToView();
       }
@@ -189,7 +190,7 @@ export default class EventPresenter {
    */
   #openEditForm = (eventPointPresenter) => {
     if (this.#activeEventEditForm) {
-      if (this.#activeEventEditForm.editFormMode === EditFormMode.NEW) {
+      if (isNewEventPresenter(this.#activeEventEditForm)) {
         this.#activeEventEditForm.destroy();
       } else {
         this.#activeEventEditForm.resetEditForm();
