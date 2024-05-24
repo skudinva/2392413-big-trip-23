@@ -94,13 +94,12 @@ export default class EventPresenter {
    * @param {String} stateAction
    */
   #onEventEditStateChange = (eventPointPresenter, stateAction) => {
-    if (
-      (eventPointPresenter.editFormMode === EditFormMode.NEW &&
-        stateAction === EventStateAction.CREATE_NEW_FORM) ||
-      stateAction === EventStateAction.OPEN_EDIT_FORM
-    ) {
+    if (stateAction === EventStateAction.OPEN_EDIT_FORM) {
       this.#openEditForm(eventPointPresenter);
-    } else {
+      return;
+    }
+
+    if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {
       if (eventPointPresenter.editFormMode === EditFormMode.NEW) {
         eventPointPresenter.destroy();
       } else if (stateAction === EventStateAction.CLOSE_EDIT_FORM) {

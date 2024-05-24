@@ -132,27 +132,29 @@ export default class EventPointPresenter {
   };
 
   #render = () => {
-    this.#city = this.#eventsModel.getCityById(this.#event.destination);
-    this.#selectedOffers = [
-      ...this.#eventsModel.getSelectedOffers(
-        this.#event.type,
-        this.#event.offers
-      ),
-    ];
-    this.#eventComponent = new EventView({
-      event: this.#event,
-      city: this.#city,
-      selectedOffers: this.#selectedOffers,
-      onEditButtonClick: () => {
-        this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
-      },
-      onFavoriteButtonClick: () => {
-        this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, {
-          ...this.#event,
-          isFavorite: !this.#event.isFavorite,
-        });
-      },
-    });
+    if (this.editFormMode === EditFormMode.EDIT) {
+      this.#city = this.#eventsModel.getCityById(this.#event.destination);
+      this.#selectedOffers = [
+        ...this.#eventsModel.getSelectedOffers(
+          this.#event.type,
+          this.#event.offers
+        ),
+      ];
+      this.#eventComponent = new EventView({
+        event: this.#event,
+        city: this.#city,
+        selectedOffers: this.#selectedOffers,
+        onEditButtonClick: () => {
+          this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
+        },
+        onFavoriteButtonClick: () => {
+          this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, {
+            ...this.#event,
+            isFavorite: !this.#event.isFavorite,
+          });
+        },
+      });
+    }
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
@@ -185,9 +187,12 @@ export default class EventPointPresenter {
       },
     });
 
-    this.#activeComponent = this.#eventComponent;
+    this.#activeComponent = this.#eventComponent || this.#eventEditComponent;
     render(this.#activeComponent, this.#container.element);
-    this.#handleStateChange(this, EventStateAction.CREATE_NEW_FORM);
+
+    if (this.editFormMode === EditFormMode.NEW) {
+      this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
+    }
   };
 
   #switchToComponent = (targetComponent) => {
