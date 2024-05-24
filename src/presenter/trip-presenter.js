@@ -7,6 +7,7 @@ export default class TripPresenter {
   #eventsModel = null;
   #tripInfoComponent = null;
   #events = null;
+  #offers = new Map();
   constructor({ container, eventsModel }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
@@ -15,7 +16,7 @@ export default class TripPresenter {
 
   get cost() {
     return this.#events
-      .map((event) => event.basePrice)
+      .map((event) => event.basePrice + this.#getOffersPrice(event.offers))
       .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
   }
 
@@ -66,8 +67,16 @@ export default class TripPresenter {
 
   init = () => {
     this.#events = [...this.#eventsModel.events];
+    [...this.#eventsModel.offers].map((type) => {
+      type.offers.map(({ id, price }) => this.#offers.set(id, price));
+    });
     this.#renderTripInfo();
   };
+
+  #getOffersPrice = (offers) =>
+    offers
+      .map((offerId) => this.#offers.get(offerId))
+      .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
 
   #renderTripInfo = () => {
     if (!this.#events.length) {
