@@ -23,7 +23,7 @@ const DEFAULT_EVENT_PROPS = {
 };
 
 const DateFormat = {
-  HUMANIZE: 'MMMM D',
+  HUMANIZE: 'MMM D',
   HUMANIZE_FIRSTDAY: 'D MMMM',
   DAYONLY: 'D',
   MACHINIZE_DATE: 'YYYY-MM-DD',
