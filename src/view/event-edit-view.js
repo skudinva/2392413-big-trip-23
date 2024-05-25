@@ -307,7 +307,7 @@ export default class EventEditView extends AbstractStatefulView {
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#onEventDestinationChange);
     const basePriceElement = this.element.querySelector('.event__input--price');
-    basePriceElement.addEventListener('change', this.#onEventBasePriceChange);
+    basePriceElement.addEventListener('input', this.#onEventBasePriceChange);
     basePriceElement.addEventListener(
       'keypress',
       this.#onEventBasePriceKeypress
