@@ -54,13 +54,9 @@ export default class TripPresenter {
 
     if (sortEvents.length > 3) {
       tripInfo.destinationInfo.push(destinationDummy);
-    } else if (sortEvents.length === 3) {
-      pushInfo(1, 'dateFrom');
     }
 
-    if (sortEvents.length > 1) {
-      pushInfo(sortEvents.length - 1, 'dateTo');
-    }
+    pushInfo(sortEvents.length - 1, 'dateTo');
 
     return tripInfo;
   }
