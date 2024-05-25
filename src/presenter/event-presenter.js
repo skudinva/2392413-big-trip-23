@@ -109,6 +109,7 @@ export default class EventPresenter {
       }
 
       this.#setActiveEventEditForm(null);
+      this.#renderFilterNoEventComponent();
     }
   };
 
@@ -247,25 +248,47 @@ export default class EventPresenter {
   };
 
   #renderTripBoard = () => {
+    if (this.#renderErrorNoEventComponent()) {
+      return;
+    }
+
+    if (this.#renderLoadingComponent()) {
+      return;
+    }
+
+    if (this.#renderFilterNoEventComponent()) {
+      return;
+    }
+
+    this.#renderSort();
+    render(this.#eventListComponent, this.#container);
+    this.#renderTripPoints();
+  };
+
+  #renderErrorNoEventComponent = () => {
     if (this.#isError) {
       this.#renderNoEventComponent(NoEventMessage[UpdateType.ERROR]);
-      return;
+      return true;
     }
+    return false;
+  };
 
-    if (this.#isLoading) {
-      this.#renderLoading();
-      return;
-    }
-
+  #renderFilterNoEventComponent = () => {
     if (!this.events.length) {
       this.#renderNoEventComponent(
         NoEventMessage[this.#filtersModel.currentFilterType]
       );
-      return;
+      return true;
     }
-    this.#renderSort();
-    render(this.#eventListComponent, this.#container);
-    this.#renderTripPoints();
+    return false;
+  };
+
+  #renderLoadingComponent = () => {
+    if (this.#isLoading) {
+      render(this.#loadingComponent, this.#container);
+      return true;
+    }
+    return false;
   };
 
   #renderNoEventComponent = (message) => {
@@ -291,10 +314,6 @@ export default class EventPresenter {
       render(this.#eventListComponent, this.#container);
     }
     this.#renderTripPoint(DEFAULT_EVENT_PROPS, EditFormMode.NEW);
-  };
-
-  #renderLoading = () => {
-    render(this.#loadingComponent, this.#container);
   };
 
   #clearTripBoard = ({ resetSort } = {}) => {
