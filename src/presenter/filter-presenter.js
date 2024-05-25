@@ -43,10 +43,10 @@ export default class FilterPresenter {
     this.init();
   };
 
-  #onFilterButtonClick = (filterValue) => {
-    if (this.#filtersModel.currentFilterType === filterValue) {
+  #onFilterButtonClick = (filterType) => {
+    if (this.#filtersModel.currentFilterType === filterType) {
       return;
     }
-    this.#filtersModel.setCurrentFilterType(UpdateType.MAJOR, filterValue);
+    this.#filtersModel.setCurrentFilterType(UpdateType.MAJOR, filterType);
   };
 }

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { UpdateType } from '../const';
 import Observable from '../framework/observable';
 import { getValueFromArrayById } from '../utils/event';
@@ -31,26 +30,15 @@ export default class EventsModel extends Observable {
     this.#error = null;
     try {
       this.#cities = await this.#eventsApiService.cities;
-    } catch (error) {
-      this.#error = error;
-      this.#cities = [];
-    }
-
-    try {
       this.#offers = await this.#eventsApiService.offers;
-    } catch (error) {
-      this.#error = error;
-      this.#offers = [];
-    }
-
-    try {
       const events = await this.#eventsApiService.events;
       this.#events = events.map(this.#adaptEventToClient);
     } catch (error) {
       this.#error = error;
+      this.#cities = [];
+      this.#offers = [];
       this.#events = [];
     }
-
     this._notify(this.#error ? UpdateType.ERROR : UpdateType.INIT);
   };
 
@@ -64,7 +52,6 @@ export default class EventsModel extends Observable {
     try {
       const response = await this.#eventsApiService.updateEvent(update);
       const updatedEvent = this.#adaptEventToClient(response);
-
       this.#events = [
         ...this.#events.slice(0, index),
         updatedEvent,
@@ -122,8 +109,8 @@ export default class EventsModel extends Observable {
     const adaptedEvent = {
       ...event,
       basePrice: event['base_price'],
-      dateFrom: dayjs(event['date_from']).toDate(),
-      dateTo: dayjs(event['date_to']).toDate(),
+      dateFrom: event['date_from'],
+      dateTo: event['date_to'],
       isFavorite: event['is_favorite'],
     };
 

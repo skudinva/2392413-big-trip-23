@@ -151,11 +151,12 @@ export default class EventPresenter {
       await callback();
     } catch (error) {
       activeForm.setAborting();
+    } finally {
+      this.#uiBlocker.unblock();
     }
-    this.#uiBlocker.unblock();
   };
 
-  #onEventDataChange = (actionType, updateType, event) => {
+  #onEventDataChange = async (actionType, updateType, event) => {
     /**@type {EventPointPresenter} */
     const activeForm =
       actionType === UserAction.ADD_EVENT
@@ -164,19 +165,19 @@ export default class EventPresenter {
 
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this.#trySendRequest(activeForm, async () => {
+        await this.#trySendRequest(activeForm, async () => {
           activeForm.setSaving();
           await this.#eventsModel.updateEvent(updateType, event);
         });
         break;
       case UserAction.ADD_EVENT:
-        this.#trySendRequest(activeForm, async () => {
+        await this.#trySendRequest(activeForm, async () => {
           activeForm.setSaving();
           await this.#eventsModel.addEvent(updateType, event);
         });
         break;
       case UserAction.DELETE_EVENT:
-        this.#trySendRequest(activeForm, async () => {
+        await this.#trySendRequest(activeForm, async () => {
           activeForm.setDeleting();
           await this.#eventsModel.deleteEvent(updateType, event);
         });
