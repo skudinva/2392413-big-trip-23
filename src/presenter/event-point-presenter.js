@@ -1,6 +1,11 @@
-import { EventStateAction, UpdateType, UserAction } from '../const';
+import {
+  EditFormMode,
+  EventStateAction,
+  UpdateType,
+  UserAction,
+} from '../const';
 import { remove, render, replace } from '../framework/render';
-import { getFormMode, guid, isNewEvent } from '../utils/event';
+import { getFormMode, isNewEventPresenter } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
 
@@ -30,6 +35,7 @@ export default class EventPointPresenter {
     eventsModel,
     container,
     cities,
+    offersList,
     onStateChange,
     onDataChange,
   }) {
@@ -40,19 +46,26 @@ export default class EventPointPresenter {
     if (!onDataChange) {
       throw new Error('Parameter "onDataChange" doesn\'t exist');
     }
-
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#event = event;
     this.#cities = cities;
+    this.#offersList = offersList;
     this.#handleStateChange = onStateChange;
     this.#handleDataChange = onDataChange;
-    this.#offersList = [...this.#eventsModel.offers];
+
     this.#render();
   }
 
-  get formMode() {
+  get editFormMode() {
     return getFormMode(this.#event);
+  }
+
+  get eventPointState() {
+    if (this.#activeComponent === this.#eventEditComponent) {
+      return this.editFormMode;
+    }
+    return EditFormMode.VIEW;
   }
 
   setEvent = (event) => {
@@ -63,8 +76,9 @@ export default class EventPointPresenter {
   };
 
   resetEditForm = () => {
-    const formElement = this.#eventEditComponent.element;
-    formElement.reset();
+    this.#eventEditComponent.updateElement(
+      EventEditView.parseEventToState(this.#event)
+    );
   };
 
   switchToEdit = () => {
@@ -75,6 +89,44 @@ export default class EventPointPresenter {
     this.#switchToComponent(this.#eventComponent);
   };
 
+  setSaving = () => {
+    if (this.eventPointState === EditFormMode.VIEW) {
+      return;
+    }
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setDeleting = () => {
+    if (this.eventPointState === EditFormMode.VIEW) {
+      return;
+    }
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isDeleting: true,
+    });
+  };
+
+  setAborting = () => {
+    if (this.eventPointState === EditFormMode.VIEW) {
+      this.#container.shake();
+      return;
+    }
+
+    this.#eventEditComponent.shake(() => {
+      if (this.eventPointState === EditFormMode.VIEW) {
+        return;
+      }
+      this.#eventEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    });
+  };
+
   destroy = () => {
     remove(this.#eventComponent);
     remove(this.#eventEditComponent);
@@ -82,35 +134,38 @@ export default class EventPointPresenter {
   };
 
   #render = () => {
-    this.#city = this.#eventsModel.getCityById(this.#event.destination);
-    this.#selectedOffers = [
-      ...this.#eventsModel.getSelectedOffers(
-        this.#event.type,
-        this.#event.offers
-      ),
-    ];
-    this.#eventComponent = new EventView({
-      event: this.#event,
-      city: this.#city,
-      selectedOffers: this.#selectedOffers,
-      onEditButtonClick: () => {
-        this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
-      },
-      onFavoriteButtonClick: () => {
-        this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, {
-          ...this.#event,
-          isFavorite: !this.#event.isFavorite,
-        });
-      },
-    });
+    const isNewPresenter = isNewEventPresenter(this);
+
+    if (!isNewPresenter) {
+      this.#city = this.#eventsModel.getCityById(this.#event.destination);
+      this.#selectedOffers = [
+        ...this.#eventsModel.getSelectedOffers(
+          this.#event.type,
+          this.#event.offers
+        ),
+      ];
+      this.#eventComponent = new EventView({
+        event: this.#event,
+        city: this.#city,
+        selectedOffers: this.#selectedOffers,
+        onEditButtonClick: () => {
+          this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
+        },
+        onFavoriteButtonClick: () => {
+          this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, {
+            ...this.#event,
+            isFavorite: !this.#event.isFavorite,
+          });
+        },
+      });
+    }
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
       cities: this.#cities,
       offersList: this.#offersList,
       onFormSubmit: (updateEvent) => {
-        if (isNewEvent(updateEvent)) {
-          updateEvent.id = guid();
+        if (isNewEventPresenter(this)) {
           this.#handleDataChange(
             UserAction.ADD_EVENT,
             UpdateType.MAJOR,
@@ -123,7 +178,6 @@ export default class EventPointPresenter {
             updateEvent
           );
         }
-        this.#handleStateChange(this, EventStateAction.SUBMIT_EDIT_FORM);
       },
       onCancelClick: () => {
         this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
@@ -134,13 +188,17 @@ export default class EventPointPresenter {
           UpdateType.MINOR,
           deleteEvent
         );
-        this.#handleStateChange(this, EventStateAction.CANCEL_EDIT_FORM);
       },
     });
 
-    this.#activeComponent = this.#eventComponent;
+    this.#activeComponent = isNewPresenter
+      ? this.#eventEditComponent
+      : this.#eventComponent;
+
     render(this.#activeComponent, this.#container.element);
-    this.#handleStateChange(this, EventStateAction.CREATE_NEW_FORM);
+    if (isNewPresenter) {
+      this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
+    }
   };
 
   #switchToComponent = (targetComponent) => {

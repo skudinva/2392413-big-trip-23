@@ -72,12 +72,10 @@ const getDurationString = (dateFrom, dateTo) => {
 
 const getPeriodString = (dateFrom, dateTo, delimiter) => {
   const period = [];
-  const dateFromFormat =
-    getDateString(dateFrom, DateFormat.YEARMONTH) ===
-    getDateString(dateTo, DateFormat.YEARMONTH)
-      ? DateFormat.DAYONLY
-      : DateFormat.HUMANIZE_FIRSTDAY;
+
+  const dateFromFormat = DateFormat.HUMANIZE_FIRSTDAY;
   period.push(getDateString(dateFrom, dateFromFormat));
+
   period.push(getDateString(dateTo, DateFormat.HUMANIZE_FIRSTDAY));
 
   return period.join(delimiter);
@@ -89,11 +87,15 @@ const isFunction = (checkFunction) =>
 const getValueFromArrayById = (array, id) =>
   array.find((item) => item.id === id);
 
-const isNewEvent = (event) => event.id === null;
+const isNewEvent = (event) => !Object.hasOwn(event, 'id');
+
 const getFormMode = (event) =>
   isNewEvent(event) ? EditFormMode.NEW : EditFormMode.EDIT;
 
-const isDigit = (testString) => /^\d+$/i.test(testString);
+const isDigitString = (testString) => /^\d+$/i.test(testString);
+
+const isNewEventPresenter = (presenter) =>
+  presenter.editFormMode === EditFormMode.NEW;
 
 export {
   getDurationMinutes,
@@ -109,7 +111,8 @@ export {
   getUniqueRandomArrayElements,
   getValueFromArrayById,
   guid,
-  isDigit,
+  isDigitString,
   isFunction,
   isNewEvent,
+  isNewEventPresenter,
 };

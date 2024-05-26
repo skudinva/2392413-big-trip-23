@@ -13,19 +13,18 @@ const EVENT_TYPES = [
 ];
 
 const DEFAULT_EVENT_PROPS = {
-  id: null,
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
   destination: null,
-  isFavorite: null,
+  isFavorite: false,
   offers: [],
   type: 'flight',
 };
 
 const DateFormat = {
-  HUMANIZE: 'MMMM D',
-  HUMANIZE_FIRSTDAY: 'D MMMM',
+  HUMANIZE: 'MMM D',
+  HUMANIZE_FIRSTDAY: 'D MMM',
   DAYONLY: 'D',
   MACHINIZE_DATE: 'YYYY-MM-DD',
   MACHINIZE_DATETIME: 'YYYY-MM-DDTHH:mm',
@@ -35,15 +34,11 @@ const DateFormat = {
   DATEPICKER: 'd/m/y H:i',
 };
 
-const EditFormMode = { NEW: 'New', EDIT: 'Edit' };
+const EditFormMode = { NEW: 'New', EDIT: 'Edit', VIEW: 'View' };
 
 const EventStateAction = {
-  CREATE_NEW_FORM: 'Create new from',
   OPEN_EDIT_FORM: 'Open edit form',
   CLOSE_EDIT_FORM: 'Close edit from',
-  SUBMIT_EDIT_FORM: 'Submit edit form',
-  CANCEL_EDIT_FORM: 'Cancel edit form',
-  DELETE_EDIT_FORM: 'Delete edit form',
 };
 
 const UserAction = {
@@ -55,6 +50,8 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
 const FilterType = {
@@ -69,6 +66,7 @@ const NoEventMessage = {
   [FilterType.FUTURE]: 'There are no future events now',
   [FilterType.PRESENT]: 'There are no present events now',
   [FilterType.PAST]: 'There are no past events now',
+  [UpdateType.ERROR]: 'Failed to load latest route information',
 };
 
 const SortType = {
@@ -88,7 +86,21 @@ const sortTemplateProps = [
 const DEFAULT_SORT_TYPE = SortType.DAY;
 const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
+const ApiConfig = {
+  AUTHORIZATION: `Basic ${btoa('user:pass12')}`,
+  END_POINT: 'https://23.objects.htmlacademy.pro/big-trip',
+  EVENTS_URL: 'points',
+  DESTINATIONS_URL: 'destinations',
+  OFFERS_URL: 'offers',
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export {
+  ApiConfig,
   DEFAULT_EVENT_PROPS,
   DEFAULT_FILTER_TYPE,
   DEFAULT_SORT_TYPE,
@@ -100,6 +112,7 @@ export {
   FilterType,
   NoEventMessage,
   SortType,
+  TimeLimit,
   UpdateType,
   UserAction,
   sortTemplateProps,

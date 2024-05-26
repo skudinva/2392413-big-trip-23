@@ -1,3 +1,5 @@
+import { ApiConfig } from './const';
+import EventsApiService from './events-api-service';
 import EventsModel from './model/events-model';
 import FiltersModel from './model/filters-model';
 import EventPresenter from './presenter/event-presenter';
@@ -15,7 +17,9 @@ const newEventButtonElement = document.querySelector(
   '.trip-main__event-add-btn'
 );
 
-const eventsModel = new EventsModel();
+const eventsModel = new EventsModel({
+  eventsApiService: new EventsApiService(ApiConfig),
+});
 const filtersModel = new FiltersModel();
 
 const tripPresenter = new TripPresenter({
@@ -25,6 +29,7 @@ const tripPresenter = new TripPresenter({
 const filterPresenter = new FilterPresenter({
   container: tripControlElement,
   filtersModel,
+  eventsModel,
 });
 const eventPresenter = new EventPresenter({
   container: eventsContainerElement,
@@ -36,3 +41,4 @@ const eventPresenter = new EventPresenter({
 tripPresenter.init();
 filterPresenter.init();
 eventPresenter.init();
+eventsModel.init();
