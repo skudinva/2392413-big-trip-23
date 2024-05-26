@@ -115,14 +115,16 @@ export default class EventPointPresenter {
       return;
     }
 
-    const resetFormState = () => {
+    this.#eventEditComponent.shake(() => {
+      if (this.eventPointState === EditFormMode.VIEW) {
+        return;
+      }
       this.#eventEditComponent.updateElement({
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
       });
-    };
-    this.#eventEditComponent.shake(resetFormState);
+    });
   };
 
   destroy = () => {
