@@ -288,7 +288,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   _restoreHandlers = () => {
-    console.log('_restoreHandlers');
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.addEventListener('reset', this.#onCancelClick);
 
@@ -307,6 +306,15 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('input', this.#onEventDestinationInput);
+
+    this.element
+      .querySelector('.event__input--destination')
+      .addEventListener('keypress', (evt) => {
+        if (evt.key === 'Enter') {
+          evt.preventDefault();
+        }
+      });
+
     const basePriceElement = this.element.querySelector('.event__input--price');
     basePriceElement.addEventListener('input', this.#onEventBasePriceInput);
     basePriceElement.addEventListener(
@@ -327,8 +335,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onFormSubmit = (evt) => {
-    console.log('#onFormSubmit');
-
     evt.preventDefault();
     const event = EventEditView.parseStateToEvent(this._state);
     this.#handleFormSubmit(event);
@@ -355,33 +361,26 @@ export default class EventEditView extends AbstractStatefulView {
     if (!selectedCity) {
       return;
     }
+
     this.updateElement({
       destination: selectedCity?.id,
     });
   };
 
   #onDateFromChange = ([userDate]) => {
-    console.log('onDateFromChange');
-
     this._setState({ dateFrom: userDate });
     this.#datepickers.get('dateTo').config.minDate = this._state.dateFrom;
   };
 
   #onDateToChange = ([userDate]) => {
-    console.log('onDateToChange');
-
     this._setState({ dateTo: userDate });
   };
 
   #onEventBasePriceInput = (evt) => {
-    console.log('onEventBasePriceInput');
-
     this._setState({ basePrice: parseInt(evt.target.value, 10) });
   };
 
   #onEventBasePriceKeypress = (evt) => {
-    console.log('onEventBasePriceKeypress');
-
     if (!isDigitString(evt.key)) {
       evt.preventDefault();
     }
