@@ -117,6 +117,7 @@ export default class EventPointPresenter {
 
     this.#eventEditComponent.shake(() => {
       if (this.eventPointState === EditFormMode.VIEW) {
+        this.#eventEditComponent.resetState();
         return;
       }
       this.#eventEditComponent.updateElement({
