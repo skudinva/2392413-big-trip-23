@@ -41,6 +41,7 @@ export default class EventPresenter {
   #currentSortType = DEFAULT_SORT_TYPE;
   #isLoading = true;
   #isError = false;
+  #isBlock = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -95,6 +96,10 @@ export default class EventPresenter {
    * @param {String} stateAction
    */
   #onEventEditStateChange = (eventPointPresenter, stateAction) => {
+    if (this.#isBlock) {
+      return;
+    }
+
     if (stateAction === EventStateAction.OPEN_EDIT_FORM) {
       this.#openEditForm(eventPointPresenter);
       return;
@@ -147,6 +152,7 @@ export default class EventPresenter {
    * @param {*} callback
    */
   #trySendRequest = async (activeForm, callback) => {
+    this.#isBlock = true;
     this.#uiBlocker.block();
     try {
       await callback();
@@ -154,6 +160,7 @@ export default class EventPresenter {
       activeForm.setAborting();
     } finally {
       this.#uiBlocker.unblock();
+      this.#isBlock = false;
     }
   };
 
