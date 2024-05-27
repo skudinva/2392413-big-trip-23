@@ -1,33 +1,6 @@
 import dayjs from 'dayjs';
 import { DateFormat, EditFormMode } from '../const';
 
-const getRandomArrayElement = (items) =>
-  items[Math.floor(Math.random() * items.length)];
-
-const getRandomInteger = function (firstNumber, secondNumber) {
-  const lower = Math.ceil(Math.min(firstNumber, secondNumber));
-  const upper = Math.floor(Math.max(firstNumber, secondNumber));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
-const getUniqueRandomArrayElements = (elements, maxCount) => {
-  const uniqueIndex = new Set();
-  while (uniqueIndex.size !== Math.min(maxCount, elements.length)) {
-    uniqueIndex.add(getRandomInteger(0, elements.length - 1));
-  }
-
-  const uniqueElements = [];
-  uniqueIndex.forEach((value) => uniqueElements.push(elements[value]));
-  return uniqueElements;
-};
-const guid = () =>
-  '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
-    (
-      +c ^
-      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
-    ).toString(16)
-  );
-
 const getDateString = (date, format) =>
   date ? dayjs(date).format(format) : '';
 const getHumanizeDate = (date) => getDateString(date, DateFormat.HUMANIZE);
@@ -81,9 +54,6 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
   return period.join(delimiter);
 };
 
-const isFunction = (checkFunction) =>
-  checkFunction && checkFunction instanceof Function;
-
 const getValueFromArrayById = (array, id) =>
   array.find((item) => item.id === id);
 
@@ -106,13 +76,9 @@ export {
   getMachinizeDate,
   getMachinizeDateTime,
   getPeriodString,
-  getRandomArrayElement,
   getShortTime,
-  getUniqueRandomArrayElements,
   getValueFromArrayById,
-  guid,
   isDigitString,
-  isFunction,
   isNewEvent,
   isNewEventPresenter,
 };
