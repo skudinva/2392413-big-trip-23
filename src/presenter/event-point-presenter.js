@@ -123,7 +123,7 @@ export default class EventPointPresenter {
       });
     };
 
-    this.#eventEditComponent.shake(() => resetFormState);
+    this.#eventEditComponent.shake(resetFormState);
   };
 
   destroy = () => {
