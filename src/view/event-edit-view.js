@@ -65,9 +65,8 @@ const createDestinationTemplate = ({
   <label class="event__label  event__type-output" for="event-destination">
     ${type}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${he.encode(
-    selectedCityName
-  )}" list="destination-list"
+  <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination"
+  value="${he.encode(selectedCityName)}" list="destination-list"
   ${getDisabledInputParam(isDisabled)}>
   <datalist id="destination-list">`);
   cities.forEach((city) => {
@@ -82,15 +81,13 @@ const createEventDateTemplate = ({ dateFrom, dateTo, isDisabled } = {}) => {
   const dateToInput = getInputDateTime(dateTo);
   return `<div class="event__field-group  event__field-group--time">
   <label class="visually-hidden" for="event-start-time">From</label>
-  <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${he.encode(
-    dateFromInput
-  )}"
+  <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time"
+  value="${he.encode(dateFromInput)}"
   ${getDisabledInputParam(isDisabled)}>
   &mdash;
   <label class="visually-hidden" for="event-end-time">To</label>
-  <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${he.encode(
-    dateToInput
-  )}"
+  <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time"
+  value="${he.encode(dateToInput)}"
   ${getDisabledInputParam(isDisabled)}>
   </div>`;
 };
@@ -103,11 +100,10 @@ const createPriceTemplate = (
     <span class="visually-hidden">Price</span>
     &euro;
   </label>
-  <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${he.encode(
-    String(basePrice)
-  )}"
-  ${getDisabledInputParam(isDisabled)}
-  ></div>`;
+  <input class="event__input  event__input--price" id="event-price" type="text"
+  name="event-price"
+  value="${he.encode(String(basePrice))}"
+  ${getDisabledInputParam(isDisabled)}></div>`;
 const createOffersTemplate = ({
   type,
   offersList,
