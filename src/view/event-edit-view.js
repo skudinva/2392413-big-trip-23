@@ -287,14 +287,6 @@ export default class EventEditView extends AbstractStatefulView {
     this.#datepickers.clear();
   };
 
-  resetState = () => {
-    this._setState({
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false,
-    });
-  };
-
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#onFormSubmit);
     this.element.addEventListener('reset', this.#onCancelClick);
