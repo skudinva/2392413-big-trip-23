@@ -20,6 +20,7 @@ import LoadingView from '../view/loading-view';
 import NoEventsView from '../view/no-events-view';
 import SortView from '../view/sort-view';
 import EventPointPresenter from './event-point-presenter';
+import NewEventPointPresenter from './new-event-point-presenter';
 
 export default class EventPresenter {
   #sortComponent = null;
@@ -32,11 +33,12 @@ export default class EventPresenter {
   #filtersModel = null;
   #cities = null;
   #offersList = null;
+  #newEventPointPresenter = null;
   /**@type {EventPointPresenter} */
   #activeEventEditForm = null;
   /**@type {HTMLElement} */
   #newEventButtonElement = null;
-  /**@type {Map<string, EventPointPresenter>} */
+  /**@type {Map<string, EventPointPresenter, NewEventPointPresenter>} */
   #eventPointPresenters = new Map();
   #currentSortType = DEFAULT_SORT_TYPE;
   #isLoading = true;
@@ -218,7 +220,12 @@ export default class EventPresenter {
 
   #renderTripPoint = (event, editFormMode) => {
     this.#renderEventItem(editFormMode, (container) => {
-      const eventPointPresenter = new EventPointPresenter({
+      const classPresenter =
+        editFormMode === EditFormMode.NEW
+          ? NewEventPointPresenter
+          : EventPointPresenter;
+
+      const eventPointPresenter = new classPresenter({
         event,
         eventsModel: this.#eventsModel,
         cities: this.#cities,
