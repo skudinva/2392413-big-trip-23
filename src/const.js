@@ -97,7 +97,7 @@ const ApiConfig = {
 
 const TimeLimit = {
   LOWER: 350,
-  UPPER: 2000,
+  UPPER: 1000,
 };
 
 export {
