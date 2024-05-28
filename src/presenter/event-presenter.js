@@ -4,12 +4,12 @@ import {
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
-  NoEventMessage,
+  noEventMessage,
   TimeLimit,
   UpdateType,
   UserAction,
 } from '../const';
-import { RenderPosition, remove, render } from '../framework/render';
+import { remove, render, RenderPosition } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import { isNewEventPresenter } from '../utils/event';
 import { filterEvents } from '../utils/filter-events';
@@ -42,8 +42,8 @@ export default class EventPresenter {
   #isLoading = true;
   #isError = false;
   #uiBlocker = new UiBlocker({
-    lowerLimit: TimeLimit.LOWER_LIMIT,
-    upperLimit: TimeLimit.UPPER_LIMIT,
+    lowerLimit: TimeLimit.LOWER,
+    upperLimit: TimeLimit.UPPER,
   });
 
   constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
@@ -268,7 +268,7 @@ export default class EventPresenter {
 
   #renderErrorNoEventComponent = () => {
     if (this.#isError) {
-      this.#renderNoEventComponent(NoEventMessage[UpdateType.ERROR]);
+      this.#renderNoEventComponent(noEventMessage[UpdateType.ERROR]);
       return true;
     }
     return false;
@@ -277,7 +277,7 @@ export default class EventPresenter {
   #renderFilterNoEventComponent = () => {
     if (!this.events.length) {
       this.#renderNoEventComponent(
-        NoEventMessage[this.#filtersModel.currentFilterType]
+        noEventMessage[this.#filtersModel.currentFilterType]
       );
       return true;
     }

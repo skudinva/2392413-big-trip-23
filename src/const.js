@@ -46,6 +46,7 @@ const UserAction = {
   ADD_EVENT: 'ADD_EVENT',
   DELETE_EVENT: 'DELETE_EVENT',
 };
+
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
@@ -61,7 +62,7 @@ const FilterType = {
   PAST: 'Past',
 };
 
-const NoEventMessage = {
+const noEventMessage = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.FUTURE]: 'There are no future events now',
   [FilterType.PRESENT]: 'There are no present events now',
@@ -75,7 +76,7 @@ const SortType = {
   PRICE: 'price',
 };
 
-const sortTemplateProps = [
+const SORT_TEMPLATE_PROPS = [
   { type: SortType.DAY, label: 'Day', disabled: false },
   { type: 'event', label: 'Event', disabled: true },
   { type: SortType.TIME, label: 'Time', disabled: false },
@@ -95,8 +96,8 @@ const ApiConfig = {
 };
 
 const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
+  LOWER: 350,
+  UPPER: 2000,
 };
 
 export {
@@ -110,10 +111,10 @@ export {
   EditFormMode,
   EventStateAction,
   FilterType,
-  NoEventMessage,
+  SORT_TEMPLATE_PROPS,
   SortType,
   TimeLimit,
   UpdateType,
   UserAction,
-  sortTemplateProps,
+  noEventMessage,
 };
