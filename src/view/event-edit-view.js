@@ -284,11 +284,16 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   resetState = () => {
-    this._setState({
+    const newState = {
       isDisabled: false,
       isSaving: false,
       isDeleting: false,
-    });
+    };
+    if (this.element.parentElement) {
+      this.updateElement(newState);
+    } else {
+      this._setState(newState);
+    }
   };
 
   _restoreHandlers = () => {
