@@ -94,7 +94,6 @@ export default class EventPointPresenter {
       return;
     }
     this.#eventEditComponent.updateElement({
-      isDisabled: true,
       isSaving: true,
     });
   };
@@ -104,7 +103,6 @@ export default class EventPointPresenter {
       return;
     }
     this.#eventEditComponent.updateElement({
-      isDisabled: true,
       isDeleting: true,
     });
   };
