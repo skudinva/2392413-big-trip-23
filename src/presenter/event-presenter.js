@@ -33,7 +33,7 @@ export default class EventPresenter {
   #cities = null;
   #offersList = null;
   /**@type {EventPointPresenter} */
-  #activeEventEditForm = null;
+  #activePresenter = null;
   /**@type {HTMLElement} */
   #newEventButtonElement = null;
   /**@type {Map<string, EventPointPresenter>} */
@@ -70,13 +70,13 @@ export default class EventPresenter {
 
   /**
    *
-   * @param {EventPointPresenter} value
+   * @param {EventPointPresenter} eventPresenter
    */
-  #setActiveEventEditForm = (value) => {
-    this.#activeEventEditForm = value;
+  #setActivePresenter = (eventPresenter) => {
+    this.#activePresenter = eventPresenter;
     this.#newEventButtonElement.disabled =
       this.#isError || this.#isNewEventFormActive();
-    if (this.#activeEventEditForm) {
+    if (this.#activePresenter) {
       document.addEventListener('keydown', this.#onEscKeyDown);
     } else {
       document.removeEventListener('keydown', this.#onEscKeyDown);
@@ -84,10 +84,10 @@ export default class EventPresenter {
   };
 
   #isNewEventFormActive = () => {
-    if (!this.#activeEventEditForm) {
+    if (!this.#activePresenter) {
       return false;
     }
-    return isNewEventPresenter(this.#activeEventEditForm);
+    return isNewEventPresenter(this.#activePresenter);
   };
 
   /**
@@ -109,7 +109,7 @@ export default class EventPresenter {
         eventPointPresenter.switchToView();
       }
 
-      this.#setActiveEventEditForm(null);
+      this.#setActivePresenter(null);
       this.#renderFilterNoEventComponent();
     }
   };
@@ -162,7 +162,7 @@ export default class EventPresenter {
     /**@type {EventPointPresenter} */
     const activeForm =
       actionType === UserAction.ADD_EVENT
-        ? this.#activeEventEditForm
+        ? this.#activePresenter
         : this.#eventPointPresenters.get(event.id);
 
     switch (actionType) {
@@ -192,17 +192,17 @@ export default class EventPresenter {
    * @param {EventPointPresenter} eventPointPresenter
    */
   #openEditForm = (eventPointPresenter) => {
-    if (this.#activeEventEditForm) {
-      if (isNewEventPresenter(this.#activeEventEditForm)) {
-        this.#activeEventEditForm.destroy();
+    if (this.#activePresenter) {
+      if (isNewEventPresenter(this.#activePresenter)) {
+        this.#activePresenter.destroy();
       } else {
-        this.#activeEventEditForm.resetEditForm();
-        this.#activeEventEditForm.switchToView();
+        this.#activePresenter.resetEditForm();
+        this.#activePresenter.switchToView();
       }
     }
 
     eventPointPresenter.switchToEdit();
-    this.#setActiveEventEditForm(eventPointPresenter);
+    this.#setActivePresenter(eventPointPresenter);
   };
 
   #renderEventItem = (editFormMode, callback) => {
@@ -325,19 +325,19 @@ export default class EventPresenter {
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
-    if (this.#activeEventEditForm) {
-      this.#activeEventEditForm.destroy();
+    if (this.#activePresenter) {
+      this.#activePresenter.destroy();
     }
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
-    this.#setActiveEventEditForm(null);
+    this.#setActivePresenter(null);
   };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#onEventEditStateChange(
-        this.#activeEventEditForm,
+        this.#activePresenter,
         EventStateAction.CLOSE_EDIT_FORM
       );
     }
