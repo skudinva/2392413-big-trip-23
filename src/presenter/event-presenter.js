@@ -74,7 +74,8 @@ export default class EventPresenter {
    */
   #setActiveEventEditForm = (value) => {
     this.#activeEventEditForm = value;
-    this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
+    this.#newEventButtonElement.disabled =
+      this.#isError || this.#isNewEventFormActive();
     if (this.#activeEventEditForm) {
       document.addEventListener('keydown', this.#onEscKeyDown);
     } else {
