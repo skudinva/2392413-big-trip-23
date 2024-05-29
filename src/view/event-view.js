@@ -87,7 +87,7 @@ export default class EventView extends AbstractView {
     const offerTemplate = createOfferTemplate(this.#selectedOffers);
     const favoriteButtonTemplate = createFavoriteButtonTemplate(isFavorite);
 
-    return `<div class="event">
+    return `<li class="trip-events__item"><div class="event">
         <time class="event__date" datetime="${machinizeDate}">${humanizeDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon" />
@@ -110,7 +110,7 @@ export default class EventView extends AbstractView {
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
-      </div>`;
+      </div></li>`;
   }
 
   #onEditButtonClick = (evt) => {

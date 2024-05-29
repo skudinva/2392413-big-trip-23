@@ -4,7 +4,7 @@ import {
   UpdateType,
   UserAction,
 } from '../const';
-import { remove, render, replace } from '../framework/render';
+import { remove, render, replace, RenderPosition } from '../framework/render';
 import { getFormMode, isNewEventPresenter } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
@@ -70,8 +70,6 @@ export default class EventPointPresenter {
 
   setEvent = (event) => {
     this.#event = event;
-    remove(this.#eventComponent);
-    remove(this.#eventEditComponent);
     this.#render();
   };
 
@@ -109,7 +107,7 @@ export default class EventPointPresenter {
 
   setAborting = () => {
     if (this.eventPointState === EditFormMode.VIEW) {
-      this.#container.shake();
+      this.#eventComponent.shake();
       return;
     }
 
@@ -121,11 +119,13 @@ export default class EventPointPresenter {
   destroy = () => {
     remove(this.#eventComponent);
     remove(this.#eventEditComponent);
-    remove(this.#container);
   };
 
   #render = () => {
     const isNewPresenter = isNewEventPresenter(this);
+
+    const prevPointComponent = this.#eventComponent;
+    const prevFormEditComponent = this.#eventEditComponent;
 
     if (!isNewPresenter) {
       this.#city = this.#eventsModel.getCityById(this.#event.destination);
@@ -186,7 +186,15 @@ export default class EventPointPresenter {
       ? this.#eventEditComponent
       : this.#eventComponent;
 
-    render(this.#activeComponent, this.#container.element);
+    if(prevPointComponent === null || prevFormEditComponent === null) {
+      render(this.#activeComponent, this.#container, this.editFormMode === EditFormMode.NEW ? RenderPosition.AFTERBEGIN : RenderPosition.BEFOREEND);
+    } else {
+      replace(this.#activeComponent, this.eventPointState === EditFormMode.VIEW ? prevPointComponent : prevFormEditComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevFormEditComponent);
+
     if (isNewPresenter) {
       this.#handleStateChange(this, EventStateAction.OPEN_EDIT_FORM);
     }

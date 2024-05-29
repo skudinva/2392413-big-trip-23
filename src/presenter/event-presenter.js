@@ -205,33 +205,20 @@ export default class EventPresenter {
     this.#setActivePresenter(eventPointPresenter);
   };
 
-  #renderEventItem = (editFormMode, callback) => {
-    const itemComponent = new EventItemView();
-    render(
-      itemComponent,
-      this.#eventListComponent.element,
-      editFormMode === EditFormMode.NEW
-        ? RenderPosition.AFTERBEGIN
-        : RenderPosition.BEFOREEND
-    );
-    callback(itemComponent);
-  };
-
   #renderTripPoint = (event, editFormMode) => {
-    this.#renderEventItem(editFormMode, (container) => {
-      const eventPointPresenter = new EventPointPresenter({
-        event,
-        eventsModel: this.#eventsModel,
-        cities: this.#cities,
-        offersList: this.#offersList,
-        container,
-        onStateChange: this.#onEventEditStateChange,
-        onDataChange: this.#onEventDataChange,
-      });
-      if (event.id) {
-        this.#eventPointPresenters.set(event.id, eventPointPresenter);
-      }
+    const eventPointPresenter = new EventPointPresenter({
+      event,
+      eventsModel: this.#eventsModel,
+      cities: this.#cities,
+      offersList: this.#offersList,
+      container: this.#eventListComponent.element,
+      editFormMode,
+      onStateChange: this.#onEventEditStateChange,
+      onDataChange: this.#onEventDataChange,
     });
+    if (event.id) {
+      this.#eventPointPresenters.set(event.id, eventPointPresenter);
+    }
   };
 
   #renderTripPoints = () => {

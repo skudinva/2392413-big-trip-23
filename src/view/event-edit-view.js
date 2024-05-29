@@ -167,7 +167,7 @@ const createEventEditTemplate = (eventState) => {
     return isDeleting ? 'Deleting...' : 'Delete';
   };
 
-  return `<form class="event event--edit" action="#" method="post">
+  return `<li class="trip-events__item"><form class="event event--edit" action="#" method="post">
     <header class="event__header">
       ${eventTypeTemplate}
       ${destinationTemplate}
@@ -186,7 +186,7 @@ const createEventEditTemplate = (eventState) => {
       ${offersTemplate}
       ${destinationDetailTemplate}
     </section>
-  </form>`;
+  </form></li>`;
 };
 export default class EventEditView extends AbstractStatefulView {
   /**@type {Array} */
