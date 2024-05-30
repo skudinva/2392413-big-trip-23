@@ -88,7 +88,7 @@ const DEFAULT_SORT_TYPE = SortType.DAY;
 const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
 const ApiConfig = {
-  AUTHORIZATION: `Basic ${btoa('user:pass12')}`,
+  AUTHORIZATION: `Basic ${btoa('user:pass13')}`,
   END_POINT: 'https://23.objects.htmlacademy.pro/big-trip',
   EVENTS_URL: 'points',
   DESTINATIONS_URL: 'destinations',
