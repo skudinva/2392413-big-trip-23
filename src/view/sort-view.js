@@ -1,4 +1,4 @@
-import { sortTemplateProps } from '../const';
+import { SORT_TEMPLATE_PROPS } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
 const createSortItemTemplate = (currentSortType, { type, label, disabled }) => {
@@ -18,7 +18,7 @@ const createSortTemplate = (currentSortType) => {
     '<form class="trip-events__trip-sort  trip-sort" action="#" method="get">'
   );
 
-  sortTemplateProps.forEach((props) => {
+  SORT_TEMPLATE_PROPS.forEach((props) => {
     sortItems.push(createSortItemTemplate(currentSortType, props));
   });
 

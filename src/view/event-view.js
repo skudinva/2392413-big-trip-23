@@ -97,7 +97,8 @@ export default class EventView extends AbstractView {
           <p class="event__time">
             <time class="event__start-time" datetime="${machinizeDateTimeFrom}">${shortTimeFrom}</time>
             &mdash;
-            <time class="event__end-time" datetime="${machinizeDateTimeTo}">${shortTimeTo}</time>
+            <time class="event__end-time"
+            datetime="${machinizeDateTimeTo}">${shortTimeTo}</time>
           </p>
           <p class="event__duration">${eventDuration}</p>
         </div>

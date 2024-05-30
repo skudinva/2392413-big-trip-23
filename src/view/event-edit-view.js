@@ -10,9 +10,7 @@ import {
   isNewEvent,
 } from '../utils/event';
 
-const getDisabledInputParam = (isDisabled) => (isDisabled ? 'disabled' : '');
-
-const createEventTypeListTemplate = ({ type, isDisabled }) => {
+const createEventTypeListTemplate = ({ type }) => {
   const eventTypeListTemplate = [];
   eventTypeListTemplate.push(`<fieldset class="event__type-group">
   <legend class="visually-hidden">Event type</legend>`);
@@ -21,10 +19,11 @@ const createEventTypeListTemplate = ({ type, isDisabled }) => {
     const typeEventCode = typeEvent.toLowerCase();
     const checkedProperty = typeEventCode === type ? 'checked' : '';
     eventTypeListTemplate.push(`<div class="event__type-item">
-    <input id="event-type-${typeEventCode}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEventCode}"
-    ${checkedProperty}
-    ${getDisabledInputParam(isDisabled)}>
-   <label class="event__type-label  event__type-label--${typeEventCode}" for="event-type-${typeEventCode}">${typeEvent}</label>
+    <input id="event-type-${typeEventCode}"
+    class="event__type-input  visually-hidden" type="radio" name="event-type"
+    value="${typeEventCode}" ${checkedProperty}>
+   <label class="event__type-label  event__type-label--${typeEventCode}"
+   for="event-type-${typeEventCode}">${typeEvent}</label>
   </div>`);
   });
 
@@ -32,19 +31,18 @@ const createEventTypeListTemplate = ({ type, isDisabled }) => {
   return eventTypeListTemplate.join('');
 };
 
-const createEventTypeTemplate = ({ type, isDisabled } = {}) => {
+const createEventTypeTemplate = ({ type } = {}) => {
   const eventTypeTemplate = [];
   const eventTypeListTemplate = createEventTypeListTemplate({
     type,
-    isDisabled,
   });
   eventTypeTemplate.push(`<div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17"
+          src="img/icons/${type}.png" alt="Event type icon">
         </label>
-        <input class="event__type-toggle visually-hidden" id="event-type-toggle" type="checkbox"
-        ${getDisabledInputParam(isDisabled)}>
+        <input class="event__type-toggle visually-hidden" id="event-type-toggle" type="checkbox">
         <div class="event__type-list">
           ${eventTypeListTemplate}
         </div>
@@ -52,23 +50,15 @@ const createEventTypeTemplate = ({ type, isDisabled } = {}) => {
 
   return eventTypeTemplate.join('');
 };
-const createDestinationTemplate = ({
-  type,
-  destination,
-  cities,
-  isDisabled,
-}) => {
+const createDestinationTemplate = ({ type, destination, cities }) => {
   const elements = [];
   const selectedCityName =
     getValueFromArrayById(cities, destination)?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
-  <label class="event__label  event__type-output" for="event-destination">
-    ${type}
-  </label>
-  <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${he.encode(
-    selectedCityName
-  )}" list="destination-list"
-  ${getDisabledInputParam(isDisabled)}>
+  <label class="event__label  event__type-output"
+  for="event-destination">${type}</label>
+  <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination"
+  value="${he.encode(selectedCityName)}" list="destination-list">
   <datalist id="destination-list">`);
   cities.forEach((city) => {
     elements.push(`<option value="${he.encode(city.name)}"></option>`);
@@ -77,43 +67,30 @@ const createDestinationTemplate = ({
   return elements.join('');
 };
 
-const createEventDateTemplate = ({ dateFrom, dateTo, isDisabled } = {}) => {
+const createEventDateTemplate = ({ dateFrom, dateTo } = {}) => {
   const dateFromInput = getInputDateTime(dateFrom);
   const dateToInput = getInputDateTime(dateTo);
   return `<div class="event__field-group  event__field-group--time">
   <label class="visually-hidden" for="event-start-time">From</label>
-  <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${he.encode(
-    dateFromInput
-  )}"
-  ${getDisabledInputParam(isDisabled)}>
+  <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time"
+  value="${he.encode(dateFromInput)}">
   &mdash;
   <label class="visually-hidden" for="event-end-time">To</label>
-  <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${he.encode(
-    dateToInput
-  )}"
-  ${getDisabledInputParam(isDisabled)}>
+  <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time"
+  value="${he.encode(dateToInput)}">
   </div>`;
 };
 
-const createPriceTemplate = (
-  { basePrice, isDisabled } = { basePrice: 0, isDisabled: false }
-) =>
+const createPriceTemplate = ({ basePrice } = { basePrice: 0 }) =>
   `<div class="event__field-group  event__field-group--price">
   <label class="event__label" for="event-price">
     <span class="visually-hidden">Price</span>
     &euro;
   </label>
-  <input class="event__input  event__input--price" id="event-price" type="text" name="event-price" value="${he.encode(
-    String(basePrice)
-  )}"
-  ${getDisabledInputParam(isDisabled)}
-  ></div>`;
-const createOffersTemplate = ({
-  type,
-  offersList,
-  isDisabled,
-  offers: selectedOffers,
-}) => {
+  <input class="event__input  event__input--price" id="event-price" type="text"
+  name="event-price"
+  value="${he.encode(String(basePrice))}"></div>`;
+const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
   const offersByType = offersList.find(
     (offerItem) => offerItem.type === type
   ).offers;
@@ -131,8 +108,8 @@ const createOffersTemplate = ({
     offersTemplate.push(`<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
       id="event-offer-${offer.id}" type="checkbox"
-      name="event-offer-${offer.id}" data-offer-id="${offer.id}" ${checkedState}
-      ${getDisabledInputParam(isDisabled)}>
+      name="event-offer-${offer.id}"
+      data-offer-id="${offer.id}" ${checkedState}>
       <label class="event__offer-label" for="event-offer-${offer.id}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -184,14 +161,13 @@ const createEventEditTemplate = (eventState) => {
   const priceTemplate = createPriceTemplate(eventState);
   const offersTemplate = createOffersTemplate(eventState);
   const destinationDetailTemplate = createDestinationDetailTemplate(eventState);
-  const { isDisabled, isSaving, isDeleting } = eventState;
+  const { isSaving, isDeleting } = eventState;
   const resetButtonCaption = () => {
     if (isNewEvent(eventState)) {
       return 'Cancel';
     }
     return isDeleting ? 'Deleting...' : 'Delete';
   };
-  const isSubmitDisabled = isDisabled;
 
   return `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -199,12 +175,10 @@ const createEventEditTemplate = (eventState) => {
       ${destinationTemplate}
       ${eventDateTemplate}
       ${priceTemplate}
-      <button class="event__save-btn btn btn--blue" type="submit"
-      ${isSubmitDisabled ? 'disabled' : ''}>
-      ${isSaving ? 'Saving...' : 'Save'}
-      </button>
-      <button class="event__reset-btn" type="reset">
-      ${resetButtonCaption()}</button>
+      <button class="event__save-btn btn btn--blue"
+      type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+      <button class="event__reset-btn"
+      type="reset">${resetButtonCaption()}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
@@ -303,9 +277,15 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#onEventTypeChange);
-    this.element
-      .querySelector('.event__input--destination')
-      .addEventListener('input', this.#onEventDestinationInput);
+
+    const destinationElement = this.element.querySelector(
+      '.event__input--destination'
+    );
+    destinationElement.addEventListener('input', this.#onEventDestinationInput);
+    destinationElement.addEventListener(
+      'keypress',
+      this.#onEventDestinationKeypress
+    );
 
     const basePriceElement = this.element.querySelector('.event__input--price');
     basePriceElement.addEventListener('input', this.#onEventBasePriceInput);
@@ -357,6 +337,17 @@ export default class EventEditView extends AbstractStatefulView {
     this.updateElement({
       destination: selectedCity?.id,
     });
+  };
+
+  #onEventDestinationKeypress = (evt) => {
+    const inputDestination = evt.target.value.concat(evt.key).toLowerCase();
+    const isMatchDestination = this.#cities.some((city) =>
+      city.name.toLowerCase().includes(inputDestination)
+    );
+
+    if (!isMatchDestination) {
+      evt.preventDefault();
+    }
   };
 
   #onDateFromChange = ([userDate]) => {
@@ -412,14 +403,12 @@ export default class EventEditView extends AbstractStatefulView {
 
   static parseEventToState = (event) => ({
     ...event,
-    isDisabled: false,
     isSaving: false,
     isDeleting: false,
   });
 
   static parseStateToEvent = (eventState) => {
     const newEventState = { ...eventState };
-    delete newEventState.isDisabled;
     delete newEventState.isSaving;
     delete newEventState.isDeleting;
     return newEventState;

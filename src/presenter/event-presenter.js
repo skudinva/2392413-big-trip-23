@@ -4,12 +4,12 @@ import {
   DEFAULT_SORT_TYPE,
   EditFormMode,
   EventStateAction,
-  NoEventMessage,
+  noEventMessage,
   TimeLimit,
   UpdateType,
   UserAction,
 } from '../const';
-import { RenderPosition, remove, render } from '../framework/render';
+import { remove, render, RenderPosition } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import { isNewEventPresenter } from '../utils/event';
 import { filterEvents } from '../utils/filter-events';
@@ -33,7 +33,7 @@ export default class EventPresenter {
   #cities = null;
   #offersList = null;
   /**@type {EventPointPresenter} */
-  #activeEventEditForm = null;
+  #activePresenter = null;
   /**@type {HTMLElement} */
   #newEventButtonElement = null;
   /**@type {Map<string, EventPointPresenter>} */
@@ -42,8 +42,8 @@ export default class EventPresenter {
   #isLoading = true;
   #isError = false;
   #uiBlocker = new UiBlocker({
-    lowerLimit: TimeLimit.LOWER_LIMIT,
-    upperLimit: TimeLimit.UPPER_LIMIT,
+    lowerLimit: TimeLimit.LOWER,
+    upperLimit: TimeLimit.UPPER,
   });
 
   constructor({ container, eventsModel, filtersModel, newEventButtonElement }) {
@@ -70,12 +70,13 @@ export default class EventPresenter {
 
   /**
    *
-   * @param {EventPointPresenter} value
+   * @param {EventPointPresenter} eventPresenter
    */
-  #setActiveEventEditForm = (value) => {
-    this.#activeEventEditForm = value;
-    this.#newEventButtonElement.disabled = this.#isNewEventFormActive();
-    if (this.#activeEventEditForm) {
+  #setActivePresenter = (eventPresenter) => {
+    this.#activePresenter = eventPresenter;
+    this.#newEventButtonElement.disabled =
+      this.#isError || this.#isNewEventFormActive();
+    if (this.#activePresenter) {
       document.addEventListener('keydown', this.#onEscKeyDown);
     } else {
       document.removeEventListener('keydown', this.#onEscKeyDown);
@@ -83,10 +84,10 @@ export default class EventPresenter {
   };
 
   #isNewEventFormActive = () => {
-    if (!this.#activeEventEditForm) {
+    if (!this.#activePresenter) {
       return false;
     }
-    return isNewEventPresenter(this.#activeEventEditForm);
+    return isNewEventPresenter(this.#activePresenter);
   };
 
   /**
@@ -108,7 +109,7 @@ export default class EventPresenter {
         eventPointPresenter.switchToView();
       }
 
-      this.#setActiveEventEditForm(null);
+      this.#setActivePresenter(null);
       this.#renderFilterNoEventComponent();
     }
   };
@@ -161,7 +162,7 @@ export default class EventPresenter {
     /**@type {EventPointPresenter} */
     const activeForm =
       actionType === UserAction.ADD_EVENT
-        ? this.#activeEventEditForm
+        ? this.#activePresenter
         : this.#eventPointPresenters.get(event.id);
 
     switch (actionType) {
@@ -191,17 +192,17 @@ export default class EventPresenter {
    * @param {EventPointPresenter} eventPointPresenter
    */
   #openEditForm = (eventPointPresenter) => {
-    if (this.#activeEventEditForm) {
-      if (isNewEventPresenter(this.#activeEventEditForm)) {
-        this.#activeEventEditForm.destroy();
+    if (this.#activePresenter) {
+      if (isNewEventPresenter(this.#activePresenter)) {
+        this.#activePresenter.destroy();
       } else {
-        this.#activeEventEditForm.resetEditForm();
-        this.#activeEventEditForm.switchToView();
+        this.#activePresenter.resetEditForm();
+        this.#activePresenter.switchToView();
       }
     }
 
     eventPointPresenter.switchToEdit();
-    this.#setActiveEventEditForm(eventPointPresenter);
+    this.#setActivePresenter(eventPointPresenter);
   };
 
   #renderEventItem = (editFormMode, callback) => {
@@ -267,7 +268,7 @@ export default class EventPresenter {
 
   #renderErrorNoEventComponent = () => {
     if (this.#isError) {
-      this.#renderNoEventComponent(NoEventMessage[UpdateType.ERROR]);
+      this.#renderNoEventComponent(noEventMessage[UpdateType.ERROR]);
       return true;
     }
     return false;
@@ -276,7 +277,7 @@ export default class EventPresenter {
   #renderFilterNoEventComponent = () => {
     if (!this.events.length) {
       this.#renderNoEventComponent(
-        NoEventMessage[this.#filtersModel.currentFilterType]
+        noEventMessage[this.#filtersModel.currentFilterType]
       );
       return true;
     }
@@ -299,16 +300,12 @@ export default class EventPresenter {
   };
 
   #renderNewEvent = () => {
-    if (
-      this.#filtersModel.currentFilterType !== DEFAULT_FILTER_TYPE ||
-      this.#currentSortType !== DEFAULT_SORT_TYPE
-    ) {
-      this.#currentSortType = DEFAULT_SORT_TYPE;
-      this.#filtersModel.setCurrentFilterType(
-        UpdateType.MAJOR,
-        DEFAULT_FILTER_TYPE
-      );
-    }
+    this.#currentSortType = DEFAULT_SORT_TYPE;
+    this.#filtersModel.setCurrentFilterType(
+      UpdateType.MAJOR,
+      DEFAULT_FILTER_TYPE
+    );
+
     if (this.#noEventsComponent) {
       remove(this.#noEventsComponent);
       render(this.#eventListComponent, this.#container);
@@ -324,19 +321,19 @@ export default class EventPresenter {
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
-    if (this.#activeEventEditForm) {
-      this.#activeEventEditForm.destroy();
+    if (this.#activePresenter) {
+      this.#activePresenter.destroy();
     }
     this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPointPresenters.clear();
-    this.#setActiveEventEditForm(null);
+    this.#setActivePresenter(null);
   };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#onEventEditStateChange(
-        this.#activeEventEditForm,
+        this.#activePresenter,
         EventStateAction.CLOSE_EDIT_FORM
       );
     }

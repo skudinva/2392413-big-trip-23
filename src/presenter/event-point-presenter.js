@@ -94,7 +94,6 @@ export default class EventPointPresenter {
       return;
     }
     this.#eventEditComponent.updateElement({
-      isDisabled: true,
       isSaving: true,
     });
   };
@@ -104,7 +103,6 @@ export default class EventPointPresenter {
       return;
     }
     this.#eventEditComponent.updateElement({
-      isDisabled: true,
       isDeleting: true,
     });
   };
@@ -114,17 +112,13 @@ export default class EventPointPresenter {
       this.#container.shake();
       return;
     }
-
-    this.#eventEditComponent.shake(() => {
-      if (this.eventPointState === EditFormMode.VIEW) {
-        return;
-      }
+    const resetState = () => {
       this.#eventEditComponent.updateElement({
-        isDisabled: false,
         isSaving: false,
         isDeleting: false,
       });
-    });
+    };
+    this.#eventEditComponent.shake(resetState);
   };
 
   destroy = () => {
