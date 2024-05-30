@@ -112,10 +112,13 @@ export default class EventPointPresenter {
       this.#container.shake();
       return;
     }
-
-    this.#eventEditComponent.shake(() => {
-      this.#eventEditComponent.resetState();
-    });
+    const resetState = () => {
+      this.#eventEditComponent.updateElement({
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#eventEditComponent.shake(resetState);
   };
 
   destroy = () => {

@@ -300,16 +300,12 @@ export default class EventPresenter {
   };
 
   #renderNewEvent = () => {
-    if (
-      this.#filtersModel.currentFilterType !== DEFAULT_FILTER_TYPE ||
-      this.#currentSortType !== DEFAULT_SORT_TYPE
-    ) {
-      this.#currentSortType = DEFAULT_SORT_TYPE;
-      this.#filtersModel.setCurrentFilterType(
-        UpdateType.MAJOR,
-        DEFAULT_FILTER_TYPE
-      );
-    }
+    this.#currentSortType = DEFAULT_SORT_TYPE;
+    this.#filtersModel.setCurrentFilterType(
+      UpdateType.MAJOR,
+      DEFAULT_FILTER_TYPE
+    );
+
     if (this.#noEventsComponent) {
       remove(this.#noEventsComponent);
       render(this.#eventListComponent, this.#container);
