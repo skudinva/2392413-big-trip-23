@@ -289,9 +289,15 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#onEventTypeChange);
-    this.element
-      .querySelector('.event__input--destination')
-      .addEventListener('input', this.#onEventDestinationInput);
+
+    const destinationElement = this.element.querySelector(
+      '.event__input--destination'
+    );
+    destinationElement.addEventListener('input', this.#onEventDestinationInput);
+    destinationElement.addEventListener(
+      'keypress',
+      this.#onEventDestinationKeypress
+    );
 
     const basePriceElement = this.element.querySelector('.event__input--price');
     basePriceElement.addEventListener('input', this.#onEventBasePriceInput);
@@ -343,6 +349,17 @@ export default class EventEditView extends AbstractStatefulView {
     this.updateElement({
       destination: selectedCity?.id,
     });
+  };
+
+  #onEventDestinationKeypress = (evt) => {
+    const inputDestination = evt.target.value.concat(evt.key).toLowerCase();
+    const isMatchDestination = this.#cities.some((city) =>
+      city.name.toLowerCase().includes(inputDestination)
+    );
+
+    if (!isMatchDestination) {
+      evt.preventDefault();
+    }
   };
 
   #onDateFromChange = ([userDate]) => {
