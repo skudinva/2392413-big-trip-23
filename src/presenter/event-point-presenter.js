@@ -112,7 +112,7 @@ export default class EventPointPresenter {
     }
 
     const resetState = () => {
-      this.updateElement({
+      this.#eventEditComponent.updateElement({
         isSaving: false,
         isDeleting: false,
       });
