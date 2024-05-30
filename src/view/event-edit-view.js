@@ -19,9 +19,11 @@ const createEventTypeListTemplate = ({ type }) => {
     const typeEventCode = typeEvent.toLowerCase();
     const checkedProperty = typeEventCode === type ? 'checked' : '';
     eventTypeListTemplate.push(`<div class="event__type-item">
-    <input id="event-type-${typeEventCode}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEventCode}"
-    ${checkedProperty}>
-   <label class="event__type-label  event__type-label--${typeEventCode}" for="event-type-${typeEventCode}">${typeEvent}</label>
+    <input id="event-type-${typeEventCode}"
+    class="event__type-input  visually-hidden" type="radio" name="event-type"
+    value="${typeEventCode}" ${checkedProperty}>
+   <label class="event__type-label  event__type-label--${typeEventCode}"
+   for="event-type-${typeEventCode}">${typeEvent}</label>
   </div>`);
   });
 
@@ -37,7 +39,8 @@ const createEventTypeTemplate = ({ type } = {}) => {
   eventTypeTemplate.push(`<div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17"
+          src="img/icons/${type}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle visually-hidden" id="event-type-toggle" type="checkbox">
         <div class="event__type-list">
@@ -52,9 +55,8 @@ const createDestinationTemplate = ({ type, destination, cities }) => {
   const selectedCityName =
     getValueFromArrayById(cities, destination)?.name || '';
   elements.push(`<div class="event__field-group  event__field-group--destination">
-  <label class="event__label  event__type-output" for="event-destination">
-    ${type}
-  </label>
+  <label class="event__label  event__type-output"
+  for="event-destination">${type}</label>
   <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination"
   value="${he.encode(selectedCityName)}" list="destination-list">
   <datalist id="destination-list">`);
@@ -173,11 +175,10 @@ const createEventEditTemplate = (eventState) => {
       ${destinationTemplate}
       ${eventDateTemplate}
       ${priceTemplate}
-      <button class="event__save-btn btn btn--blue" type="submit">
-      ${isSaving ? 'Saving...' : 'Save'}
-      </button>
-      <button class="event__reset-btn" type="reset">
-      ${resetButtonCaption()}</button>
+      <button class="event__save-btn btn btn--blue"
+      type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+      <button class="event__reset-btn"
+      type="reset">${resetButtonCaption()}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
