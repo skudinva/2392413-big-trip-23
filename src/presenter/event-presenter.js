@@ -9,12 +9,11 @@ import {
   UpdateType,
   UserAction,
 } from '../const';
-import { remove, render, RenderPosition } from '../framework/render';
+import { remove, render } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import { isNewEventPresenter } from '../utils/event';
 import { filterEvents } from '../utils/filter-events';
 import { sortEvents } from '../utils/sort-events';
-import EventItemView from '../view/event-item-view';
 import EventsListView from '../view/events-list-view';
 import LoadingView from '../view/loading-view';
 import NoEventsView from '../view/no-events-view';

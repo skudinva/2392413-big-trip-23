@@ -4,7 +4,7 @@ import {
   UpdateType,
   UserAction,
 } from '../const';
-import { remove, render, replace, RenderPosition } from '../framework/render';
+import { RenderPosition, remove, render, replace } from '../framework/render';
 import { getFormMode, isNewEventPresenter } from '../utils/event';
 import EventEditView from '../view/event-edit-view';
 import EventView from '../view/event-view';
@@ -111,9 +111,14 @@ export default class EventPointPresenter {
       return;
     }
 
-    this.#eventEditComponent.shake(() => {
-      this.#eventEditComponent.resetState();
-    });
+    const resetState = () => {
+      this.updateElement({
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#eventEditComponent.shake(resetState);
   };
 
   destroy = () => {
@@ -186,10 +191,21 @@ export default class EventPointPresenter {
       ? this.#eventEditComponent
       : this.#eventComponent;
 
-    if(prevPointComponent === null || prevFormEditComponent === null) {
-      render(this.#activeComponent, this.#container, this.editFormMode === EditFormMode.NEW ? RenderPosition.AFTERBEGIN : RenderPosition.BEFOREEND);
+    if (prevPointComponent === null || prevFormEditComponent === null) {
+      render(
+        this.#activeComponent,
+        this.#container,
+        this.editFormMode === EditFormMode.NEW
+          ? RenderPosition.AFTERBEGIN
+          : RenderPosition.BEFOREEND
+      );
     } else {
-      replace(this.#activeComponent, this.eventPointState === EditFormMode.VIEW ? prevPointComponent : prevFormEditComponent);
+      replace(
+        this.#activeComponent,
+        this.eventPointState === EditFormMode.VIEW
+          ? prevPointComponent
+          : prevFormEditComponent
+      );
     }
 
     remove(prevPointComponent);
