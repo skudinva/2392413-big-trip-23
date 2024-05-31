@@ -324,7 +324,9 @@ export default class EventPresenter {
     if (this.#activePresenter) {
       this.#activePresenter.destroy();
     }
-    this.#eventPointPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPointPresenters.forEach((presenter) => {
+      presenter.destroy();
+    });
     this.#eventPointPresenters.clear();
     this.#setActivePresenter(null);
   };
