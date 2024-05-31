@@ -63,9 +63,9 @@ export default class EventPresenter {
 
   init = () => {
     this.#renderTripBoard();
-    this.#newEventButtonElement.addEventListener('click', () =>
-      this.#renderNewEvent()
-    );
+    this.#newEventButtonElement.addEventListener('click', () => {
+      this.#renderNewEvent();
+    });
   };
 
   /**
