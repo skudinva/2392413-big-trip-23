@@ -197,7 +197,6 @@ export default class EventEditView extends AbstractStatefulView {
   #handleCancelClick = null;
   #handleDeleteClick = null;
   #datepickers = new Map();
-  #dateFields = [];
 
   constructor({
     event,
@@ -227,21 +226,6 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelClick = onCancelClick;
     this.#handleDeleteClick = onDeleteClick;
-    this.#dateFields = [
-      {
-        name: 'dateFrom',
-        fieldId: '#event-start-time',
-        defaultDate: this._state.dateFrom,
-        callback: this.#onDateFromChange,
-      },
-      {
-        name: 'dateTo',
-        fieldId: '#event-end-time',
-        defaultDate: this._state.dateTo,
-        callback: this.#onDateToChange,
-        minDate: this._state.dateFrom,
-      },
-    ];
     this._restoreHandlers();
   }
 
@@ -386,7 +370,23 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #setDatepicker = () => {
-    this.#dateFields.forEach((dateField) => {
+    const datepickerFields = [
+      {
+        name: 'dateFrom',
+        fieldId: '#event-start-time',
+        defaultDate: this._state.dateFrom,
+        callback: this.#onDateFromChange,
+      },
+      {
+        name: 'dateTo',
+        fieldId: '#event-end-time',
+        defaultDate: this._state.dateTo,
+        callback: this.#onDateToChange,
+        minDate: this._state.dateFrom,
+      },
+    ];
+
+    datepickerFields.forEach((dateField) => {
       const dateElement = this.element.querySelector(dateField.fieldId);
       const newFlatpickr = flatpickr(dateElement, {
         enableTime: true,
