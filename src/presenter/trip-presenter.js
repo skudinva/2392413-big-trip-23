@@ -1,7 +1,7 @@
+import { MAX_LIMIT_TRIP_ROUTE } from '../const';
 import { RenderPosition, remove, render } from '../framework/render';
 import { getDurationMinutes } from '../utils/event';
 import TripInfoView from '../view/trip-info-view';
-
 export default class TripPresenter {
   #container = null;
   #eventsModel = null;
@@ -52,7 +52,7 @@ export default class TripPresenter {
 
     pushInfo(0, 'dateFrom');
 
-    if (sortEvents.length > 3) {
+    if (sortEvents.length > MAX_LIMIT_TRIP_ROUTE) {
       tripInfo.destinationInfo.push(destinationDummy);
     }
 

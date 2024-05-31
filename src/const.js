@@ -100,6 +100,8 @@ const TimeLimit = {
   UPPER: 1000,
 };
 
+const MAX_LIMIT_TRIP_ROUTE = 3;
+
 export {
   ApiConfig,
   DEFAULT_EVENT_PROPS,
@@ -111,6 +113,7 @@ export {
   EditFormMode,
   EventStateAction,
   FilterType,
+  MAX_LIMIT_TRIP_ROUTE,
   SORT_TEMPLATE_PROPS,
   SortType,
   TimeLimit,
