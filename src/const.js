@@ -1,5 +1,3 @@
-const EVENT_COUNT = 5;
-
 const EVENT_TYPES = [
   'Taxi',
   'Bus',
@@ -108,7 +106,6 @@ export {
   DEFAULT_FILTER_TYPE,
   DEFAULT_SORT_TYPE,
   DateFormat,
-  EVENT_COUNT,
   EVENT_TYPES,
   EditFormMode,
   EventStateAction,
