@@ -1,6 +1,16 @@
+import { MAX_LIMIT_TRIP_ROUTE } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 import { getPeriodString } from '../utils/event';
 
+const getDestinationPath = (destinations) => {
+  const delimiter = ' &mdash; ';
+  if (destinations.length > MAX_LIMIT_TRIP_ROUTE) {
+    return [destinations[0], '...', destinations[destinations.length - 1]].join(
+      delimiter
+    );
+  }
+  return destinations.join(delimiter);
+};
 export default class TripInfoView extends AbstractView {
   #tripInfo = null;
   constructor({ tripInfo }) {
@@ -9,16 +19,9 @@ export default class TripInfoView extends AbstractView {
   }
 
   get template() {
-    const { destinationInfo, cost } = this.#tripInfo;
-    const destinationPath = destinationInfo
-      .map((destination) => destination.cityName)
-      .join(' &mdash; ');
-
-    const dateInfo = getPeriodString(
-      destinationInfo[0]?.date,
-      destinationInfo[destinationInfo.length - 1]?.date,
-      '&nbsp;&mdash;&nbsp;'
-    );
+    const { destinations, cost, dateFrom, dateTo } = this.#tripInfo;
+    const destinationPath = getDestinationPath(destinations);
+    const dateInfo = getPeriodString(dateFrom, dateTo, '&nbsp;&mdash;&nbsp;');
     return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${destinationPath}</h1>

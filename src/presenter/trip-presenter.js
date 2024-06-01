@@ -1,4 +1,3 @@
-import { MAX_LIMIT_TRIP_ROUTE } from '../const';
 import { RenderPosition, remove, render } from '../framework/render';
 import { getDurationMinutes } from '../utils/event';
 import TripInfoView from '../view/trip-info-view';
@@ -22,41 +21,30 @@ export default class TripPresenter {
 
   get getTripInfo() {
     const tripInfo = {
-      destinationInfo: [],
       cost: this.cost,
+      destinations: [],
+      dateFrom: null,
+      dateTo: null,
     };
 
     if (!this.#events.length) {
       return tripInfo;
     }
 
-    const destinationDummy = {
-      date: null,
-      cityName: '...',
-    };
-
     const sortEvents = this.#events.sort((nextEvent, currentEvent) =>
       getDurationMinutes(currentEvent.dateFrom, nextEvent.dateFrom)
     );
 
-    const getInfo = (date, destination) => ({
-      date: date,
-      cityName: this.#eventsModel.getCityById(destination)?.name,
+    sortEvents.map((event) => {
+      const cityName = this.#eventsModel.getCityById(event.destination).name;
+
+      if (!tripInfo.destinations.includes(cityName)) {
+        tripInfo.destinations.push(cityName);
+      }
     });
 
-    const pushInfo = (index, dateField) => {
-      const date = sortEvents[index][dateField];
-      const destination = sortEvents[index].destination;
-      tripInfo.destinationInfo.push(getInfo(date, destination));
-    };
-
-    pushInfo(0, 'dateFrom');
-
-    if (sortEvents.length > MAX_LIMIT_TRIP_ROUTE) {
-      tripInfo.destinationInfo.push(destinationDummy);
-    }
-
-    pushInfo(sortEvents.length - 1, 'dateTo');
+    tripInfo.dateFrom = sortEvents[0].dateFrom;
+    tripInfo.dateTo = sortEvents[sortEvents.length - 1].dateTo;
 
     return tripInfo;
   }
