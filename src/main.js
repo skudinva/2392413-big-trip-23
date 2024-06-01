@@ -6,9 +6,11 @@ import EventPresenter from './presenter/event-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import TripPresenter from './presenter/trip-presenter';
 
-const headerContainer = document.querySelector('.page-header__container');
-const tripContainerElement = headerContainer.querySelector('.trip-main');
-const tripControlElement = headerContainer.querySelector(
+const headerContainerElement = document.querySelector(
+  '.page-header__container'
+);
+const tripContainerElement = headerContainerElement.querySelector('.trip-main');
+const tripControlElement = headerContainerElement.querySelector(
   '.trip-controls__filters'
 );
 
