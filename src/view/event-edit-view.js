@@ -99,13 +99,13 @@ const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
     return '';
   }
 
-  const offersTemplate = [];
-  offersTemplate.push(`<section class="event__section  event__section--offers">
+  const offerTemplates = [];
+  offerTemplates.push(`<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">`);
   offersByType.forEach((offer) => {
     const checkedState = selectedOffers.includes(offer.id) ? 'checked' : '';
-    offersTemplate.push(`<div class="event__offer-selector">
+    offerTemplates.push(`<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
       id="event-offer-${offer.id}" type="checkbox"
       name="event-offer-${offer.id}"
@@ -117,8 +117,8 @@ const createOffersTemplate = ({ type, offersList, offers: selectedOffers }) => {
       </label>
       </div>`);
   });
-  offersTemplate.push('</div></section>');
-  return offersTemplate.join('');
+  offerTemplates.push('</div></section>');
+  return offerTemplates.join('');
 };
 
 const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
@@ -131,27 +131,27 @@ const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
   if (!description && !pictures.length) {
     return '';
   }
-  const destDetailInfo = [];
-  destDetailInfo.push(`<section class="event__section  event__section--destination">
+  const destinationtemplates = [];
+  destinationtemplates.push(`<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>`);
 
   if (pictures.length) {
-    destDetailInfo.push(
+    destinationtemplates.push(
       '<div class="event__photos-container"><div class="event__photos-tape">'
     );
 
     pictures.forEach((picture) => {
-      destDetailInfo.push(
+      destinationtemplates.push(
         `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
       );
     });
 
-    destDetailInfo.push('</div></div></section>');
+    destinationtemplates.push('</div></div></section>');
   }
-  destDetailInfo.push('</section>');
+  destinationtemplates.push('</section>');
 
-  return destDetailInfo.join('');
+  return destinationtemplates.join('');
 };
 
 const createEventEditTemplate = (eventState) => {
@@ -159,7 +159,7 @@ const createEventEditTemplate = (eventState) => {
   const destinationTemplate = createDestinationTemplate(eventState);
   const eventDateTemplate = createEventDateTemplate(eventState);
   const priceTemplate = createPriceTemplate(eventState);
-  const offersTemplate = createOffersTemplate(eventState);
+  const offerTemplates = createOffersTemplate(eventState);
   const destinationDetailTemplate = createDestinationDetailTemplate(eventState);
   const { isSaving, isDeleting } = eventState;
   const resetButtonCaption = () => {
@@ -184,7 +184,7 @@ const createEventEditTemplate = (eventState) => {
       </button>
     </header>
     <section class="event__details">
-      ${offersTemplate}
+      ${offerTemplates}
       ${destinationDetailTemplate}
     </section>
   </form>`;

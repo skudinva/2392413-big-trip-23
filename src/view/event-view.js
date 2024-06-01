@@ -21,17 +21,17 @@ const createOfferTemplate = (selectedOffers) => {
   if (!selectedOffers.length) {
     return '';
   }
-  const offersElement = ['<ul class="event__selected-offers">'];
+  const offerTemplates = ['<ul class="event__selected-offers">'];
   selectedOffers.forEach((offer) => {
-    offersElement.push(`<li class="event__offer">
+    offerTemplates.push(`<li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
   </li>`);
   });
 
-  offersElement.push('</ul>');
-  return offersElement.join('');
+  offerTemplates.push('</ul>');
+  return offerTemplates.join('');
 };
 export default class EventView extends AbstractView {
   #event = null;

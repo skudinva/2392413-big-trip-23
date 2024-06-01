@@ -47,14 +47,14 @@ const getDurationString = (dateFrom, dateTo) => {
 };
 
 const getPeriodString = (dateFrom, dateTo, delimiter) => {
-  const period = [];
+  const periods = [];
 
   const dateFromFormat = DateFormat.HUMANIZE_FIRSTDAY;
-  period.push(getDateString(dateFrom, dateFromFormat));
+  periods.push(getDateString(dateFrom, dateFromFormat));
 
-  period.push(getDateString(dateTo, DateFormat.HUMANIZE_FIRSTDAY));
+  periods.push(getDateString(dateTo, DateFormat.HUMANIZE_FIRSTDAY));
 
-  return period.join(delimiter);
+  return periods.join(delimiter);
 };
 
 const getValueFromArrayById = (array, id) =>
