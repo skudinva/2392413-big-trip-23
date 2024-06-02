@@ -32,11 +32,11 @@ const createEventTypeListTemplate = ({ type }) => {
 };
 
 const createEventTypeTemplate = ({ type } = {}) => {
-  const eventTypeTemplate = [];
+  const eventTypeTemplates = [];
   const eventTypeListTemplate = createEventTypeListTemplate({
     type,
   });
-  eventTypeTemplate.push(`<div class="event__type-wrapper">
+  eventTypeTemplates.push(`<div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17"
@@ -48,7 +48,7 @@ const createEventTypeTemplate = ({ type } = {}) => {
         </div>
       </div>`);
 
-  return eventTypeTemplate.join('');
+  return eventTypeTemplates.join('');
 };
 const createDestinationTemplate = ({ type, destination, cities }) => {
   const elements = [];
@@ -159,7 +159,7 @@ const createEventEditTemplate = (eventState) => {
   const destinationTemplate = createDestinationTemplate(eventState);
   const eventDateTemplate = createEventDateTemplate(eventState);
   const priceTemplate = createPriceTemplate(eventState);
-  const offerTemplates = createOffersTemplate(eventState);
+  const offerTemplate = createOffersTemplate(eventState);
   const destinationDetailTemplate = createDestinationDetailTemplate(eventState);
   const { isSaving, isDeleting } = eventState;
   const resetButtonCaption = () => {
@@ -184,7 +184,7 @@ const createEventEditTemplate = (eventState) => {
       </button>
     </header>
     <section class="event__details">
-      ${offerTemplates}
+      ${offerTemplate}
       ${destinationDetailTemplate}
     </section>
   </form>`;
