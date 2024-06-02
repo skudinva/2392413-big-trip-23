@@ -11,14 +11,14 @@ import {
 } from '../utils/event';
 
 const createEventTypeListTemplate = ({ type }) => {
-  const eventTypeListTemplate = [];
-  eventTypeListTemplate.push(`<fieldset class="event__type-group">
+  const eventTypeListTemplates = [];
+  eventTypeListTemplates.push(`<fieldset class="event__type-group">
   <legend class="visually-hidden">Event type</legend>`);
 
   EVENT_TYPES.forEach((typeEvent) => {
     const typeEventCode = typeEvent.toLowerCase();
     const checkedProperty = typeEventCode === type ? 'checked' : '';
-    eventTypeListTemplate.push(`<div class="event__type-item">
+    eventTypeListTemplates.push(`<div class="event__type-item">
     <input id="event-type-${typeEventCode}"
     class="event__type-input  visually-hidden" type="radio" name="event-type"
     value="${typeEventCode}" ${checkedProperty}>
@@ -27,8 +27,8 @@ const createEventTypeListTemplate = ({ type }) => {
   </div>`);
   });
 
-  eventTypeListTemplate.push('</fieldset>');
-  return eventTypeListTemplate.join('');
+  eventTypeListTemplates.push('</fieldset>');
+  return eventTypeListTemplates.join('');
 };
 
 const createEventTypeTemplate = ({ type } = {}) => {
