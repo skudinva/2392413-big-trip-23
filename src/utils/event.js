@@ -57,8 +57,7 @@ const getPeriodString = (dateFrom, dateTo, delimiter) => {
   return periods.join(delimiter);
 };
 
-const getValueFromArrayById = (array, id) =>
-  array.find((item) => item.id === id);
+const getValueFromArrayById = (data, id) => data.find((item) => item.id === id);
 
 const isNewEvent = (event) => !Object.hasOwn(event, 'id');
 
