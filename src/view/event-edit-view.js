@@ -131,27 +131,27 @@ const createDestinationDetailTemplate = ({ cities, destination } = {}) => {
   if (!description && !pictures.length) {
     return '';
   }
-  const destinationtemplates = [];
-  destinationtemplates.push(`<section class="event__section  event__section--destination">
+  const destinationTemplates = [];
+  destinationTemplates.push(`<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>`);
 
   if (pictures.length) {
-    destinationtemplates.push(
+    destinationTemplates.push(
       '<div class="event__photos-container"><div class="event__photos-tape">'
     );
 
     pictures.forEach((picture) => {
-      destinationtemplates.push(
+      destinationTemplates.push(
         `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
       );
     });
 
-    destinationtemplates.push('</div></div></section>');
+    destinationTemplates.push('</div></div></section>');
   }
-  destinationtemplates.push('</section>');
+  destinationTemplates.push('</section>');
 
-  return destinationtemplates.join('');
+  return destinationTemplates.join('');
 };
 
 const createEventEditTemplate = (eventState) => {
