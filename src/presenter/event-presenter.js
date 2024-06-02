@@ -242,7 +242,7 @@ export default class EventPresenter {
 
   #renderSort = () => {
     this.#sortComponent = new SortView({
-      onSortButtonClick: this.#onSortButtonClick,
+      onSortChange: this.#onSortChange,
       currentSortType: this.#currentSortType,
     });
     render(this.#sortComponent, this.#container);
@@ -341,7 +341,7 @@ export default class EventPresenter {
     }
   };
 
-  #onSortButtonClick = (sortType) => {
+  #onSortChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }

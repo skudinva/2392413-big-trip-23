@@ -26,27 +26,27 @@ const createSortTemplate = (currentSortType) => {
   return sortItems.join('');
 };
 export default class SortView extends AbstractView {
-  #handleSortButtonClick = null;
+  #handleSortChange = null;
   #currentSortType = null;
-  constructor({ onSortButtonClick, currentSortType }) {
+  constructor({ onSortChange, currentSortType }) {
     super();
 
-    if (!onSortButtonClick) {
-      throw new Error('Parameter "onSortButtonClick" doesn\'t exist');
+    if (!onSortChange) {
+      throw new Error('Parameter "onSortChange" doesn\'t exist');
     }
 
-    this.#handleSortButtonClick = onSortButtonClick;
+    this.#handleSortChange = onSortChange;
     this.#currentSortType = currentSortType;
 
-    this.element.addEventListener('change', this.#onSortButtonClick);
+    this.element.addEventListener('change', this.#onSortChange);
   }
 
   get template() {
     return createSortTemplate(this.#currentSortType);
   }
 
-  #onSortButtonClick = (evt) => {
+  #onSortChange = (evt) => {
     const sortType = evt.target.value.split('-')[1];
-    this.#handleSortButtonClick(sortType);
+    this.#handleSortChange(sortType);
   };
 }

@@ -173,7 +173,7 @@ export default class EventPointPresenter {
           );
         }
       },
-      onCancelClick: () => {
+      onFormReset: () => {
         this.#handleStateChange(this, EventStateAction.CLOSE_EDIT_FORM);
       },
       onDeleteClick: (deleteEvent) => {

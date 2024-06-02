@@ -34,7 +34,7 @@ export default class FilterPresenter {
     this.#filterComponent = new FilterView({
       filters: this.filters,
       currentFilterType: this.#filtersModel.currentFilterType,
-      onFilterButtonClick: this.#onFilterButtonClick,
+      onFilterChange: this.#onFilterChange,
     });
     render(this.#filterComponent, this.#container);
   };
@@ -43,7 +43,7 @@ export default class FilterPresenter {
     this.init();
   };
 
-  #onFilterButtonClick = (filterType) => {
+  #onFilterChange = (filterType) => {
     if (this.#filtersModel.currentFilterType === filterType) {
       return;
     }

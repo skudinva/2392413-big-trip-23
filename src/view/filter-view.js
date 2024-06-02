@@ -10,17 +10,17 @@ const getFilterItemTemplate = ({ type, count }, currentFilterType) => {
 };
 export default class FilterView extends AbstractView {
   #filters = null;
-  #handleFilterButtonClick = null;
+  #handleFilterChange = null;
   #currentFilterType = null;
-  constructor({ filters, currentFilterType, onFilterButtonClick }) {
+  constructor({ filters, currentFilterType, onFilterChange }) {
     super();
-    if (!onFilterButtonClick) {
-      throw new Error('Parameter "onFilterButtonClick" doesn\'t exist');
+    if (!onFilterChange) {
+      throw new Error('Parameter "onFilterChange" doesn\'t exist');
     }
     this.#filters = filters;
     this.#currentFilterType = currentFilterType;
-    this.#handleFilterButtonClick = onFilterButtonClick;
-    this.element.addEventListener('change', this.#onFilterButtonClick);
+    this.#handleFilterChange = onFilterChange;
+    this.element.addEventListener('change', this.#onFilterChange);
   }
 
   get template() {
@@ -32,8 +32,8 @@ export default class FilterView extends AbstractView {
     </form>`;
   }
 
-  #onFilterButtonClick = (evt) => {
+  #onFilterChange = (evt) => {
     evt.preventDefault();
-    this.#handleFilterButtonClick(evt.target.value);
+    this.#handleFilterChange(evt.target.value);
   };
 }

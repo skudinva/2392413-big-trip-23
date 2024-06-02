@@ -194,7 +194,7 @@ export default class EventEditView extends AbstractStatefulView {
   #cities = null;
   #offersList = null;
   #handleFormSubmit = null;
-  #handleCancelClick = null;
+  #handleFormReset = null;
   #handleDeleteClick = null;
   #datepickers = new Map();
 
@@ -203,7 +203,7 @@ export default class EventEditView extends AbstractStatefulView {
     cities,
     offersList,
     onFormSubmit,
-    onCancelClick,
+    onFormReset,
     onDeleteClick,
   }) {
     super();
@@ -211,8 +211,8 @@ export default class EventEditView extends AbstractStatefulView {
       throw new Error('Parameter "onFormSubmit" doesn\'t exist');
     }
 
-    if (!onCancelClick) {
-      throw new Error('Parameter "onCancelClick" doesn\'t exist');
+    if (!onFormReset) {
+      throw new Error('Parameter "onFormReset" doesn\'t exist');
     }
 
     if (!onDeleteClick) {
@@ -224,7 +224,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#cities = cities;
     this.#offersList = offersList;
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleCancelClick = onCancelClick;
+    this.#handleFormReset = onFormReset;
     this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
@@ -247,7 +247,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#onFormSubmit);
-    this.element.addEventListener('reset', this.#onCancelClick);
+    this.element.addEventListener('reset', this.#onFormReset);
 
     if (!isNewEvent(this._state)) {
       this.element
@@ -257,7 +257,7 @@ export default class EventEditView extends AbstractStatefulView {
 
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#onCancelClick);
+      .addEventListener('click', this.#onFormReset);
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#onEventTypeChange);
@@ -296,8 +296,8 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit(event);
   };
 
-  #onCancelClick = () => {
-    this.#handleCancelClick();
+  #onFormReset = () => {
+    this.#handleFormReset();
   };
 
   #onDeleteClick = (evt) => {
