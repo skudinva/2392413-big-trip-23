@@ -203,7 +203,7 @@ export default class EventEditView extends AbstractStatefulView {
     cities,
     offersList,
     onFormSubmit,
-    onFormReset,
+    onCancelClick,
     onDeleteClick,
   }) {
     super();
@@ -211,8 +211,8 @@ export default class EventEditView extends AbstractStatefulView {
       throw new Error('Parameter "onFormSubmit" doesn\'t exist');
     }
 
-    if (!onFormReset) {
-      throw new Error('Parameter "onFormReset" doesn\'t exist');
+    if (!onCancelClick) {
+      throw new Error('Parameter "onCancelClick" doesn\'t exist');
     }
 
     if (!onDeleteClick) {
@@ -224,7 +224,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#cities = cities;
     this.#offersList = offersList;
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleFormReset = onFormReset;
+    this.#handleFormReset = onCancelClick;
     this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
