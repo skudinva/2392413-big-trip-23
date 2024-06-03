@@ -297,13 +297,12 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit(event);
   };
 
-  #onFormReset = (evt) => {
-    evt.preventDefault();
+  #onFormReset = () => {
     this.#handleFormReset();
   };
 
-  #onRollupButtonClick = (evt) => {
-    this.#onFormReset(evt);
+  #onRollupButtonClick = () => {
+    this.#onFormReset();
   };
 
   #onDeleteButtonClick = (evt) => {
