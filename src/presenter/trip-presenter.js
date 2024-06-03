@@ -35,12 +35,9 @@ export default class TripPresenter {
       getDurationMinutes(currentEvent.dateFrom, nextEvent.dateFrom)
     );
 
-    sortEvents.map((event) => {
+    sortEvents.forEach((event) => {
       const cityName = this.#eventsModel.getCityById(event.destination).name;
-
-      if (!tripInfo.destinations.includes(cityName)) {
-        tripInfo.destinations.push(cityName);
-      }
+      tripInfo.destinations.push(cityName);
     });
 
     tripInfo.dateFrom = sortEvents[0].dateFrom;
