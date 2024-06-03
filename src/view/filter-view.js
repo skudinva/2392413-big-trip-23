@@ -20,7 +20,7 @@ export default class FilterView extends AbstractView {
     this.#filters = filters;
     this.#currentFilterType = currentFilterType;
     this.#handleFilterChange = onFilterChange;
-    this.element.addEventListener('change', this.#onFilterChange);
+    this.element.addEventListener('change', this.#onFilterFormChange);
   }
 
   get template() {
@@ -32,7 +32,7 @@ export default class FilterView extends AbstractView {
     </form>`;
   }
 
-  #onFilterChange = (evt) => {
+  #onFilterFormChange = (evt) => {
     evt.preventDefault();
     this.#handleFilterChange(evt.target.value);
   };

@@ -252,12 +252,13 @@ export default class EventEditView extends AbstractStatefulView {
     if (!isNewEvent(this._state)) {
       this.element
         .querySelector('.event__reset-btn')
-        .addEventListener('click', this.#onDeleteClick);
+        .addEventListener('click', this.#onDeleteButtonClick);
     }
 
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#onFormReset);
+      .addEventListener('click', this.#onRollupButtonClick);
+
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#onEventTypeChange);
@@ -301,7 +302,11 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormReset();
   };
 
-  #onDeleteClick = (evt) => {
+  #onRollupButtonClick = (evt) => {
+    this.#onFormReset(evt);
+  };
+
+  #onDeleteButtonClick = (evt) => {
     evt.preventDefault();
     const event = EventEditView.parseStateToEvent(this._state);
     this.#handleDeleteClick(event);
