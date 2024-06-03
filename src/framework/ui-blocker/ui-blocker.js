@@ -27,7 +27,7 @@ export default class UiBlocker {
    * @param {number} config.lowerLimit Время до блокировки интерфейса в миллисекундах. Если вызвать метод unblock раньше, то интерфейс заблокирован не будет
    * @param {number} config.upperLimit Минимальное время блокировки в миллисекундах. Минимальная длительность блокировки
    */
-  constructor({lowerLimit, upperLimit}) {
+  constructor({ lowerLimit, upperLimit }) {
     this.#lowerLimit = lowerLimit;
     this.#upperLimit = upperLimit;
 
@@ -65,16 +65,16 @@ export default class UiBlocker {
   /** Метод, добавляющий CSS-класс и обработчик */
   #activateBlocking = () => {
     this.#element.classList.add('ui-blocker--on');
-    document.addEventListener('keydown', this.#documentKeydownHandler);
+    document.addEventListener('keydown', this.#onDocumentKeydown);
   };
 
   /** Метод, убирающий CSS-класс и обработчик */
   #disactivateBlocking = () => {
     this.#element.classList.remove('ui-blocker--on');
-    document.removeEventListener('keydown', this.#documentKeydownHandler);
+    document.removeEventListener('keydown', this.#onDocumentKeydown);
   };
 
-  #documentKeydownHandler = (evt) => {
+  #onDocumentKeydown = (evt) => {
     evt.preventDefault();
   };
 }
