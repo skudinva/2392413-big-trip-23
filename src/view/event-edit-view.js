@@ -296,7 +296,8 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit(event);
   };
 
-  #onFormReset = () => {
+  #onFormReset = (evt) => {
+    evt.preventDefault();
     this.#handleFormReset();
   };
 
